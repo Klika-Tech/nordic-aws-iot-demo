@@ -95,6 +95,7 @@ $(abspath ../../../sdk_components/drivers_nrf/pdm/nrf_drv_pdm.c) \
 $(abspath ../../../sdk_components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath ../../../sdk_components/drivers_nrf/saadc/nrf_drv_saadc.c) \
 $(abspath ../../../sdk_components/drivers_nrf/hal/nrf_saadc.c) \
+$(abspath ../../../sdk_components/drivers_nrf/uart/nrf_drv_uart.c) \
 $(abspath ../../../sdk_components/libraries/button/app_button.c) \
 $(abspath ../../../sdk_components/libraries/scheduler/app_scheduler.c) \
 $(abspath ../../../sdk_components/libraries/timer/app_timer.c) \
@@ -287,7 +288,7 @@ INC_PATHS += -I$(abspath ../../../sdk_components/iot/iot_timer)
 INC_PATHS += -I$(abspath ../../../sdk_components/iot/common)
 INC_PATHS += -I$(abspath ../../../sdk_components/iot/tls)
 INC_PATHS += -I$(abspath ../../../external/sdk/components/iot/ble_ipsp)
-INC_PATHS += -I$(abspath ../../../external/sdk/components/ble_6lowpan)
+INC_PATHS += -I$(abspath ../../../external/sdk/components/iot/ble_6lowpan)
 INC_PATHS += -I$(abspath ../../../external/sdk/components/iot/medium)
 INC_PATHS += -I$(abspath ../../../sdk_components/iot/context_manager)
 INC_PATHS += -I$(abspath ../../../tools/sound)
@@ -319,7 +320,6 @@ CFLAGS += -DNRF_SD_BLE_API_VERSION=3
 CFLAGS += -DBLE_STACK_SUPPORT_REQD
 CFLAGS += -D__STACK_SIZE=4608
 CFLAGS += -D__HEAP_SIZE=512
-CFLAGS += -DNRF_LOG_USES_RTT
 CFLAGS += -DNRF52_PAN_12
 CFLAGS += -DNRF52_PAN_15
 CFLAGS += -DNRF52_PAN_20
@@ -335,6 +335,7 @@ CFLAGS += -DNRF52_PAN_62
 CFLAGS += -DNRF52_PAN_63
 CFLAGS += -DNRF52_PAN_64
 CFLAGS += -Ds1xx
+CFLAGS += -DENABLE_DEBUG_LOG_SUPPORT
 CFLAGS += -DMBEDTLS_CONFIG_FILE=\"nrf_tls_config.h\"
 CFLAGS += -DNRF_LOG_USES_RTT=1
 CFLAGS += -DBLE_DFU_APP_SUPPORT
@@ -501,3 +502,10 @@ flash_iot_softdevice:
 	@echo Flashing: s1xx-iot-prototype3_nrf52_softdevice.hex
 	nrfjprog --program /home/eugene/nrf5_iot_sdk_3288530/components/softdevice/s1xx_iot/s1xx-iot-prototype3_nrf52_softdevice.hex -f nrf52 --chiperase
 	nrfjprog --reset -f nrf52
+	
+# Erases all user available program flash memory and the UICR page.
+erase_all:
+	@echo Erasing all
+	nrfjprog --eraseall
+	nrfjprog --reset -f nrf52
+

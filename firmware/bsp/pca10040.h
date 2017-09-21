@@ -146,6 +146,6 @@
 #define ARDUINO_A5_PIN              31    // Analog channel 5
 
 // Low frequency clock source to be used by the SoftDevice
-#define NRF_CLOCK_LFCLKSRC      NRF_CLOCK_LFCLKSRC_XTAL_20_PPM
+//#define NRF_CLOCK_LFCLKSRC      NRF_CLOCK_LFCLKSRC_XTAL_20_PPM
 
 #endif // PCA10040_H
