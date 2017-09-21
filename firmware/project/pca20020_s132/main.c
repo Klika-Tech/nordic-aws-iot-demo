@@ -984,7 +984,6 @@ int main(void)
 //    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 //    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
 
-    app_trace_init();
 //	timers_init();
 //	iot_timer_init();
 //	button_init();
@@ -1025,6 +1024,8 @@ int main(void)
     connectable_mode_enter();
 
 //    board_init();
+
+    app_trace_init();
 
     //Enter main loop.
     for (;;)
