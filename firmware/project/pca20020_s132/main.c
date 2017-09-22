@@ -61,7 +61,8 @@
 #include "app_trace.h"
 #include "SEGGER_RTT.h"
 //#include "m_ble.h"
-//#include "m_environment.h"
+#include "m_environment.h"
+#include "drv_hts221.h"
 //#include "m_sound.h"
 //#include "m_motion.h"
 //#include "m_ui.h"
@@ -70,7 +71,6 @@
 #include "drv_ext_gpio.h"
 #include "nrf_delay.h"
 #include "twi_manager.h"
-#include "pca10040.h"
 #include "pca20020.h"
 #include "app_error.h"
 #include "support_func.h"
@@ -86,8 +86,19 @@
 #define SCHED_MAX_EVENT_DATA_SIZE   MAX(APP_TIMER_SCHED_EVT_SIZE, BLE_STACK_HANDLER_SCHED_EVT_SIZE) /**< Maximum size of scheduler events. */
 #define SCHED_QUEUE_SIZE            60  /**< Maximum number of events in the scheduler queue. */
 
+#define BUTTON_1       11	// thingy
+#define BUTTON_PULL    NRF_GPIO_PIN_PULLUP
+#define BUTTONS_LIST { BUTTON_1 }
+#define BSP_BUTTON_0   BUTTON_1
+#define BSP_BUTTON_0_MASK (1<<BSP_BUTTON_0)
+
+#define RX_PIN_NUMBER  8
+#define TX_PIN_NUMBER  6
+#define CTS_PIN_NUMBER 7
+#define RTS_PIN_NUMBER 5
+#define HWFC           true
+
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
-//static m_ble_service_handle_t  m_ble_service_handles[THINGY_SERVICES_MAX];
 
 typedef enum
 {
@@ -112,7 +123,7 @@ typedef enum
 #define APPL_LOG                            app_trace_log                                           /**< Macro for logging application messages on UART, in case ENABLE_DEBUG_LOG_SUPPORT is not defined, no logging occurs. */
 #define APPL_DUMP                           app_trace_dump                                          /**< Macro for dumping application data on UART, in case ENABLE_DEBUG_LOG_SUPPORT is not defined, no logging occurs. */
 
-#define APP_DATA_INITIAL_TEMPERATURE        17                                                      /**< Initial simulated temperature. */
+#define APP_DATA_INITIAL_TEMPERATURE        20                                                      /**< Initial simulated temperature. */
 #define APP_DATA_MAXIMUM_TEMPERATURE        25                                                      /**< Maximum simulated temperature. */
 #define APP_DATA_MAX_SIZE                   200                                                     /**< Maximum size of data buffer size. */
 
@@ -144,7 +155,7 @@ static bool                                 m_do_publication   = false;         
 static mqtt_client_t                        m_app_mqtt_id;                                          /**< MQTT Client instance reference provided by the MQTT module. */
 static const char                           m_device_id[]      = "nrfPublisher";                    /**< Unique MQTT client identifier. */
 static const char                           m_user[]           = APP_MQTT_XIVELY_API_KEY;           /**< MQTT user name. */
-static uint16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
+static int16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
 
@@ -320,15 +331,15 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
                 }
                 break;
             }
-            case BSP_BUTTON_1:
-            {
-                if (m_connection_state == true)
-                {
-                    err_code = mqtt_disconnect(&m_app_mqtt_id);
-                    APP_ERROR_CHECK(err_code);
-                }
-                break;
-            }
+//            case BSP_BUTTON_1:
+//            {
+//                if (m_connection_state == true)
+//                {
+//                    err_code = mqtt_disconnect(&m_app_mqtt_id);
+//                    APP_ERROR_CHECK(err_code);
+//                }
+//                break;
+//            }
             default:
                 break;
         }
@@ -611,31 +622,30 @@ static void power_manage(void)
 
 /**@brief Function for initializing the Thingy.
  */
-//static void thingy_init(void)
-//{
-//    uint32_t                 err_code;
+static void thingy_init(void)
+{
+    uint32_t                 err_code;
 //    m_ui_init_t              ui_params;
-//    m_environment_init_t     env_params;
+    m_environment_init_t     env_params;
 //    m_motion_init_t          motion_params;
 //    m_ble_init_t             ble_params;
 //    batt_meas_init_t         batt_meas_init = BATT_MEAS_PARAM_CFG;
-//
-//    /**@brief Initialize the TWI manager. */
-//    err_code = twi_manager_init(APP_IRQ_PRIORITY_THREAD);
-//    APP_ERROR_CHECK(err_code);
-//
+
+    /**@brief Initialize the TWI manager. */
+    err_code = twi_manager_init(APP_IRQ_PRIORITY_THREAD);
+    APP_ERROR_CHECK(err_code);
+
 //    /**@brief Initialize LED and button UI module. */
 //    ui_params.p_twi_instance = &m_twi_sensors;
 //    err_code = m_ui_init(&m_ble_service_handles[THINGY_SERVICE_UI],
 //                         &ui_params);
 //    APP_ERROR_CHECK(err_code);
-//
-//    /**@brief Initialize environment module. */
-//    env_params.p_twi_instance = &m_twi_sensors;
-//    err_code = m_environment_init(&m_ble_service_handles[THINGY_SERVICE_ENVIRONMENT],
-//                                  &env_params);
-//    APP_ERROR_CHECK(err_code);
-//
+
+    /**@brief Initialize environment module. */
+    env_params.p_twi_instance = &m_twi_sensors;
+    err_code = m_environment_init(&env_params);
+    APP_ERROR_CHECK(err_code);
+
 //    /**@brief Initialize motion module. */
 //    motion_params.p_twi_instance = &m_twi_sensors;
 //
@@ -653,21 +663,7 @@ static void power_manage(void)
 //
 //    err_code = m_batt_meas_enable(BATT_MEAS_INTERVAL_MS);
 //    APP_ERROR_CHECK(err_code);
-//
-//    /**@brief Initialize BLE handling module. */
-//    ble_params.evt_handler       = thingy_ble_evt_handler;
-//    ble_params.p_service_handles = m_ble_service_handles;
-//    ble_params.service_num       = 5;
-//
-//    err_code = m_ble_init(&ble_params);
-//    APP_ERROR_CHECK(err_code);
-//
-//    err_code = m_ui_led_set_event(M_UI_BLE_DISCONNECTED);
-//    APP_ERROR_CHECK(err_code);
-//
-//    err_code = support_func_ble_mac_address_print_rtt();
-//    APP_ERROR_CHECK(err_code);
-//}
+}
 
 
 static void board_init(void)
@@ -805,10 +801,12 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     }
 
     // Reset temperature to initial state.
-    if (m_temperature == APP_DATA_MAXIMUM_TEMPERATURE)
-    {
-        m_temperature = APP_DATA_INITIAL_TEMPERATURE;
-    }
+//    if (m_temperature == APP_DATA_MAXIMUM_TEMPERATURE)
+//    {
+//        m_temperature = APP_DATA_INITIAL_TEMPERATURE;
+//    }
+
+    drv_hts221_temperature_get(&m_temperature);
 
     // Prepare data in JSON format.
     sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
@@ -856,7 +854,7 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     // }
 
     // Increase temperature value.
-    m_temperature++;
+//    m_temperature++;
 
     APPL_LOG("[APPL]: mqtt_publish result 0x%08lx\r\n", err_code);
 }
@@ -901,7 +899,8 @@ static void timers_init(void)
     uint32_t err_code;
 
     // Initialize timer module.
-    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
+//    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);	// iot
+    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);		// thingy
 
     // Create timer to create delay connection to Xively.
     err_code = app_timer_create(&m_mqtt_conn_timer_id,
@@ -958,11 +957,7 @@ static void button_init(void)
 
     static app_button_cfg_t buttons[] =
     {
-        {BSP_BUTTON_0,        false, BUTTON_PULL, button_event_handler},
-        {BSP_BUTTON_1,        false, BUTTON_PULL, button_event_handler},
-#ifdef COMMISSIONING_ENABLED
-        {ERASE_BUTTON_PIN_NO, false, BUTTON_PULL, button_event_handler}
-#endif // COMMISSIONING_ENABLED
+        {BSP_BUTTON_0,        false, BUTTON_PULL, button_event_handler}
     };
 
     #define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)
@@ -980,24 +975,11 @@ int main(void)
 {
     uint32_t err_code;
 
-    // Initialize.
-//    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
-//    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
-
-#ifdef COMMISSIONING_ENABLED
-    err_code = pstorage_init();
-    APP_ERROR_CHECK(err_code);
-#endif // COMMISSIONING_ENABLED
-
     static ipv6_medium_init_params_t ipv6_medium_init_params;
     memset(&ipv6_medium_init_params, 0x00, sizeof(ipv6_medium_init_params));
     ipv6_medium_init_params.ipv6_medium_evt_handler    = on_ipv6_medium_evt;
     ipv6_medium_init_params.ipv6_medium_error_handler  = on_ipv6_medium_error;
     ipv6_medium_init_params.use_scheduler              = false;
-#ifdef COMMISSIONING_ENABLED
-    ipv6_medium_init_params.commissioning_id_mode_cb   = commissioning_id_mode_cb;
-    ipv6_medium_init_params.commissioning_power_off_cb = commissioning_power_off_cb;
-#endif // COMMISSIONING_ENABLED
 
     err_code = ipv6_medium_init(&ipv6_medium_init_params, \
                                 IPV6_MEDIUM_ID_BLE,       \
@@ -1020,17 +1002,26 @@ int main(void)
     connectable_mode_enter();
 
     board_init();
-    app_trace_init();
+//  app_trace_init();
 	timers_init();
 	iot_timer_init();
 	button_init();
+	thingy_init();
+
+    // Initialize.
+    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+
+    err_code = temperature_start();
+    APP_ERROR_CHECK(err_code);
 
     //Enter main loop.
     for (;;)
     {
         //Sleep waiting for an application event.
-        err_code = sd_app_evt_wait();
-        APP_ERROR_CHECK(err_code);
+//        err_code = sd_app_evt_wait();
+//        APP_ERROR_CHECK(err_code);
+		app_sched_execute();
+//		power_manage();
     }
 
 //    for (;;)

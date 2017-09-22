@@ -94,25 +94,25 @@ extern "C" {
 #ifdef NRF52
   #define __NRF_NVIC_ISER_COUNT (2) /**< The number of ISER/ICER registers in the NVIC that are used. */
 
-//  /**@brief Interrupts used by the SoftDevice. */
-//  #define __NRF_NVIC_SD_IRQS_0 ((uint32_t)( \
-//        (1U << POWER_CLOCK_IRQn) \
-//      | (1U << RADIO_IRQn) \
-//      | (1U << RTC0_IRQn) \
-//      | (1U << TIMER0_IRQn) \
-//      | (1U << RNG_IRQn) \
-//      | (1U << ECB_IRQn) \
-//      | (1U << CCM_AAR_IRQn) \
-//      | (1U << TEMP_IRQn) \
-//      | (1U << __NRF_NVIC_NVMC_IRQn) \
-//      | (1U << (uint32_t)SWI4_EGU4_IRQn) \
-//      | (1U << (uint32_t)SWI5_EGU5_IRQn) \
-//    ))
-//  #define __NRF_NVIC_SD_IRQS_1 ((uint32_t)0)
-//
-//  /**@brief Interrupts available for to application. */
-//  #define __NRF_NVIC_APP_IRQS_0 (~__NRF_NVIC_SD_IRQS_0)
-//  #define __NRF_NVIC_APP_IRQS_1 (~__NRF_NVIC_SD_IRQS_1)
+  /**@brief Interrupts used by the SoftDevice. */
+  #define __NRF_NVIC_SD_IRQS_0 ((uint32_t)( \
+        (1U << POWER_CLOCK_IRQn) \
+      | (1U << RADIO_IRQn) \
+      | (1U << RTC0_IRQn) \
+      | (1U << TIMER0_IRQn) \
+      | (1U << RNG_IRQn) \
+      | (1U << ECB_IRQn) \
+      | (1U << CCM_AAR_IRQn) \
+      | (1U << TEMP_IRQn) \
+      | (1U << __NRF_NVIC_NVMC_IRQn) \
+      | (1U << (uint32_t)SWI4_EGU4_IRQn) \
+      | (1U << (uint32_t)SWI5_EGU5_IRQn) \
+    ))
+  #define __NRF_NVIC_SD_IRQS_1 ((uint32_t)0)
+
+  /**@brief Interrupts available for to application. */
+  #define __NRF_NVIC_APP_IRQS_0 (~__NRF_NVIC_SD_IRQS_0)
+  #define __NRF_NVIC_APP_IRQS_1 (~__NRF_NVIC_SD_IRQS_1)
 #endif
 /**@} */
 

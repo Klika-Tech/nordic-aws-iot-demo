@@ -61,6 +61,7 @@ $(abspath ../../../source/drivers/drv_mpu9250.c) \
 $(abspath ../../../source/drivers/drv_motion.c) \
 $(abspath ../../../source/drivers/drv_acc_lis3dh.c) \
 $(abspath ../../../source/drivers/drv_mic.c) \
+$(abspath ../../../source/modules/m_environment.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu_dmp_motion_driver.c) \
 $(abspath ../../../libs/eMD6/core/mllite/data_builder.c) \
@@ -86,7 +87,6 @@ $(abspath ../../../sdk_components/ble/ble_advertising/ble_advertising.c) \
 $(abspath ../../../sdk_components/ble/common/ble_conn_params.c) \
 $(abspath ../../../sdk_components/ble/common/ble_srv_common.c) \
 $(abspath ../../../sdk_components/ble/common/ble_conn_state.c) \
-$(abspath ../../../sdk_components/libraries/trace/app_trace.c) \
 $(abspath ../../../sdk_components/drivers_nrf/common/nrf_drv_common.c) \
 $(abspath ../../../sdk_components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
 $(abspath ../../../sdk_components/drivers_nrf/twi_master/nrf_drv_twi.c) \

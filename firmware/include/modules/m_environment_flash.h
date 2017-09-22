@@ -48,8 +48,6 @@
 #ifndef __M_ENVIRONMENT_FLASH_H__
 #define __M_ENVIRONMENT_FLASH_H__
 
-#include "ble_tes.h"
-
 /**@brief Gas sensor baseline values for different modes of operation.
  */
 typedef PACKED( struct
