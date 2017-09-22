@@ -393,93 +393,93 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
  *
  * @param[in] vdd_on    If true, keep VDD turned on.
  */
-//static void configure_gpio_for_sleep(vdd_state_t vdd_on)
-//{
-//    ret_code_t err_code;
-//
-//    sx_gpio_cfg_t  ioext_sys_off_pin_cfg[SX_IOEXT_NUM_PINS] = IOEXT_SYSTEM_OFF_PIN_CFG;
-//
-//    nrf_gpio_cfg_t   nrf_sys_off_pin_cfg[NRF_NUM_GPIO_PINS] = NRF_SYSTEM_OFF_PIN_CFG;
-//
-//    #if    defined(THINGY_HW_v0_7_0)
-//        // VDD always on.
-//    #elif  defined(THINGY_HW_v0_8_0)
-//        // VDD always on.
-//    #elif  defined(THINGY_HW_v0_9_0)
-//        // VDD always on.
-//    #else
-//        if (vdd_on)
-//        {
-//            nrf_sys_off_pin_cfg[VDD_PWR_CTRL] = (nrf_gpio_cfg_t)NRF_PIN_OUTPUT_SET;
-//        }
-//    #endif
-//
-//    err_code = drv_ext_gpio_reset();
-//    APP_ERROR_CHECK(err_code);
-//
-//    /* Set all IO extender pins in system off state. IO extender will be powered down as well,
-//    Hence, this config will not be retained when VDD is turned off. */
-//    for (uint8_t i = 0; i < SX_IOEXT_NUM_PINS; i++)
-//    {
-//        err_code = drv_ext_gpio_cfg(i,
-//                         ioext_sys_off_pin_cfg[i].dir,
-//                         ioext_sys_off_pin_cfg[i].input_buf,
-//                         ioext_sys_off_pin_cfg[i].pull_config,
-//                         ioext_sys_off_pin_cfg[i].drive_type,
-//                         ioext_sys_off_pin_cfg[i].slew_rate);
-//        APP_ERROR_CHECK(err_code);
-//
-//        switch(ioext_sys_off_pin_cfg[i].state)
-//        {
-//            case PIN_CLEAR:
-//                err_code = drv_ext_gpio_pin_clear(i);
-//                APP_ERROR_CHECK(err_code);
-//                break;
-//
-//            case PIN_SET:
-//                err_code = drv_ext_gpio_pin_set(i);
-//                APP_ERROR_CHECK(err_code);
-//                break;
-//
-//            case PIN_NO_OUTPUT:
-//                err_code = NRF_SUCCESS;     // Do nothing.
-//                APP_ERROR_CHECK(err_code);
-//                break;
-//
-//            default:
-//                err_code = NRF_ERROR_NOT_SUPPORTED;
-//        }
-//    }
-//
-//    // Set all nRF pins in desired state for power off.
-//    for(uint8_t i = 0; i < NRF_NUM_GPIO_PINS; i++)
-//    {
-//        nrf_gpio_cfg(i,
-//                     nrf_sys_off_pin_cfg[i].dir,
-//                     nrf_sys_off_pin_cfg[i].input,
-//                     nrf_sys_off_pin_cfg[i].pull,
-//                     nrf_sys_off_pin_cfg[i].drive,
-//                     nrf_sys_off_pin_cfg[i].sense);
-//
-//        switch(nrf_sys_off_pin_cfg[i].state)
-//        {
-//            case PIN_CLEAR:
-//                nrf_gpio_pin_clear(i);
-//                break;
-//
-//            case PIN_SET:
-//                nrf_gpio_pin_set(i);
-//                break;
-//
-//            case PIN_NO_OUTPUT:
-//                // Do nothing.
-//                break;
-//
-//            default:
-//                APP_ERROR_CHECK(NRF_ERROR_NOT_SUPPORTED);
-//        }
-//    }
-//}
+static void configure_gpio_for_sleep(vdd_state_t vdd_on)
+{
+    ret_code_t err_code;
+
+    sx_gpio_cfg_t  ioext_sys_off_pin_cfg[SX_IOEXT_NUM_PINS] = IOEXT_SYSTEM_OFF_PIN_CFG;
+
+    nrf_gpio_cfg_t   nrf_sys_off_pin_cfg[NRF_NUM_GPIO_PINS] = NRF_SYSTEM_OFF_PIN_CFG;
+
+    #if    defined(THINGY_HW_v0_7_0)
+        // VDD always on.
+    #elif  defined(THINGY_HW_v0_8_0)
+        // VDD always on.
+    #elif  defined(THINGY_HW_v0_9_0)
+        // VDD always on.
+    #else
+        if (vdd_on)
+        {
+            nrf_sys_off_pin_cfg[VDD_PWR_CTRL] = (nrf_gpio_cfg_t)NRF_PIN_OUTPUT_SET;
+        }
+    #endif
+
+    err_code = drv_ext_gpio_reset();
+    APP_ERROR_CHECK(err_code);
+
+    /* Set all IO extender pins in system off state. IO extender will be powered down as well,
+    Hence, this config will not be retained when VDD is turned off. */
+    for (uint8_t i = 0; i < SX_IOEXT_NUM_PINS; i++)
+    {
+        err_code = drv_ext_gpio_cfg(i,
+                         ioext_sys_off_pin_cfg[i].dir,
+                         ioext_sys_off_pin_cfg[i].input_buf,
+                         ioext_sys_off_pin_cfg[i].pull_config,
+                         ioext_sys_off_pin_cfg[i].drive_type,
+                         ioext_sys_off_pin_cfg[i].slew_rate);
+        APP_ERROR_CHECK(err_code);
+
+        switch(ioext_sys_off_pin_cfg[i].state)
+        {
+            case PIN_CLEAR:
+                err_code = drv_ext_gpio_pin_clear(i);
+                APP_ERROR_CHECK(err_code);
+                break;
+
+            case PIN_SET:
+                err_code = drv_ext_gpio_pin_set(i);
+                APP_ERROR_CHECK(err_code);
+                break;
+
+            case PIN_NO_OUTPUT:
+                err_code = NRF_SUCCESS;     // Do nothing.
+                APP_ERROR_CHECK(err_code);
+                break;
+
+            default:
+                err_code = NRF_ERROR_NOT_SUPPORTED;
+        }
+    }
+
+    // Set all nRF pins in desired state for power off.
+    for(uint8_t i = 0; i < NRF_NUM_GPIO_PINS; i++)
+    {
+        nrf_gpio_cfg(i,
+                     nrf_sys_off_pin_cfg[i].dir,
+                     nrf_sys_off_pin_cfg[i].input,
+                     nrf_sys_off_pin_cfg[i].pull,
+                     nrf_sys_off_pin_cfg[i].drive,
+                     nrf_sys_off_pin_cfg[i].sense);
+
+        switch(nrf_sys_off_pin_cfg[i].state)
+        {
+            case PIN_CLEAR:
+                nrf_gpio_pin_clear(i);
+                break;
+
+            case PIN_SET:
+                nrf_gpio_pin_set(i);
+                break;
+
+            case PIN_NO_OUTPUT:
+                // Do nothing.
+                break;
+
+            default:
+                APP_ERROR_CHECK(NRF_ERROR_NOT_SUPPORTED);
+        }
+    }
+}
 
 
 /**@brief Function for putting Thingy into sleep mode.
@@ -670,76 +670,76 @@ static void power_manage(void)
 //}
 
 
-//static void board_init(void)
-//{
-//    uint32_t            err_code;
-//    drv_ext_gpio_init_t ext_gpio_init;
-//
-//    #if defined(THINGY_HW_v0_7_0)
-//        #error   "HW version v0.7.0 not supported."
-//    #elif defined(THINGY_HW_v0_8_0)
-//        (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"FW compiled for depricated Thingy HW v0.8.0"RTT_CTRL_RESET"\n");
-//    #elif defined(THINGY_HW_v0_9_0)
-//        (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"FW compiled for depricated Thingy HW v0.9.0"RTT_CTRL_RESET"\n");
-//    #endif
-//
-//    /**@brief Enable power on VDD. */
-//    nrf_gpio_cfg_output(VDD_PWR_CTRL);
-//    nrf_gpio_pin_set(VDD_PWR_CTRL);
-//
-//    nrf_delay_ms(75);
-//
-//    static const nrf_drv_twi_config_t twi_config =
-//    {
-//        .scl                = TWI_SCL,
-//        .sda                = TWI_SDA,
-//        .frequency          = NRF_TWI_FREQ_400K,
-//        .interrupt_priority = APP_IRQ_PRIORITY_LOW
-//    };
-//
-//    static const drv_sx1509_cfg_t sx1509_cfg =
-//    {
-//        .twi_addr       = SX1509_ADDR,
-//        .p_twi_instance = &m_twi_sensors,
-//        .p_twi_cfg      = &twi_config
-//    };
-//
-//    ext_gpio_init.p_cfg = &sx1509_cfg;
-//
-//    err_code = drv_ext_gpio_init(&ext_gpio_init, true);
-//    APP_ERROR_CHECK(err_code);
-//
-//    configure_gpio_for_sleep(VDD_ON);    // Set all pins to their default state, with the exception of VDD_PWR_CTRL.
-//
-//    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_R);
-//    APP_ERROR_CHECK(err_code);
-//    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_G);
-//    APP_ERROR_CHECK(err_code);
-//    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_B);
-//    APP_ERROR_CHECK(err_code);
-//    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_R);
-//    APP_ERROR_CHECK(err_code);
-//    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_G);
-//    APP_ERROR_CHECK(err_code);
-//    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_B);
-//    APP_ERROR_CHECK(err_code);
-//
-//    #if defined(THINGY_HW_v0_8_0)
-//        nrf_gpio_cfg_output(VOLUME);
-//        nrf_gpio_pin_clear(VOLUME);
-//
-//        err_code = drv_ext_gpio_cfg_output(SX_SPK_PWR_CTRL);
-//        APP_ERROR_CHECK(err_code);
-//
-//        err_code = drv_ext_gpio_pin_clear(SX_SPK_PWR_CTRL);
-//        APP_ERROR_CHECK(err_code);
-//    #else
-//        nrf_gpio_cfg_output(SPK_PWR_CTRL);
-//        nrf_gpio_pin_clear(SPK_PWR_CTRL);
-//    #endif
-//
-//    nrf_delay_ms(100);
-//}
+static void board_init(void)
+{
+    uint32_t            err_code;
+    drv_ext_gpio_init_t ext_gpio_init;
+
+    #if defined(THINGY_HW_v0_7_0)
+        #error   "HW version v0.7.0 not supported."
+    #elif defined(THINGY_HW_v0_8_0)
+        (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"FW compiled for depricated Thingy HW v0.8.0"RTT_CTRL_RESET"\n");
+    #elif defined(THINGY_HW_v0_9_0)
+        (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"FW compiled for depricated Thingy HW v0.9.0"RTT_CTRL_RESET"\n");
+    #endif
+
+    /**@brief Enable power on VDD. */
+    nrf_gpio_cfg_output(VDD_PWR_CTRL);
+    nrf_gpio_pin_set(VDD_PWR_CTRL);
+
+    nrf_delay_ms(75);
+
+    static const nrf_drv_twi_config_t twi_config =
+    {
+        .scl                = TWI_SCL,
+        .sda                = TWI_SDA,
+        .frequency          = NRF_TWI_FREQ_400K,
+        .interrupt_priority = APP_IRQ_PRIORITY_LOW
+    };
+
+    static const drv_sx1509_cfg_t sx1509_cfg =
+    {
+        .twi_addr       = SX1509_ADDR,
+        .p_twi_instance = &m_twi_sensors,
+        .p_twi_cfg      = &twi_config
+    };
+
+    ext_gpio_init.p_cfg = &sx1509_cfg;
+
+    err_code = drv_ext_gpio_init(&ext_gpio_init, true);
+    APP_ERROR_CHECK(err_code);
+
+    configure_gpio_for_sleep(VDD_ON);    // Set all pins to their default state, with the exception of VDD_PWR_CTRL.
+
+    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_R);
+    APP_ERROR_CHECK(err_code);
+    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_G);
+    APP_ERROR_CHECK(err_code);
+    err_code = drv_ext_gpio_cfg_output(SX_LIGHTWELL_B);
+    APP_ERROR_CHECK(err_code);
+    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_R);
+    APP_ERROR_CHECK(err_code);
+    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_G);
+    APP_ERROR_CHECK(err_code);
+    err_code = drv_ext_gpio_pin_set(SX_LIGHTWELL_B);
+    APP_ERROR_CHECK(err_code);
+
+    #if defined(THINGY_HW_v0_8_0)
+        nrf_gpio_cfg_output(VOLUME);
+        nrf_gpio_pin_clear(VOLUME);
+
+        err_code = drv_ext_gpio_cfg_output(SX_SPK_PWR_CTRL);
+        APP_ERROR_CHECK(err_code);
+
+        err_code = drv_ext_gpio_pin_clear(SX_SPK_PWR_CTRL);
+        APP_ERROR_CHECK(err_code);
+    #else
+        nrf_gpio_cfg_output(SPK_PWR_CTRL);
+        nrf_gpio_pin_clear(SPK_PWR_CTRL);
+    #endif
+
+    nrf_delay_ms(100);
+}
 
 /**@brief Asynchronous event notification callback registered by the application with the module to receive MQTT events. */
 static void app_mqtt_evt_handler(mqtt_client_t * p_client, const mqtt_evt_t * p_evt)
@@ -984,10 +984,6 @@ int main(void)
 //    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 //    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
 
-//	timers_init();
-//	iot_timer_init();
-//	button_init();
-
 #ifdef COMMISSIONING_ENABLED
     err_code = pstorage_init();
     APP_ERROR_CHECK(err_code);
@@ -1023,9 +1019,11 @@ int main(void)
     //Start execution.
     connectable_mode_enter();
 
-//    board_init();
-
+    board_init();
     app_trace_init();
+	timers_init();
+	iot_timer_init();
+	button_init();
 
     //Enter main loop.
     for (;;)
