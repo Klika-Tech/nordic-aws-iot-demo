@@ -1,0 +1,1 @@
+mosquitto_sub --psk-identity Client_identity --psk 73656372657450534b -h localhost -p 8883 -t '#' -v
