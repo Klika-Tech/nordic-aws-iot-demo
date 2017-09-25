@@ -100,6 +100,8 @@
 
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
 
+float tmp = 0.0;
+
 typedef enum
 {
     LEDS_INACTIVE = 0,
@@ -155,7 +157,7 @@ static bool                                 m_do_publication   = false;         
 static mqtt_client_t                        m_app_mqtt_id;                                          /**< MQTT Client instance reference provided by the MQTT module. */
 static const char                           m_device_id[]      = "nrfPublisher";                    /**< Unique MQTT client identifier. */
 static const char                           m_user[]           = APP_MQTT_XIVELY_API_KEY;           /**< MQTT user name. */
-static int16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
+static uint16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
 
@@ -806,7 +808,12 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
 //        m_temperature = APP_DATA_INITIAL_TEMPERATURE;
 //    }
 
-    drv_hts221_temperature_get(&m_temperature);
+    err_code = temperature_start();
+    APP_ERROR_CHECK(err_code);
+
+    drv_humidity_temp_get(&tmp);
+
+    m_temperature = (uint16_t)tmp;
 
     // Prepare data in JSON format.
     sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
@@ -833,25 +840,6 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
         APP_ERROR_CHECK(err_code);
         m_message_counter += 2;
     }
-
-    // Change leds to indicate actual data that has been sent.
-    // switch(m_temperature % 4)
-    // {
-    //   case 0:
-    //     LEDS_OFF(LED_THREE | LED_FOUR);
-    //     break;
-    //   case 1:
-    //     LEDS_ON(LED_FOUR);
-    //     LEDS_OFF(LED_THREE);
-    //     break;
-    //   case 2:
-    //     LEDS_ON(LED_THREE);
-    //     LEDS_OFF(LED_FOUR);
-    //     break;
-    //   case 3:
-    //     LEDS_ON(LED_THREE | LED_FOUR);
-    //     break;
-    // }
 
     // Increase temperature value.
 //    m_temperature++;

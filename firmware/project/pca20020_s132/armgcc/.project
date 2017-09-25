@@ -45,16 +45,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>main.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
-		</link>
-		<link>
-			<name>nrf52_common.ld</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/external/sdk/components/toolchain/gcc/nrf52_common.ld</locationURI>
-		</link>
-		<link>
 			<name>project</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -63,11 +53,6 @@
 			<name>sdk_components</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>sdk_config.h</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/config/sdk_config.h</locationURI>
 		</link>
 		<link>
 			<name>source</name>
@@ -231,11 +216,6 @@
 		</link>
 		<link>
 			<name>include/util</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -965,96 +945,6 @@
 			<locationURI>PARENT-3-PROJECT_LOC/include/util/twi_manager.h</locationURI>
 		</link>
 		<link>
-			<name>project/bootloader_secure/dfu-cc.options</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu-cc.options</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/dfu-cc.pb.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu-cc.pb.c</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/dfu-cc.pb.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu-cc.pb.h</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/dfu-cc.proto</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu-cc.proto</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/dfu_req_handling.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu_req_handling.c</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/dfu_req_handling.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/dfu_req_handling.h</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/keys</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/license.txt</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/license.txt</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/main.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/main.c</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/readme.txt</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/readme.txt</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/secure_dfu.eww</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/secure_dfu.eww</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/secure_dfu_gcc_nrf51.ld</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/secure_dfu_gcc_nrf51.ld</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/secure_dfu_gcc_nrf51_debug.ld</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/secure_dfu_gcc_nrf51_debug.ld</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/secure_dfu_gcc_nrf52.ld</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/secure_dfu_gcc_nrf52.ld</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/secure_dfu_gcc_nrf52_debug.ld</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/secure_dfu_gcc_nrf52_debug.ld</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/arm5_no_packs</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>project/pca20020_s132/armgcc</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1068,11 +958,6 @@
 			<name>project/pca20020_s132/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/ses</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>sdk_components/ant/ant_channel_config</name>
@@ -3270,56 +3155,6 @@
 			<locationURI>PARENT-3-PROJECT_LOC/external/segger_rtt/license/license.txt</locationURI>
 		</link>
 		<link>
-			<name>project/bootloader_secure/keys/public_key.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/keys/public_key.c</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/arm5_no_packs</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/armgcc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/config</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/iar</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/arm5_no_packs</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/armgcc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/config</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/arm5_no_packs/ble_app_thingy_s132_pca20020.uvoptx</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/arm5_no_packs/ble_app_thingy_s132_pca20020.uvoptx</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/arm5_no_packs/ble_app_thingy_s132_pca20020.uvprojx</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/arm5_no_packs/ble_app_thingy_s132_pca20020.uvprojx</locationURI>
-		</link>
-		<link>
 			<name>project/pca20020_s132/armgcc/.cproject</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/.cproject</locationURI>
@@ -3373,16 +3208,6 @@
 			<name>project/pca20020_s132/config/thingy_config.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/config/thingy_config.h</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/ses/ble_app_thingee_s132_pca20020.emProject</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/ses/ble_app_thingee_s132_pca20020.emProject</locationURI>
-		</link>
-		<link>
-			<name>project/pca20020_s132/ses/ble_app_thingee_s132_pca20020.emSession</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/ses/ble_app_thingee_s132_pca20020.emSession</locationURI>
 		</link>
 		<link>
 			<name>sdk_components/ant/ant_channel_config/ant_channel_config.c</name>
@@ -10273,61 +10098,6 @@
 			<name>external/sdk/external/rtx/source</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040.uvoptx</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040.uvoptx</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040.uvprojx</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040.uvprojx</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/armgcc/Makefile</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/armgcc/Makefile</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/config/sdk_config.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/config/sdk_config.h</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/iar/secure_dfu_iar_nRF5x.icf</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/iar/secure_dfu_iar_nRF5x.icf</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/iar/secure_dfu_secure_dfu_ble_s132_pca10040.ewd</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/iar/secure_dfu_secure_dfu_ble_s132_pca10040.ewd</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040/iar/secure_dfu_secure_dfu_ble_s132_pca10040.ewp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040/iar/secure_dfu_secure_dfu_ble_s132_pca10040.ewp</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040_debug.uvoptx</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040_debug/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040_debug.uvoptx</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040_debug.uvprojx</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040_debug/arm5_no_packs/secure_dfu_secure_dfu_ble_s132_pca10040_debug.uvprojx</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/armgcc/Makefile</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040_debug/armgcc/Makefile</locationURI>
-		</link>
-		<link>
-			<name>project/bootloader_secure/pca10040_debug/config/sdk_config.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/bootloader_secure/pca10040_debug/config/sdk_config.h</locationURI>
 		</link>
 		<link>
 			<name>project/pca20020_s132/armgcc/.settings/language.settings.xml</name>

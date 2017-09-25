@@ -42,6 +42,7 @@
 #include "drv_hts221.h"
 #include "nrf_drv_gpiote.h"
 #include "app_scheduler.h"
+#include "app_trace.h"
 
 #ifdef DRV_HUMIDITY_DEBUG
     #define LOCAL_DEBUG
@@ -294,7 +295,7 @@ int16_t drv_humidity_get(void)
 }
 
 
-float drv_humidity_temp_get(void)
+float drv_humidity_temp_get(float * p_temp)
 {
     uint32_t err_code;
     int16_t  t_out;
@@ -318,6 +319,8 @@ float drv_humidity_temp_get(void)
     t_temp = (((int16_t)t_out - (int16_t)m_drv_humidity.calib.T0_OUT) * deg) / ((int16_t)m_drv_humidity.calib.T1_OUT - (int16_t)m_drv_humidity.calib.T0_OUT);
     deg    = ((int16_t)m_drv_humidity.calib.T0_degC_x8) / 8.0;     // Remove x8 multiple.
     _temperature = deg + t_temp;   // Provide signed celsius measurement unit.
+
+    *p_temp = _temperature;
 
     return _temperature;
 }

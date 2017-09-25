@@ -1116,9 +1116,9 @@ uint32_t m_environment_init(m_environment_init_t * p_params)
 //    err_code = color_sensor_init(p_params->p_twi_instance);
 //    APP_ERROR_CHECK(err_code);
 //
-//    /**@brief Init application timers */
-//    err_code = app_timer_create(&temperature_timer_id, APP_TIMER_MODE_REPEATED, temperature_timeout_handler);
-//    APP_ERROR_CHECK(err_code);
+    /**@brief Init application timers */
+    err_code = app_timer_create(&temperature_timer_id, APP_TIMER_MODE_REPEATED, temperature_timeout_handler);
+    APP_ERROR_CHECK(err_code);
 //
 //    err_code = app_timer_create(&pressure_timer_id, APP_TIMER_MODE_REPEATED, pressure_timeout_handler);
 //    APP_ERROR_CHECK(err_code);
