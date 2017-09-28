@@ -132,7 +132,7 @@ uint32_t drv_pressure_mode_set(drv_pressure_mode_t mode);
  *
  * @retval Pressure data.
  */
-float drv_pressure_get(void);
+float drv_pressure_get(float *);
 
 /**@brief Function to start sampling.
  *

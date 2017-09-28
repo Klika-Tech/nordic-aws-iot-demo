@@ -251,7 +251,7 @@ uint32_t drv_pressure_mode_set(drv_pressure_mode_t mode)
 }
 
 
-float drv_pressure_get(void)
+float drv_pressure_get(float * p_prs)
 {
     uint32_t err_code;
     uint32_t pressure;
@@ -266,6 +266,7 @@ float drv_pressure_get(void)
     APP_ERROR_CHECK(err_code);
 
     // p(hPa) = pressure(LSB) / 4096(LSB/hPa).
+    *p_prs =  (((float)pressure) / 4096.0f);
     return (((float)pressure) / 4096.0f);
 }
 

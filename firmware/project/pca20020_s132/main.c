@@ -100,7 +100,7 @@
 
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
 
-float tmp = 0.0;
+float tmp, prs = 0.0;
 uint16_t hmd = 5;
 
 typedef enum
@@ -132,8 +132,8 @@ typedef enum
 
 #define APP_MQTT_XIVELY_BROKER_PORT         8883                                                    /**< Port number of MQTT Broker. */
 #define APP_MQTT_XIVELY_CHANNEL             "Thermometer"                                           /**< Device's Channel. */
-#define APP_MQTT_XIVELY_FEED_ID             "{PUT FEED ID HERE}"                                    /**< Device's Feed ID. */
-#define APP_MQTT_XIVELY_API_KEY             "{PUT API KEY HERE}"                                    /**< API key used for authentication. */
+#define APP_MQTT_XIVELY_FEED_ID             "637693378"                                    		 /**< Device's Feed ID. */
+#define APP_MQTT_XIVELY_API_KEY             "jAVEnAqZ9IVCFSQ9Oc9XJ7FuMvggmmYIdgqE8ZYKgMbjvm5T"    /**< API key used for authentication. */
 
 // URL of given Xively JSON resource.
 #define APP_MQTT_XIVELY_API_URL             "/v2/feeds/" APP_MQTT_XIVELY_FEED_ID ".json"
@@ -192,6 +192,10 @@ static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
 //       0x00, 0x00, 0xff, 0xff,
 //       0x00, 0x64, 0x00, 0x00,
 //       0xd8, 0x34, 0xe9, 0x7a
+//	   0x20, 0x01, 0x41, 0xd0,
+//	   0x00, 0x0a, 0x3a, 0x10,
+//	   0x00, 0x00, 0x00, 0x00,
+//	   0x00, 0x00, 0x00, 0x01
 		 0xFE, 0x80, 0x00, 0x00,
 	     0x00, 0x00, 0x00, 0x00,
 	     0xfa, 0x59, 0x71, 0xff,
@@ -822,12 +826,17 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
 
     hmd = drv_humidity_get();
 
+    err_code = pressure_start();
+    APP_ERROR_CHECK(err_code);
+
+    drv_pressure_get(&prs);
+
     // Prepare data in JSON format.
-//  sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
-    sprintf(m_data_body, "{\"temperature\": %d, \"humidity\": %d, \"marker\": true}",
-    		//", \"pressure\": %f, \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
-    		(uint16_t)tmp, hmd
-			/*, Pressure, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
+//    sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
+    sprintf(m_data_body, "{\"temperature\": %d, \"humidity\": %d, \"pressure\": %d, \"marker\": true}",
+    		// \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
+    		(uint16_t)tmp, hmd, (uint16_t)prs
+			/*, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
 			);
 
     
@@ -842,8 +851,9 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     param.dup_flag                       = 0;
     param.retain_flag                    = 0;
 
-    APPL_LOG("[APPL]: Publishing value of %02d.00\r\n", m_temperature);
+    APPL_LOG("[TEMPE]: %d\n\r", m_temperature);
     APPL_LOG("[HUMID]: %d\r\n", hmd);
+    APPL_LOG("[PRESS]: %d\n\r", (uint16_t)prs);
 
     // Publish data.
     err_code = mqtt_publish(&m_app_mqtt_id, &param);
@@ -1017,6 +1027,9 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
     err_code = humidity_start();
+    APP_ERROR_CHECK(err_code);
+
+    err_code = pressure_start();
     APP_ERROR_CHECK(err_code);
 
     //Enter main loop.
