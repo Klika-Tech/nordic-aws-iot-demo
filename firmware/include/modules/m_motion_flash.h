@@ -48,7 +48,7 @@
 #ifndef __M_MOTION_FLASH_H__
 #define __M_MOTION_FLASH_H__
 
-#include "ble_tms.h"
+
 
 /**@brief Function for storing the configuration.
  *

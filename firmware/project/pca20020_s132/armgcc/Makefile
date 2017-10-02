@@ -62,6 +62,7 @@ $(abspath ../../../source/drivers/drv_motion.c) \
 $(abspath ../../../source/drivers/drv_acc_lis3dh.c) \
 $(abspath ../../../source/drivers/drv_mic.c) \
 $(abspath ../../../source/modules/m_environment.c) \
+$(abspath ../../../source/modules/m_motion.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu_dmp_motion_driver.c) \
 $(abspath ../../../libs/eMD6/core/mllite/data_builder.c) \
@@ -329,6 +330,7 @@ CFLAGS += -DNRF_DFU_SETTINGS_VERSION=1
 CFLAGS += -DSOFTDEVICE_PRESENT
 CFLAGS += -DSWI_DISABLE0
 CFLAGS += -DDEBUG
+CFLAGS += -DGLOBAL_DEBUG
 CFLAGS += -DBSP_DEFINES_ONLY
 CFLAGS += -DARM_MATH_CM4
 CFLAGS += -DMPU9250

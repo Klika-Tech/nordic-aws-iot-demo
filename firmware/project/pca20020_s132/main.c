@@ -64,7 +64,7 @@
 #include "m_environment.h"
 #include "drv_hts221.h"
 //#include "m_sound.h"
-//#include "m_motion.h"
+#include "m_motion.h"
 //#include "m_ui.h"
 //#include "m_batt_meas.h"
 #include "drv_ext_light.h"
@@ -82,6 +82,8 @@
 #include "lwip/netif.h"
 #include "ipv6_medium.h"
 #include "iot_errors.h"
+
+#define GLOBAL_DEBUG
 
 #define SCHED_MAX_EVENT_DATA_SIZE   MAX(APP_TIMER_SCHED_EVT_SIZE, BLE_STACK_HANDLER_SCHED_EVT_SIZE) /**< Maximum size of scheduler events. */
 #define SCHED_QUEUE_SIZE            60  /**< Maximum number of events in the scheduler queue. */
@@ -635,7 +637,7 @@ static void thingy_init(void)
     uint32_t                 err_code;
 //    m_ui_init_t              ui_params;
     m_environment_init_t     env_params;
-//    m_motion_init_t          motion_params;
+    m_motion_init_t          motion_params;
 //    m_ble_init_t             ble_params;
 //    batt_meas_init_t         batt_meas_init = BATT_MEAS_PARAM_CFG;
 
@@ -654,13 +656,11 @@ static void thingy_init(void)
     err_code = m_environment_init(&env_params);
     APP_ERROR_CHECK(err_code);
 
-//    /**@brief Initialize motion module. */
+    /**@brief Initialize motion module. */
 //    motion_params.p_twi_instance = &m_twi_sensors;
-//
-//    err_code = m_motion_init(&m_ble_service_handles[THINGY_SERVICE_MOTION],
-//                             &motion_params);
+//    err_code = m_motion_init(&motion_params);
 //    APP_ERROR_CHECK(err_code);
-//
+
 //    err_code = m_sound_init(&m_ble_service_handles[THINGY_SERVICE_SOUND]);
 //    APP_ERROR_CHECK(err_code);
 //

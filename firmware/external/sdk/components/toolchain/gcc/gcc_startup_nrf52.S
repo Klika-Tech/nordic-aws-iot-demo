@@ -39,7 +39,7 @@
 #elif defined(__STACK_SIZE)
     .equ    Stack_Size, __STACK_SIZE
 #else
-    .equ    Stack_Size, 4608
+    .equ    Stack_Size, 4096
 #endif
     .globl __StackTop
     .globl __StackLimit
