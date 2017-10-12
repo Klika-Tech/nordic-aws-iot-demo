@@ -5974,11 +5974,11 @@ Discarded input sections
                 0x0000000000000000       0x20 _build/m_motion.o
  .data.my_led_1
                 0x0000000000000000        0x8 _build/m_motion.o
- .rodata        0x0000000000000000      0x154 _build/m_motion.o
+ .rodata        0x0000000000000000      0x15e _build/m_motion.o
  .text.drv_motion_evt_handler
                 0x0000000000000000      0x3dc _build/m_motion.o
  .text.m_motion_init
-                0x0000000000000000       0x7c _build/m_motion.o
+                0x0000000000000000       0xac _build/m_motion.o
  .text.m_motion_sleep_prepare
                 0x0000000000000000       0x20 _build/m_motion.o
  .rodata.overflow_limit_upper.9493
@@ -5989,7 +5989,7 @@ Discarded input sections
                 0x0000000000000000       0x10 _build/m_motion.o
  .rodata.twi_config_lis2dh12.9537
                 0x0000000000000000       0x10 _build/m_motion.o
- .debug_info    0x0000000000000000     0x397a _build/m_motion.o
+ .debug_info    0x0000000000000000     0x39f2 _build/m_motion.o
  .debug_abbrev  0x0000000000000000      0x2b7 _build/m_motion.o
  .debug_aranges
                 0x0000000000000000      0x3c0 _build/m_motion.o
@@ -6064,8 +6064,8 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x3a _build/m_motion.o
  .debug_macro   0x0000000000000000      0x114 _build/m_motion.o
  .debug_macro   0x0000000000000000       0x1c _build/m_motion.o
- .debug_line    0x0000000000000000     0x130a _build/m_motion.o
- .debug_str     0x0000000000000000    0x7b359 _build/m_motion.o
+ .debug_line    0x0000000000000000     0x1315 _build/m_motion.o
+ .debug_str     0x0000000000000000    0x7b3d8 _build/m_motion.o
  .comment       0x0000000000000000       0x39 _build/m_motion.o
  .debug_frame   0x0000000000000000      0x78c _build/m_motion.o
  .ARM.attributes
@@ -7750,597 +7750,6 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0x7c _build/log_nrf52.o
  .ARM.attributes
                 0x0000000000000000       0x39 _build/log_nrf52.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/dvi_adpcm.o
- .text          0x0000000000000000        0x0 _build/dvi_adpcm.o
- .data          0x0000000000000000        0x0 _build/dvi_adpcm.o
- .bss           0x0000000000000000        0x0 _build/dvi_adpcm.o
- .rodata.indexTable
-                0x0000000000000000       0x10 _build/dvi_adpcm.o
- .rodata.stepsizeTable
-                0x0000000000000000       0xb2 _build/dvi_adpcm.o
- .text.dvi_adpcm_init_state
-                0x0000000000000000       0x18 _build/dvi_adpcm.o
- .text.dvi_adpcm_encode
-                0x0000000000000000      0x224 _build/dvi_adpcm.o
- .debug_info    0x0000000000000000      0x2b3 _build/dvi_adpcm.o
- .debug_abbrev  0x0000000000000000       0xe0 _build/dvi_adpcm.o
- .debug_aranges
-                0x0000000000000000       0x28 _build/dvi_adpcm.o
- .debug_ranges  0x0000000000000000       0x18 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0xac _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000      0x916 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x44 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0xe3 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000      0x1df _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x2e _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000       0x34 _build/dvi_adpcm.o
- .debug_macro   0x0000000000000000      0x114 _build/dvi_adpcm.o
- .debug_line    0x0000000000000000      0x2a2 _build/dvi_adpcm.o
- .debug_str     0x0000000000000000     0x3d63 _build/dvi_adpcm.o
- .comment       0x0000000000000000       0x39 _build/dvi_adpcm.o
- .debug_frame   0x0000000000000000       0x40 _build/dvi_adpcm.o
- .ARM.attributes
-                0x0000000000000000       0x39 _build/dvi_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .text          0x0000000000000000        0x0 _build/drv_audio_coder_adpcm.o
- .data          0x0000000000000000        0x0 _build/drv_audio_coder_adpcm.o
- .bss           0x0000000000000000        0x0 _build/drv_audio_coder_adpcm.o
- .bss.my_led_0_timings
-                0x0000000000000000        0xc _build/drv_audio_coder_adpcm.o
- .bss.my_led_0_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_coder_adpcm.o
- .data.my_led_0
-                0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .bss.my_led_1_timings
-                0x0000000000000000        0xc _build/drv_audio_coder_adpcm.o
- .bss.my_led_1_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_coder_adpcm.o
- .data.my_led_1
-                0x0000000000000000        0x8 _build/drv_audio_coder_adpcm.o
- .bss.m_adpcm_state
-                0x0000000000000000        0x3 _build/drv_audio_coder_adpcm.o
- .rodata        0x0000000000000000       0x31 _build/drv_audio_coder_adpcm.o
- .text.drv_audio_coder_init
-                0x0000000000000000       0x1c _build/drv_audio_coder_adpcm.o
- .text.drv_audio_coder_encode
-                0x0000000000000000       0x34 _build/drv_audio_coder_adpcm.o
- .debug_info    0x0000000000000000      0x38d _build/drv_audio_coder_adpcm.o
- .debug_abbrev  0x0000000000000000      0x11e _build/drv_audio_coder_adpcm.o
- .debug_aranges
-                0x0000000000000000       0x28 _build/drv_audio_coder_adpcm.o
- .debug_ranges  0x0000000000000000       0x18 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x314 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x916 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x44 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0xe3 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x1df _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x2d _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x50 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0xe66 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x392 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000     0xcc30 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000     0x130f _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x88 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x58 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x9c _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x97 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x29d _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0xef _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x52 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x43 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x180 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0xbe _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x197 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x8e _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x70 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x151 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x2b _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x83 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x390 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000     0x22e9 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x62 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x3a _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x37 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x382 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0xb6 _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000       0x3a _build/drv_audio_coder_adpcm.o
- .debug_macro   0x0000000000000000      0x114 _build/drv_audio_coder_adpcm.o
- .debug_line    0x0000000000000000      0x898 _build/drv_audio_coder_adpcm.o
- .debug_str     0x0000000000000000    0x7286c _build/drv_audio_coder_adpcm.o
- .comment       0x0000000000000000       0x39 _build/drv_audio_coder_adpcm.o
- .debug_frame   0x0000000000000000       0x48 _build/drv_audio_coder_adpcm.o
- .ARM.attributes
-                0x0000000000000000       0x39 _build/drv_audio_coder_adpcm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .text          0x0000000000000000        0x0 _build/drv_audio_coder_bv32fp.o
- .data          0x0000000000000000        0x0 _build/drv_audio_coder_bv32fp.o
- .bss           0x0000000000000000        0x0 _build/drv_audio_coder_bv32fp.o
- .bss.my_led_0_timings
-                0x0000000000000000        0xc _build/drv_audio_coder_bv32fp.o
- .bss.my_led_0_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_coder_bv32fp.o
- .data.my_led_0
-                0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .bss.my_led_1_timings
-                0x0000000000000000        0xc _build/drv_audio_coder_bv32fp.o
- .bss.my_led_1_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_coder_bv32fp.o
- .data.my_led_1
-                0x0000000000000000        0x8 _build/drv_audio_coder_bv32fp.o
- .debug_info    0x0000000000000000      0x26d _build/drv_audio_coder_bv32fp.o
- .debug_abbrev  0x0000000000000000       0xca _build/drv_audio_coder_bv32fp.o
- .debug_aranges
-                0x0000000000000000       0x18 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x30d _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x916 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x44 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0xe3 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x1df _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x2d _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x50 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0xe66 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x392 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000     0xcc30 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000     0x130f _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x88 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x58 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x9c _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x97 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x29d _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0xef _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x52 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x43 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x180 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0xbe _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x197 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x8e _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x70 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x151 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x2b _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x34 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x114 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x89 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x390 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000     0x22e9 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x62 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x3a _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x37 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000      0x382 _build/drv_audio_coder_bv32fp.o
- .debug_macro   0x0000000000000000       0xb6 _build/drv_audio_coder_bv32fp.o
- .debug_line    0x0000000000000000      0x877 _build/drv_audio_coder_bv32fp.o
- .debug_str     0x0000000000000000    0x728e0 _build/drv_audio_coder_bv32fp.o
- .comment       0x0000000000000000       0x39 _build/drv_audio_coder_bv32fp.o
- .ARM.attributes
-                0x0000000000000000       0x39 _build/drv_audio_coder_bv32fp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .text          0x0000000000000000        0x0 _build/drv_audio_dsp.o
- .data          0x0000000000000000        0x0 _build/drv_audio_dsp.o
- .bss           0x0000000000000000        0x0 _build/drv_audio_dsp.o
- .bss.my_led_0_timings
-                0x0000000000000000        0xc _build/drv_audio_dsp.o
- .bss.my_led_0_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_dsp.o
- .data.my_led_0
-                0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .bss.my_led_1_timings
-                0x0000000000000000        0xc _build/drv_audio_dsp.o
- .bss.my_led_1_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_dsp.o
- .data.my_led_1
-                0x0000000000000000        0x8 _build/drv_audio_dsp.o
- .debug_info    0x0000000000000000      0x282 _build/drv_audio_dsp.o
- .debug_abbrev  0x0000000000000000       0xca _build/drv_audio_dsp.o
- .debug_aranges
-                0x0000000000000000       0x18 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x340 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x916 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x2d _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x44 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0xe3 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x1df _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x50 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0xe66 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x392 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000     0xcc30 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000     0x130f _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x88 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x12 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x58 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x9c _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x166 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x52 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x43 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x180 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x29d _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x1e1 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0xd6 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x83 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x390 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0xbe _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x197 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x8e _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x70 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x151 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x2b _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000     0x22e9 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x62 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x3a _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x37 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000      0x382 _build/drv_audio_dsp.o
- .debug_macro   0x0000000000000000       0xb6 _build/drv_audio_dsp.o
- .debug_line    0x0000000000000000      0x7c1 _build/drv_audio_dsp.o
- .debug_str     0x0000000000000000    0x73020 _build/drv_audio_dsp.o
- .comment       0x0000000000000000       0x39 _build/drv_audio_dsp.o
- .ARM.attributes
-                0x0000000000000000       0x39 _build/drv_audio_dsp.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .group         0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .text          0x0000000000000000        0x0 _build/drv_audio_pdm.o
- .data          0x0000000000000000        0x0 _build/drv_audio_pdm.o
- .bss           0x0000000000000000        0x0 _build/drv_audio_pdm.o
- .bss.my_led_0_timings
-                0x0000000000000000        0xc _build/drv_audio_pdm.o
- .bss.my_led_0_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_pdm.o
- .data.my_led_0
-                0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .bss.my_led_1_timings
-                0x0000000000000000        0xc _build/drv_audio_pdm.o
- .bss.my_led_1_timer_data
-                0x0000000000000000       0x20 _build/drv_audio_pdm.o
- .data.my_led_1
-                0x0000000000000000        0x8 _build/drv_audio_pdm.o
- .bss.m_pdm_buff
-                0x0000000000000000      0x400 _build/drv_audio_pdm.o
- .bss.m_buffer_handler
-                0x0000000000000000        0x4 _build/drv_audio_pdm.o
- .bss.m_skip_buffers
-                0x0000000000000000        0x1 _build/drv_audio_pdm.o
- .text.drv_audio_enable
-                0x0000000000000000       0x18 _build/drv_audio_pdm.o
- .text.drv_audio_disable
-                0x0000000000000000        0xc _build/drv_audio_pdm.o
- .text.drv_audio_pdm_event_handler
-                0x0000000000000000       0x40 _build/drv_audio_pdm.o
- .rodata        0x0000000000000000       0x18 _build/drv_audio_pdm.o
- .text.drv_audio_init
-                0x0000000000000000       0x60 _build/drv_audio_pdm.o
- .debug_info    0x0000000000000000      0x4df _build/drv_audio_pdm.o
- .debug_abbrev  0x0000000000000000      0x14a _build/drv_audio_pdm.o
- .debug_aranges
-                0x0000000000000000       0x38 _build/drv_audio_pdm.o
- .debug_ranges  0x0000000000000000       0x28 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x328 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x916 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x44 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0xe3 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x1df _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x58 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x9c _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x10e _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x7f _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x52 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x43 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x180 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x29d _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x29 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x2d _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x50 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0xe66 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x392 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000     0xcc30 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000     0x130f _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x88 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x1c _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x35 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x22 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0xbe _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x197 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x8e _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x70 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x151 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x2b _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x390 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x10 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x83 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000     0x22e9 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x62 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x3a _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x3b _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x37 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000      0x382 _build/drv_audio_pdm.o
- .debug_macro   0x0000000000000000       0xb6 _build/drv_audio_pdm.o
- .debug_line    0x0000000000000000      0x885 _build/drv_audio_pdm.o
- .debug_str     0x0000000000000000    0x72538 _build/drv_audio_pdm.o
- .comment       0x0000000000000000       0x39 _build/drv_audio_pdm.o
- .debug_frame   0x0000000000000000       0x7c _build/drv_audio_pdm.o
- .ARM.attributes
-                0x0000000000000000       0x39 _build/drv_audio_pdm.o
  .group         0x0000000000000000        0x8 _build/nrf_drv_rng.o
  .group         0x0000000000000000        0x8 _build/nrf_drv_rng.o
  .group         0x0000000000000000        0x8 _build/nrf_drv_rng.o
@@ -8717,7 +8126,6 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0xe3 _build/app_error.o
  .debug_macro   0x0000000000000000       0x22 _build/app_error.o
  .debug_macro   0x0000000000000000      0x1df _build/app_error.o
- .debug_macro   0x0000000000000000       0x35 _build/app_error.o
  .debug_macro   0x0000000000000000       0x50 _build/app_error.o
  .debug_macro   0x0000000000000000      0xe66 _build/app_error.o
  .debug_macro   0x0000000000000000      0x392 _build/app_error.o
@@ -10889,8 +10297,6 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x70 _build/nrf_drv_pdm.o
  .debug_macro   0x0000000000000000      0x151 _build/nrf_drv_pdm.o
  .debug_macro   0x0000000000000000       0x2b _build/nrf_drv_pdm.o
- .debug_macro   0x0000000000000000       0x16 _build/nrf_drv_pdm.o
- .debug_macro   0x0000000000000000       0x10 _build/nrf_drv_pdm.o
  .debug_macro   0x0000000000000000       0x83 _build/nrf_drv_pdm.o
  .debug_macro   0x0000000000000000       0x10 _build/nrf_drv_pdm.o
  .debug_macro   0x0000000000000000       0x10 _build/nrf_drv_pdm.o
@@ -27522,11 +26928,6 @@ LOAD _build/start_manager.o
 LOAD _build/storage_manager.o
 LOAD _build/eMPL_outputs.o
 LOAD _build/log_nrf52.o
-LOAD _build/dvi_adpcm.o
-LOAD _build/drv_audio_coder_adpcm.o
-LOAD _build/drv_audio_coder_bv32fp.o
-LOAD _build/drv_audio_dsp.o
-LOAD _build/drv_audio_pdm.o
 LOAD _build/nrf_drv_rng.o
 LOAD _build/app_error.o
 LOAD _build/ble_advdata.o
@@ -29573,7 +28974,7 @@ OUTPUT(_build/nrf52832_xxaa_s132.out elf32-littlearm)
  .debug_frame   0x0000000000012904       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-nano-msizer.o)
  .debug_frame   0x0000000000012924       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libnosys.a(sbrk.o)
 
-.debug_macro    0x0000000000000000    0x2a172
+.debug_macro    0x0000000000000000    0x2a1cd
  .debug_macro   0x0000000000000000      0x708 _build/main.o
  .debug_macro   0x0000000000000708      0x916 _build/main.o
  .debug_macro   0x000000000000101e       0x22 _build/main.o
@@ -29716,169 +29117,172 @@ OUTPUT(_build/nrf52832_xxaa_s132.out elf32-littlearm)
  .debug_macro   0x00000000000196c3       0x10 _build/nrf_drv_rng.o
  .debug_macro   0x00000000000196d3       0x10 _build/nrf_drv_rng.o
  .debug_macro   0x00000000000196e3      0x2c5 _build/app_error.o
- .debug_macro   0x00000000000199a8       0x1c _build/app_error.o
- .debug_macro   0x00000000000199c4       0x10 _build/app_error.o
- .debug_macro   0x00000000000199d4      0x45d _build/app_error.o
- .debug_macro   0x0000000000019e31      0x160 _build/app_error.o
- .debug_macro   0x0000000000019f91       0x59 _build/app_error.o
- .debug_macro   0x0000000000019fea       0x10 _build/app_error.o
- .debug_macro   0x0000000000019ffa       0x28 _build/app_error.o
- .debug_macro   0x000000000001a022       0x22 _build/app_error.o
- .debug_macro   0x000000000001a044      0x255 _build/ble_advdata.o
- .debug_macro   0x000000000001a299      0x281 _build/nrf_drv_common.o
- .debug_macro   0x000000000001a51a      0x2fd _build/nrf_drv_gpiote.o
- .debug_macro   0x000000000001a817      0x304 _build/nrf_drv_twi.o
- .debug_macro   0x000000000001ab1b      0x2c3 _build/nrf_drv_pwm.o
- .debug_macro   0x000000000001adde      0x267 _build/nrf_drv_pdm.o
- .debug_macro   0x000000000001b045      0x3ac _build/nrf_drv_clock.o
- .debug_macro   0x000000000001b3f1       0x10 _build/nrf_drv_clock.o
- .debug_macro   0x000000000001b401      0x2ce _build/nrf_drv_saadc.o
- .debug_macro   0x000000000001b6cf       0x22 _build/nrf_drv_saadc.o
- .debug_macro   0x000000000001b6f1      0x2f8 _build/nrf_drv_uart.o
- .debug_macro   0x000000000001b9e9       0x36 _build/nrf_drv_uart.o
- .debug_macro   0x000000000001ba1f      0x2be _build/app_button.o
- .debug_macro   0x000000000001bcdd      0x2d4 _build/app_scheduler.o
- .debug_macro   0x000000000001bfb1      0x323 _build/app_timer.o
- .debug_macro   0x000000000001c2d4      0x23a _build/app_timer_appsh.o
- .debug_macro   0x000000000001c50e      0x1ea _build/fstorage.o
- .debug_macro   0x000000000001c6f8       0x47 _build/fstorage.o
- .debug_macro   0x000000000001c73f      0x1ea _build/fds.o
- .debug_macro   0x000000000001c929       0x10 _build/fds.o
- .debug_macro   0x000000000001c939       0x9c _build/fds.o
- .debug_macro   0x000000000001c9d5      0x24e _build/app_util_platform.o
- .debug_macro   0x000000000001cc23      0x21f _build/app_fifo.o
- .debug_macro   0x000000000001ce42      0x111 _build/SEGGER_RTT.o
- .debug_macro   0x000000000001cf53      0x12a _build/SEGGER_RTT_printf.o
- .debug_macro   0x000000000001d07d      0x330 _build/softdevice_handler.o
- .debug_macro   0x000000000001d3ad       0xe6 _build/system_nrf52.o
- .debug_macro   0x000000000001d493      0x2bd _build/mqtt.o
- .debug_macro   0x000000000001d750       0x10 _build/mqtt.o
- .debug_macro   0x000000000001d760      0x260 _build/mqtt.o
- .debug_macro   0x000000000001d9c0       0x10 _build/mqtt.o
- .debug_macro   0x000000000001d9d0      0x128 _build/mqtt.o
- .debug_macro   0x000000000001daf8      0x1f4 _build/mqtt_decoder.o
- .debug_macro   0x000000000001dcec      0x20c _build/mqtt_encoder.o
- .debug_macro   0x000000000001def8      0x42f _build/mqtt_transport.o
- .debug_macro   0x000000000001e327       0x2e _build/mqtt_transport.o
- .debug_macro   0x000000000001e355       0x10 _build/mqtt_transport.o
- .debug_macro   0x000000000001e365       0x3f _build/mqtt_transport.o
- .debug_macro   0x000000000001e3a4       0x16 _build/mqtt_transport.o
- .debug_macro   0x000000000001e3ba      0x162 _build/mqtt_transport.o
- .debug_macro   0x000000000001e51c       0xc5 _build/mqtt_transport.o
- .debug_macro   0x000000000001e5e1       0x85 _build/mqtt_transport.o
- .debug_macro   0x000000000001e666       0xc6 _build/mqtt_transport.o
- .debug_macro   0x000000000001e72c       0xe1 _build/mqtt_transport.o
- .debug_macro   0x000000000001e80d      0x110 _build/mqtt_transport.o
- .debug_macro   0x000000000001e91d       0x64 _build/mqtt_transport.o
- .debug_macro   0x000000000001e981       0xcf _build/mqtt_transport.o
- .debug_macro   0x000000000001ea50      0x415 _build/mem_manager.o
- .debug_macro   0x000000000001ee65       0x1c _build/mem_manager.o
- .debug_macro   0x000000000001ee81      0x2e6 _build/iot_context_manager.o
- .debug_macro   0x000000000001f167      0x20c _build/iot_timer.o
- .debug_macro   0x000000000001f373      0x3e7 _build/ipv6_medium_ble.o
- .debug_macro   0x000000000001f75a       0x34 _build/ipv6_medium_ble.o
- .debug_macro   0x000000000001f78e      0x2f8 _build/def.o
- .debug_macro   0x000000000001fa86      0x3de _build/icmp.o
- .debug_macro   0x000000000001fe64       0x2e _build/icmp.o
- .debug_macro   0x000000000001fe92      0x321 _build/icmp.o
- .debug_macro   0x00000000000201b3      0x3d1 _build/icmp6.o
- .debug_macro   0x0000000000020584       0xbd _build/icmp6.o
- .debug_macro   0x0000000000020641       0x22 _build/icmp6.o
- .debug_macro   0x0000000000020663      0x34a _build/inet_chksum.o
- .debug_macro   0x00000000000209ad       0x28 _build/inet_chksum.o
- .debug_macro   0x00000000000209d5      0x48e _build/init.o
- .debug_macro   0x0000000000020e63       0x46 _build/init.o
- .debug_macro   0x0000000000020ea9       0x74 _build/init.o
- .debug_macro   0x0000000000020f1d      0x200 _build/init.o
- .debug_macro   0x000000000002111d       0x16 _build/init.o
- .debug_macro   0x0000000000021133      0x437 _build/ip4.o
- .debug_macro   0x000000000002156a       0xd5 _build/ip4.o
- .debug_macro   0x000000000002163f      0x35d _build/ip4_addr.o
- .debug_macro   0x000000000002199c       0x4f _build/ip4_addr.o
- .debug_macro   0x00000000000219eb      0x416 _build/ip6.o
- .debug_macro   0x0000000000021e01       0x6e _build/ip6.o
- .debug_macro   0x0000000000021e6f       0x6a _build/ip6.o
- .debug_macro   0x0000000000021ed9      0x32b _build/ip6_addr.o
- .debug_macro   0x0000000000022204      0x4c3 _build/memp.o
- .debug_macro   0x00000000000226c7      0x168 _build/memp.o
- .debug_macro   0x000000000002282f      0x3ec _build/mld6.o
- .debug_macro   0x0000000000022c1b       0x1c _build/mld6.o
- .debug_macro   0x0000000000022c37      0x3e9 _build/nd6.o
- .debug_macro   0x0000000000023020       0xb7 _build/nd6.o
- .debug_macro   0x00000000000230d7      0x42a _build/netif.o
- .debug_macro   0x0000000000023501      0x4ae _build/nrf_platform_port.o
- .debug_macro   0x00000000000239af       0x2e _build/nrf_platform_port.o
- .debug_macro   0x00000000000239dd       0x10 _build/nrf_platform_port.o
- .debug_macro   0x00000000000239ed       0x10 _build/nrf_platform_port.o
- .debug_macro   0x00000000000239fd      0x402 _build/pbuf.o
- .debug_macro   0x0000000000023dff      0x414 _build/tcp.o
- .debug_macro   0x0000000000024213      0x31b _build/tcp.o
- .debug_macro   0x000000000002452e      0x206 _build/tcp.o
- .debug_macro   0x0000000000024734      0x3f0 _build/tcp_in.o
- .debug_macro   0x0000000000024b24      0x402 _build/tcp_out.o
- .debug_macro   0x0000000000024f26      0x443 _build/timers.o
- .debug_macro   0x0000000000025369       0x10 _build/timers.o
- .debug_macro   0x0000000000025379      0x402 _build/udp.o
- .debug_macro   0x000000000002577b      0x1c1 _build/aes.o
- .debug_macro   0x000000000002593c      0x191 _build/aes.o
- .debug_macro   0x0000000000025acd       0x1c _build/aes.o
- .debug_macro   0x0000000000025ae9      0x15d _build/asn1parse.o
- .debug_macro   0x0000000000025c46       0x72 _build/asn1parse.o
- .debug_macro   0x0000000000025cb8       0xac _build/asn1parse.o
- .debug_macro   0x0000000000025d64       0x20 _build/asn1parse.o
- .debug_macro   0x0000000000025d84      0x169 _build/asn1write.o
- .debug_macro   0x0000000000025eed       0x96 _build/base64.o
- .debug_macro   0x0000000000025f83       0x10 _build/base64.o
- .debug_macro   0x0000000000025f93      0x17d _build/bignum.o
- .debug_macro   0x0000000000026110       0x19 _build/bignum.o
- .debug_macro   0x0000000000026129      0x13e _build/cipher.o
- .debug_macro   0x0000000000026267       0x48 _build/cipher.o
- .debug_macro   0x00000000000262af       0xc7 _build/cipher_wrap.o
- .debug_macro   0x0000000000026376      0x14c _build/ecdh.o
- .debug_macro   0x00000000000264c2       0x72 _build/ecdh.o
- .debug_macro   0x0000000000026534      0x188 _build/ecdsa.o
- .debug_macro   0x00000000000266bc       0x2f _build/ecdsa.o
- .debug_macro   0x00000000000266eb      0x18c _build/ecp.o
- .debug_macro   0x0000000000026877      0x1d7 _build/ecp_curves.o
- .debug_macro   0x0000000000026a4e      0x123 _build/md.o
- .debug_macro   0x0000000000026b71      0x178 _build/md5.o
- .debug_macro   0x0000000000026ce9       0xe5 _build/md_wrap.o
- .debug_macro   0x0000000000026dce      0x24f _build/oid.o
- .debug_macro   0x000000000002701d       0x6a _build/oid.o
- .debug_macro   0x0000000000027087       0x78 _build/oid.o
- .debug_macro   0x00000000000270ff       0x10 _build/oid.o
- .debug_macro   0x000000000002710f       0x5e _build/oid.o
- .debug_macro   0x000000000002716d      0x1f4 _build/oid.o
- .debug_macro   0x0000000000027361      0x3fe _build/oid.o
- .debug_macro   0x000000000002775f      0x1a0 _build/pem.o
- .debug_macro   0x00000000000278ff       0x3a _build/pem.o
- .debug_macro   0x0000000000027939       0x1c _build/pem.o
- .debug_macro   0x0000000000027955       0xed _build/pk.o
- .debug_macro   0x0000000000027a42       0x64 _build/pk.o
- .debug_macro   0x0000000000027aa6      0x19f _build/pk_wrap.o
- .debug_macro   0x0000000000027c45      0x1f2 _build/pkparse.o
- .debug_macro   0x0000000000027e37       0x59 _build/platform.o
- .debug_macro   0x0000000000027e90      0x203 _build/rsa.o
- .debug_macro   0x0000000000028093      0x1af _build/sha1.o
- .debug_macro   0x0000000000028242      0x180 _build/sha256.o
- .debug_macro   0x00000000000283c2      0x17f _build/sha512.o
- .debug_macro   0x0000000000028541      0x1f0 _build/ssl_ciphersuites.o
- .debug_macro   0x0000000000028731      0x456 _build/ssl_ciphersuites.o
- .debug_macro   0x0000000000028b87      0x1ee _build/ssl_ciphersuites.o
- .debug_macro   0x0000000000028d75       0x28 _build/ssl_ciphersuites.o
- .debug_macro   0x0000000000028d9d      0x4a1 _build/ssl_ciphersuites.o
- .debug_macro   0x000000000002923e      0x253 _build/ssl_cli.o
- .debug_macro   0x0000000000029491       0x28 _build/ssl_cli.o
- .debug_macro   0x00000000000294b9       0x74 _build/ssl_cli.o
- .debug_macro   0x000000000002952d      0x27d _build/ssl_tls.o
- .debug_macro   0x00000000000297aa      0x42b _build/tls_interface.o
- .debug_macro   0x0000000000029bd5      0x27a _build/x509.o
- .debug_macro   0x0000000000029e4f       0x16 _build/x509.o
- .debug_macro   0x0000000000029e65       0x10 _build/x509.o
- .debug_macro   0x0000000000029e75       0x10 _build/x509.o
- .debug_macro   0x0000000000029e85       0x10 _build/x509.o
- .debug_macro   0x0000000000029e95       0x35 _build/x509.o
- .debug_macro   0x0000000000029eca      0x2a8 _build/x509_crt.o
+ .debug_macro   0x00000000000199a8       0x35 _build/app_error.o
+ .debug_macro   0x00000000000199dd       0x1c _build/app_error.o
+ .debug_macro   0x00000000000199f9       0x10 _build/app_error.o
+ .debug_macro   0x0000000000019a09      0x45d _build/app_error.o
+ .debug_macro   0x0000000000019e66      0x160 _build/app_error.o
+ .debug_macro   0x0000000000019fc6       0x59 _build/app_error.o
+ .debug_macro   0x000000000001a01f       0x10 _build/app_error.o
+ .debug_macro   0x000000000001a02f       0x28 _build/app_error.o
+ .debug_macro   0x000000000001a057       0x22 _build/app_error.o
+ .debug_macro   0x000000000001a079      0x255 _build/ble_advdata.o
+ .debug_macro   0x000000000001a2ce      0x281 _build/nrf_drv_common.o
+ .debug_macro   0x000000000001a54f      0x2fd _build/nrf_drv_gpiote.o
+ .debug_macro   0x000000000001a84c      0x304 _build/nrf_drv_twi.o
+ .debug_macro   0x000000000001ab50      0x2c3 _build/nrf_drv_pwm.o
+ .debug_macro   0x000000000001ae13      0x267 _build/nrf_drv_pdm.o
+ .debug_macro   0x000000000001b07a       0x16 _build/nrf_drv_pdm.o
+ .debug_macro   0x000000000001b090       0x10 _build/nrf_drv_pdm.o
+ .debug_macro   0x000000000001b0a0      0x3ac _build/nrf_drv_clock.o
+ .debug_macro   0x000000000001b44c       0x10 _build/nrf_drv_clock.o
+ .debug_macro   0x000000000001b45c      0x2ce _build/nrf_drv_saadc.o
+ .debug_macro   0x000000000001b72a       0x22 _build/nrf_drv_saadc.o
+ .debug_macro   0x000000000001b74c      0x2f8 _build/nrf_drv_uart.o
+ .debug_macro   0x000000000001ba44       0x36 _build/nrf_drv_uart.o
+ .debug_macro   0x000000000001ba7a      0x2be _build/app_button.o
+ .debug_macro   0x000000000001bd38      0x2d4 _build/app_scheduler.o
+ .debug_macro   0x000000000001c00c      0x323 _build/app_timer.o
+ .debug_macro   0x000000000001c32f      0x23a _build/app_timer_appsh.o
+ .debug_macro   0x000000000001c569      0x1ea _build/fstorage.o
+ .debug_macro   0x000000000001c753       0x47 _build/fstorage.o
+ .debug_macro   0x000000000001c79a      0x1ea _build/fds.o
+ .debug_macro   0x000000000001c984       0x10 _build/fds.o
+ .debug_macro   0x000000000001c994       0x9c _build/fds.o
+ .debug_macro   0x000000000001ca30      0x24e _build/app_util_platform.o
+ .debug_macro   0x000000000001cc7e      0x21f _build/app_fifo.o
+ .debug_macro   0x000000000001ce9d      0x111 _build/SEGGER_RTT.o
+ .debug_macro   0x000000000001cfae      0x12a _build/SEGGER_RTT_printf.o
+ .debug_macro   0x000000000001d0d8      0x330 _build/softdevice_handler.o
+ .debug_macro   0x000000000001d408       0xe6 _build/system_nrf52.o
+ .debug_macro   0x000000000001d4ee      0x2bd _build/mqtt.o
+ .debug_macro   0x000000000001d7ab       0x10 _build/mqtt.o
+ .debug_macro   0x000000000001d7bb      0x260 _build/mqtt.o
+ .debug_macro   0x000000000001da1b       0x10 _build/mqtt.o
+ .debug_macro   0x000000000001da2b      0x128 _build/mqtt.o
+ .debug_macro   0x000000000001db53      0x1f4 _build/mqtt_decoder.o
+ .debug_macro   0x000000000001dd47      0x20c _build/mqtt_encoder.o
+ .debug_macro   0x000000000001df53      0x42f _build/mqtt_transport.o
+ .debug_macro   0x000000000001e382       0x2e _build/mqtt_transport.o
+ .debug_macro   0x000000000001e3b0       0x10 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e3c0       0x3f _build/mqtt_transport.o
+ .debug_macro   0x000000000001e3ff       0x16 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e415      0x162 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e577       0xc5 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e63c       0x85 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e6c1       0xc6 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e787       0xe1 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e868      0x110 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e978       0x64 _build/mqtt_transport.o
+ .debug_macro   0x000000000001e9dc       0xcf _build/mqtt_transport.o
+ .debug_macro   0x000000000001eaab      0x415 _build/mem_manager.o
+ .debug_macro   0x000000000001eec0       0x1c _build/mem_manager.o
+ .debug_macro   0x000000000001eedc      0x2e6 _build/iot_context_manager.o
+ .debug_macro   0x000000000001f1c2      0x20c _build/iot_timer.o
+ .debug_macro   0x000000000001f3ce      0x3e7 _build/ipv6_medium_ble.o
+ .debug_macro   0x000000000001f7b5       0x34 _build/ipv6_medium_ble.o
+ .debug_macro   0x000000000001f7e9      0x2f8 _build/def.o
+ .debug_macro   0x000000000001fae1      0x3de _build/icmp.o
+ .debug_macro   0x000000000001febf       0x2e _build/icmp.o
+ .debug_macro   0x000000000001feed      0x321 _build/icmp.o
+ .debug_macro   0x000000000002020e      0x3d1 _build/icmp6.o
+ .debug_macro   0x00000000000205df       0xbd _build/icmp6.o
+ .debug_macro   0x000000000002069c       0x22 _build/icmp6.o
+ .debug_macro   0x00000000000206be      0x34a _build/inet_chksum.o
+ .debug_macro   0x0000000000020a08       0x28 _build/inet_chksum.o
+ .debug_macro   0x0000000000020a30      0x48e _build/init.o
+ .debug_macro   0x0000000000020ebe       0x46 _build/init.o
+ .debug_macro   0x0000000000020f04       0x74 _build/init.o
+ .debug_macro   0x0000000000020f78      0x200 _build/init.o
+ .debug_macro   0x0000000000021178       0x16 _build/init.o
+ .debug_macro   0x000000000002118e      0x437 _build/ip4.o
+ .debug_macro   0x00000000000215c5       0xd5 _build/ip4.o
+ .debug_macro   0x000000000002169a      0x35d _build/ip4_addr.o
+ .debug_macro   0x00000000000219f7       0x4f _build/ip4_addr.o
+ .debug_macro   0x0000000000021a46      0x416 _build/ip6.o
+ .debug_macro   0x0000000000021e5c       0x6e _build/ip6.o
+ .debug_macro   0x0000000000021eca       0x6a _build/ip6.o
+ .debug_macro   0x0000000000021f34      0x32b _build/ip6_addr.o
+ .debug_macro   0x000000000002225f      0x4c3 _build/memp.o
+ .debug_macro   0x0000000000022722      0x168 _build/memp.o
+ .debug_macro   0x000000000002288a      0x3ec _build/mld6.o
+ .debug_macro   0x0000000000022c76       0x1c _build/mld6.o
+ .debug_macro   0x0000000000022c92      0x3e9 _build/nd6.o
+ .debug_macro   0x000000000002307b       0xb7 _build/nd6.o
+ .debug_macro   0x0000000000023132      0x42a _build/netif.o
+ .debug_macro   0x000000000002355c      0x4ae _build/nrf_platform_port.o
+ .debug_macro   0x0000000000023a0a       0x2e _build/nrf_platform_port.o
+ .debug_macro   0x0000000000023a38       0x10 _build/nrf_platform_port.o
+ .debug_macro   0x0000000000023a48       0x10 _build/nrf_platform_port.o
+ .debug_macro   0x0000000000023a58      0x402 _build/pbuf.o
+ .debug_macro   0x0000000000023e5a      0x414 _build/tcp.o
+ .debug_macro   0x000000000002426e      0x31b _build/tcp.o
+ .debug_macro   0x0000000000024589      0x206 _build/tcp.o
+ .debug_macro   0x000000000002478f      0x3f0 _build/tcp_in.o
+ .debug_macro   0x0000000000024b7f      0x402 _build/tcp_out.o
+ .debug_macro   0x0000000000024f81      0x443 _build/timers.o
+ .debug_macro   0x00000000000253c4       0x10 _build/timers.o
+ .debug_macro   0x00000000000253d4      0x402 _build/udp.o
+ .debug_macro   0x00000000000257d6      0x1c1 _build/aes.o
+ .debug_macro   0x0000000000025997      0x191 _build/aes.o
+ .debug_macro   0x0000000000025b28       0x1c _build/aes.o
+ .debug_macro   0x0000000000025b44      0x15d _build/asn1parse.o
+ .debug_macro   0x0000000000025ca1       0x72 _build/asn1parse.o
+ .debug_macro   0x0000000000025d13       0xac _build/asn1parse.o
+ .debug_macro   0x0000000000025dbf       0x20 _build/asn1parse.o
+ .debug_macro   0x0000000000025ddf      0x169 _build/asn1write.o
+ .debug_macro   0x0000000000025f48       0x96 _build/base64.o
+ .debug_macro   0x0000000000025fde       0x10 _build/base64.o
+ .debug_macro   0x0000000000025fee      0x17d _build/bignum.o
+ .debug_macro   0x000000000002616b       0x19 _build/bignum.o
+ .debug_macro   0x0000000000026184      0x13e _build/cipher.o
+ .debug_macro   0x00000000000262c2       0x48 _build/cipher.o
+ .debug_macro   0x000000000002630a       0xc7 _build/cipher_wrap.o
+ .debug_macro   0x00000000000263d1      0x14c _build/ecdh.o
+ .debug_macro   0x000000000002651d       0x72 _build/ecdh.o
+ .debug_macro   0x000000000002658f      0x188 _build/ecdsa.o
+ .debug_macro   0x0000000000026717       0x2f _build/ecdsa.o
+ .debug_macro   0x0000000000026746      0x18c _build/ecp.o
+ .debug_macro   0x00000000000268d2      0x1d7 _build/ecp_curves.o
+ .debug_macro   0x0000000000026aa9      0x123 _build/md.o
+ .debug_macro   0x0000000000026bcc      0x178 _build/md5.o
+ .debug_macro   0x0000000000026d44       0xe5 _build/md_wrap.o
+ .debug_macro   0x0000000000026e29      0x24f _build/oid.o
+ .debug_macro   0x0000000000027078       0x6a _build/oid.o
+ .debug_macro   0x00000000000270e2       0x78 _build/oid.o
+ .debug_macro   0x000000000002715a       0x10 _build/oid.o
+ .debug_macro   0x000000000002716a       0x5e _build/oid.o
+ .debug_macro   0x00000000000271c8      0x1f4 _build/oid.o
+ .debug_macro   0x00000000000273bc      0x3fe _build/oid.o
+ .debug_macro   0x00000000000277ba      0x1a0 _build/pem.o
+ .debug_macro   0x000000000002795a       0x3a _build/pem.o
+ .debug_macro   0x0000000000027994       0x1c _build/pem.o
+ .debug_macro   0x00000000000279b0       0xed _build/pk.o
+ .debug_macro   0x0000000000027a9d       0x64 _build/pk.o
+ .debug_macro   0x0000000000027b01      0x19f _build/pk_wrap.o
+ .debug_macro   0x0000000000027ca0      0x1f2 _build/pkparse.o
+ .debug_macro   0x0000000000027e92       0x59 _build/platform.o
+ .debug_macro   0x0000000000027eeb      0x203 _build/rsa.o
+ .debug_macro   0x00000000000280ee      0x1af _build/sha1.o
+ .debug_macro   0x000000000002829d      0x180 _build/sha256.o
+ .debug_macro   0x000000000002841d      0x17f _build/sha512.o
+ .debug_macro   0x000000000002859c      0x1f0 _build/ssl_ciphersuites.o
+ .debug_macro   0x000000000002878c      0x456 _build/ssl_ciphersuites.o
+ .debug_macro   0x0000000000028be2      0x1ee _build/ssl_ciphersuites.o
+ .debug_macro   0x0000000000028dd0       0x28 _build/ssl_ciphersuites.o
+ .debug_macro   0x0000000000028df8      0x4a1 _build/ssl_ciphersuites.o
+ .debug_macro   0x0000000000029299      0x253 _build/ssl_cli.o
+ .debug_macro   0x00000000000294ec       0x28 _build/ssl_cli.o
+ .debug_macro   0x0000000000029514       0x74 _build/ssl_cli.o
+ .debug_macro   0x0000000000029588      0x27d _build/ssl_tls.o
+ .debug_macro   0x0000000000029805      0x42b _build/tls_interface.o
+ .debug_macro   0x0000000000029c30      0x27a _build/x509.o
+ .debug_macro   0x0000000000029eaa       0x16 _build/x509.o
+ .debug_macro   0x0000000000029ec0       0x10 _build/x509.o
+ .debug_macro   0x0000000000029ed0       0x10 _build/x509.o
+ .debug_macro   0x0000000000029ee0       0x10 _build/x509.o
+ .debug_macro   0x0000000000029ef0       0x35 _build/x509.o
+ .debug_macro   0x0000000000029f25      0x2a8 _build/x509_crt.o
 
 .stabstr        0x0000000000000000       0xa9
  .stabstr       0x0000000000000000       0xa9 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libnosys.a(close.o)

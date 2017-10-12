@@ -657,6 +657,11 @@ uint32_t m_motion_init(m_motion_init_t * p_params)
     err_code = drv_motion_init(drv_motion_evt_handler, &motion_params_mpu9250, &motion_params_lis2dh12);
     RETURN_IF_ERROR(err_code);
 
+	drv_motion_cfg_t motion_cfg = MOTION_DEFAULT_CONFIG;
+
+	err_code = drv_motion_config(&motion_cfg);
+	APP_ERROR_CHECK(err_code);
+
     return NRF_SUCCESS;
 }
 
