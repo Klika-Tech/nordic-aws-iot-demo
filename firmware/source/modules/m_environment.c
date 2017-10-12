@@ -345,7 +345,7 @@ static void pressure_timeout_handler(void * p_context)
 
 /**@brief Function for starting pressure sampling.
  */
-static uint32_t pressure_start(void)
+uint32_t pressure_start(void)
 {
     uint32_t err_code;
 
@@ -481,19 +481,19 @@ static void humidity_timeout_handler(void * p_context)
 
 /**@brief Function for starting humidity sampling.
  */
-static uint32_t humidity_start(void)
+uint32_t humidity_start(void)
 {
-//    uint32_t err_code;
-//
-//    m_get_humidity = true;
-//    m_temp_humid_for_ble_transfer = true;
-//
-//    err_code = drv_humidity_enable();
-//    RETURN_IF_ERROR(err_code);
-//
-//    err_code = drv_humidity_sample();
-//    RETURN_IF_ERROR(err_code);
-//
+    uint32_t err_code;
+
+    m_get_humidity = true;
+    m_temp_humid_for_ble_transfer = true;
+
+    err_code = drv_humidity_enable();
+    RETURN_IF_ERROR(err_code);
+
+    err_code = drv_humidity_sample();
+    RETURN_IF_ERROR(err_code);
+
 //    return app_timer_start(humidity_timer_id,
 //                           APP_TIMER_TICKS(m_p_config->humidity_interval_ms, APP_TIMER_PRESCALER),
 //                           NULL);
@@ -1104,8 +1104,8 @@ uint32_t m_environment_init(m_environment_init_t * p_params)
     DEBUG_PRINTF(0, "environment_init: \r\n");
 
     /**@brief Init drivers */
-//    err_code = pressure_sensor_init(p_params->p_twi_instance);
-//    APP_ERROR_CHECK(err_code);
+    err_code = pressure_sensor_init(p_params->p_twi_instance);
+    APP_ERROR_CHECK(err_code);
 
     err_code = humidity_sensor_init(p_params->p_twi_instance);
     APP_ERROR_CHECK(err_code);
@@ -1119,13 +1119,13 @@ uint32_t m_environment_init(m_environment_init_t * p_params)
     /**@brief Init application timers */
     err_code = app_timer_create(&temperature_timer_id, APP_TIMER_MODE_REPEATED, temperature_timeout_handler);
     APP_ERROR_CHECK(err_code);
-//
-//    err_code = app_timer_create(&pressure_timer_id, APP_TIMER_MODE_REPEATED, pressure_timeout_handler);
-//    APP_ERROR_CHECK(err_code);
-//
-//    err_code = app_timer_create(&humidity_timer_id, APP_TIMER_MODE_REPEATED, humidity_timeout_handler);
-//    RETURN_IF_ERROR(err_code);
-//
+
+    err_code = app_timer_create(&pressure_timer_id, APP_TIMER_MODE_REPEATED, pressure_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_create(&humidity_timer_id, APP_TIMER_MODE_REPEATED, humidity_timeout_handler);
+    RETURN_IF_ERROR(err_code);
+
 //    err_code = app_timer_create(&color_timer_id, APP_TIMER_MODE_REPEATED, color_timeout_handler);
 //    RETURN_IF_ERROR(err_code);
 //

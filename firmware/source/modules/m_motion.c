@@ -37,11 +37,12 @@
  */
 
 #include "m_motion.h"
-#include "m_motion_flash.h"
+//#include "m_motion_flash.h"
 #include "ble_tms.h"
 #include "drv_motion.h"
 #include "sdk_errors.h"
 #include "pca20020.h"
+#include "app_util_platform.h"
 
 #define RAW_PARAM_NUM                 9     // Number of raw parameters (3 * acc + 3 * gyro + 3 * compass).
 #define RAW_Q_FORMAT_ACC_INTEGER_BITS 6     // Number of bits used for integer part of raw data.
@@ -53,183 +54,183 @@
 #endif
 #include "macros_common.h"
 
-static ble_tms_t              m_tms;
-static ble_tms_config_t     * m_config;
-static const ble_tms_config_t m_default_config = MOTION_DEFAULT_CONFIG;
+//static ble_tms_t              m_tms;
+//static ble_tms_config_t     * m_config;
+//static const ble_tms_config_t m_default_config = MOTION_DEFAULT_CONFIG;
 
 /**@brief Function for applying the configuration.
  */
-static uint32_t m_motion_configuration_apply(ble_tms_config_t * p_config)
-{
-    uint32_t err_code;
-    drv_motion_cfg_t motion_cfg;
+//static uint32_t m_motion_configuration_apply(ble_tms_config_t * p_config)
+//{
+//    uint32_t err_code;
+//    drv_motion_cfg_t motion_cfg;
+//
+//    NULL_PARAM_CHECK(p_config);
+//
+//    motion_cfg.pedo_interval_ms    = p_config->pedo_interval_ms;
+//    motion_cfg.temp_interval_ms    = p_config->temp_interval_ms;
+//    motion_cfg.compass_interval_ms = p_config->compass_interval_ms;
+//    motion_cfg.motion_freq_hz      = p_config->motion_freq_hz;
+//    motion_cfg.wake_on_motion      = p_config->wake_on_motion;
+//
+//    err_code = drv_motion_config(&motion_cfg);
+//    APP_ERROR_CHECK(err_code);
+//
+//    return NRF_SUCCESS;
+//}
 
-    NULL_PARAM_CHECK(p_config);
 
-    motion_cfg.pedo_interval_ms    = p_config->pedo_interval_ms;
-    motion_cfg.temp_interval_ms    = p_config->temp_interval_ms;
-    motion_cfg.compass_interval_ms = p_config->compass_interval_ms;
-    motion_cfg.motion_freq_hz      = p_config->motion_freq_hz;
-    motion_cfg.wake_on_motion      = p_config->wake_on_motion;
-
-    err_code = drv_motion_config(&motion_cfg);
-    APP_ERROR_CHECK(err_code);
-
-    return NRF_SUCCESS;
-}
-
-
-static void ble_tms_evt_handler(ble_tms_t        * p_tms,
-                                ble_tms_evt_type_t evt_type,
-                                uint8_t          * p_data,
-                                uint16_t           length)
-{
-    uint32_t err_code;
-
-    switch (evt_type)
-    {
-        case BLE_TMS_EVT_NOTIF_TAP:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_TAP - %d\r\n", p_tms->is_tap_notif_enabled);
-            if (p_tms->is_tap_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_TAP);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_TAP);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_ORIENTATION:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_ORIENTATION - %d\r\n", p_tms->is_orientation_notif_enabled);
-            if (p_tms->is_orientation_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_ORIENTATION);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_ORIENTATION);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_QUAT:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_QUAT - %d\r\n", p_tms->is_quat_notif_enabled);
-            if (p_tms->is_quat_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_QUAT);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_QUAT);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_PEDOMETER:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_PEDOMETER - %d\r\n", p_tms->is_pedo_notif_enabled);
-            if (p_tms->is_pedo_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_PEDOMETER);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_PEDOMETER);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_RAW:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_RAW - %d\r\n", p_tms->is_raw_notif_enabled);
-            if (p_tms->is_raw_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_RAW);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_RAW);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_EULER:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_EULER - %d\r\n", p_tms->is_euler_notif_enabled);
-            if (p_tms->is_euler_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_EULER);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_EULER);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_ROT_MAT:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_ROT_MAT - %d\r\n", p_tms->is_rot_mat_notif_enabled);
-            if (p_tms->is_rot_mat_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_ROT_MAT);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_ROT_MAT);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_HEADING:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_HEADING - %d\r\n", p_tms->is_heading_notif_enabled);
-            if (p_tms->is_heading_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_HEADING);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_HEADING);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_NOTIF_GRAVITY:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_GRAVITY - %d\r\n", p_tms->is_gravity_notif_enabled);
-            if (p_tms->is_gravity_notif_enabled)
-            {
-                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_GRAVITY_VECTOR);
-                APP_ERROR_CHECK(err_code);
-            }
-            else
-            {
-                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_GRAVITY_VECTOR);
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BLE_TMS_EVT_CONFIG_RECEIVED:
-            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_CONFIG_RECEIVED - %d\r\n", length);
-            APP_ERROR_CHECK_BOOL(length == sizeof(ble_tms_config_t));
-
-            err_code = m_motion_flash_config_store((ble_tms_config_t *)p_data);
-            APP_ERROR_CHECK(err_code);
-
-            err_code = m_motion_configuration_apply((ble_tms_config_t *)p_data);
-            APP_ERROR_CHECK(err_code);
-            break;
-
-        default:
-            break;
-    }
-
-}
+//static void ble_tms_evt_handler(ble_tms_t        * p_tms,
+//                                ble_tms_evt_type_t evt_type,
+//                                uint8_t          * p_data,
+//                                uint16_t           length)
+//{
+//    uint32_t err_code;
+//
+//    switch (evt_type)
+//    {
+//        case BLE_TMS_EVT_NOTIF_TAP:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_TAP - %d\r\n", p_tms->is_tap_notif_enabled);
+//            if (p_tms->is_tap_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_TAP);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_TAP);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_ORIENTATION:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_ORIENTATION - %d\r\n", p_tms->is_orientation_notif_enabled);
+//            if (p_tms->is_orientation_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_ORIENTATION);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_ORIENTATION);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_QUAT:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_QUAT - %d\r\n", p_tms->is_quat_notif_enabled);
+//            if (p_tms->is_quat_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_QUAT);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_QUAT);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_PEDOMETER:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_PEDOMETER - %d\r\n", p_tms->is_pedo_notif_enabled);
+//            if (p_tms->is_pedo_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_PEDOMETER);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_PEDOMETER);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_RAW:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_RAW - %d\r\n", p_tms->is_raw_notif_enabled);
+//            if (p_tms->is_raw_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_RAW);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_RAW);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_EULER:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_EULER - %d\r\n", p_tms->is_euler_notif_enabled);
+//            if (p_tms->is_euler_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_EULER);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_EULER);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_ROT_MAT:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_ROT_MAT - %d\r\n", p_tms->is_rot_mat_notif_enabled);
+//            if (p_tms->is_rot_mat_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_ROT_MAT);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_ROT_MAT);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_HEADING:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_HEADING - %d\r\n", p_tms->is_heading_notif_enabled);
+//            if (p_tms->is_heading_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_HEADING);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_HEADING);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_NOTIF_GRAVITY:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_NOTIF_GRAVITY - %d\r\n", p_tms->is_gravity_notif_enabled);
+//            if (p_tms->is_gravity_notif_enabled)
+//            {
+//                err_code = drv_motion_enable(DRV_MOTION_FEATURE_MASK_GRAVITY_VECTOR);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            else
+//            {
+//                err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK_GRAVITY_VECTOR);
+//                APP_ERROR_CHECK(err_code);
+//            }
+//            break;
+//
+//        case BLE_TMS_EVT_CONFIG_RECEIVED:
+//            DEBUG_PRINTF(0, "ble_tms_evt_handler: BLE_TMS_EVT_CONFIG_RECEIVED - %d\r\n", length);
+//            APP_ERROR_CHECK_BOOL(length == sizeof(ble_tms_config_t));
+//
+//            err_code = m_motion_flash_config_store((ble_tms_config_t *)p_data);
+//            APP_ERROR_CHECK(err_code);
+//
+//            err_code = m_motion_configuration_apply((ble_tms_config_t *)p_data);
+//            APP_ERROR_CHECK(err_code);
+//            break;
+//
+//        default:
+//            break;
+//    }
+//
+//}
 
 
 /**@brief Function for initializing the Thingy Motion Service.
@@ -238,34 +239,34 @@ static void ble_tms_evt_handler(ble_tms_t        * p_tms,
  *
  * @retval NRF_SUCCESS If initialization was successful.
  */
-static uint32_t motion_service_init(void)
-{
-    uint32_t              err_code;
-    ble_tms_init_t        tms_init;
-
-    /**@brief Load configuration from flash. */
-    err_code = m_motion_flash_init(&m_default_config, &m_config);
-    RETURN_IF_ERROR(err_code);
-
-    err_code = m_motion_configuration_apply(m_config);
-    RETURN_IF_ERROR(err_code);
-
-    memset(&tms_init, 0, sizeof(tms_init));
-
-    tms_init.p_init_config = m_config;
-    tms_init.evt_handler = ble_tms_evt_handler;
-
-    DEBUG_PRINTF(0, "motion_service_init: ble_tms_init ");
-    err_code = ble_tms_init(&m_tms, &tms_init);
-    if (err_code != NRF_SUCCESS)
-    {
-        DEBUG_PRINTF(0, "FAILED - %d\r\n", err_code);
-        return err_code;
-    }
-
-    DEBUG_PRINTF(0, "\r\n");
-    return NRF_SUCCESS;
-}
+//static uint32_t motion_service_init(void)
+//{
+//    uint32_t              err_code;
+//    ble_tms_init_t        tms_init;
+//
+//    /**@brief Load configuration from flash. */
+//    err_code = m_motion_flash_init(&m_default_config, &m_config);
+//    RETURN_IF_ERROR(err_code);
+//
+//    err_code = m_motion_configuration_apply(m_config);
+//    RETURN_IF_ERROR(err_code);
+//
+//    memset(&tms_init, 0, sizeof(tms_init));
+//
+//    tms_init.p_init_config = m_config;
+//    tms_init.evt_handler = ble_tms_evt_handler;
+//
+//    DEBUG_PRINTF(0, "motion_service_init: ble_tms_init ");
+//    err_code = ble_tms_init(&m_tms, &tms_init);
+//    if (err_code != NRF_SUCCESS)
+//    {
+//        DEBUG_PRINTF(0, "FAILED - %d\r\n", err_code);
+//        return err_code;
+//    }
+//
+//    DEBUG_PRINTF(0, "\r\n");
+//    return NRF_SUCCESS;
+//}
 
 
 /**@brief Function for passing the BLE event to the Thingy Motion Service.
@@ -274,17 +275,17 @@ static uint32_t motion_service_init(void)
  *
  * @param[in] p_ble_evt    Pointer to the BLE event.
  */
-static void motion_on_ble_evt(ble_evt_t * p_ble_evt)
-{
-    uint32_t err_code;
-    ble_tms_on_ble_evt(&m_tms, p_ble_evt);
-
-    if (p_ble_evt->header.evt_id == BLE_GAP_EVT_DISCONNECTED)
-    {
-        err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK);
-        APP_ERROR_CHECK(err_code);
-    }
-}
+//static void motion_on_ble_evt(ble_evt_t * p_ble_evt)
+//{
+//    uint32_t err_code;
+//    ble_tms_on_ble_evt(&m_tms, p_ble_evt);
+//
+//    if (p_ble_evt->header.evt_id == BLE_GAP_EVT_DISCONNECTED)
+//    {
+//        err_code = drv_motion_disable(DRV_MOTION_FEATURE_MASK);
+//        APP_ERROR_CHECK(err_code);
+//    }
+//}
 
 static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data, uint32_t size)
 {
@@ -410,7 +411,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                 DEBUG_PRINTF(0, " mag.z [uT] = %s:\r\n", buffer);
             #endif
 
-            (void)ble_tms_raw_set(&m_tms, &data);
+            //(void)ble_tms_raw_set(&m_tms, &data);
         }
         break;
 
@@ -441,7 +442,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                 DEBUG_PRINTF(0, "DRV_MOTION_EVT_QUAT: \n w:%s x:%s y:%s z:%s\r\n", buffer[0], buffer[1], buffer[2], buffer[3]);
             #endif
 
-            (void)ble_tms_quat_set(&m_tms, &data);
+            ///(void)ble_tms_quat_set(&m_tms, &data);
         }
         break;
 
@@ -460,7 +461,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                 DEBUG_PRINTF(0, "DRV_MOTION_EVT_EULER, [deg]:  roll(x):%3d   pitch(y):%3d   yaw(z):%3d  \r\n", data.roll/(1<<16), data.pitch/(1<<16), data.yaw/(1<<16));
             #endif
 
-            (void)ble_tms_euler_set(&m_tms, &data);
+            //(void)ble_tms_euler_set(&m_tms, &data);
         }
         break;
 
@@ -502,7 +503,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                                 buffer[8]);
             #endif
 
-            (void)ble_tms_rot_mat_set(&m_tms, &data);
+            //(void)ble_tms_rot_mat_set(&m_tms, &data);
         }
         break;
 
@@ -515,7 +516,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                 DEBUG_PRINTF(0, "DRV_MOTION_EVT_HEADING [deg]:  h: %d\r\n", heading/(1<<16));
             #endif
 
-            (void)ble_tms_heading_set(&m_tms, (ble_tms_heading_t *)p_data);
+            //(void)ble_tms_heading_set(&m_tms, (ble_tms_heading_t *)p_data);
         }
         break;
 
@@ -542,7 +543,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                 DEBUG_PRINTF(0, "DRV_MOTION_EVT_GRAVITY [m/s^2]:  [%s, %s, %s]\r\n", buffer[0], buffer[1], buffer[2]);
             #endif
 
-            (void)ble_tms_gravity_set(&m_tms, &data);
+            //(void)ble_tms_gravity_set(&m_tms, &data);
         }
         break;
 
@@ -563,7 +564,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                                                                        data.dir);
             #endif
 
-            (void)ble_tms_tap_set(&m_tms, &data);
+            //(void)ble_tms_tap_set(&m_tms, &data);
         }
         break;
 
@@ -577,7 +578,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                                                                           *(ble_tms_orientation_t *)p_data);
             #endif
 
-            (void)ble_tms_orientation_set(&m_tms, (ble_tms_orientation_t *)p_data);
+            //(void)ble_tms_orientation_set(&m_tms, (ble_tms_orientation_t *)p_data);
         }
         break;
 
@@ -598,7 +599,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
                                                                                    p_pedo[1]);
             #endif
 
-            (void)ble_tms_pedo_set(&m_tms, &data);
+            //(void)ble_tms_pedo_set(&m_tms, &data);
         }
         break;
 
@@ -609,7 +610,7 @@ static void drv_motion_evt_handler(drv_motion_evt_t const * p_evt, void * p_data
 }
 
 
-uint32_t m_motion_init(m_ble_service_handle_t * p_handle, m_motion_init_t * p_params)
+uint32_t m_motion_init(m_motion_init_t * p_params)
 {
     uint32_t err_code;
     drv_motion_twi_init_t motion_params_mpu9250;
@@ -642,13 +643,10 @@ uint32_t m_motion_init(m_ble_service_handle_t * p_handle, m_motion_init_t * p_pa
         .interrupt_priority = APP_IRQ_PRIORITY_LOW
     };
 
-    NULL_PARAM_CHECK(p_handle);
+//    NULL_PARAM_CHECK(p_handle);
     NULL_PARAM_CHECK(p_params);
 
     DEBUG_PRINTF(0, "m_motion_init: \r\n");
-
-    p_handle->ble_evt_cb = motion_on_ble_evt;
-    p_handle->init_cb    = motion_service_init;
 
     motion_params_mpu9250.p_twi_instance = p_params->p_twi_instance;
     motion_params_mpu9250.p_twi_cfg      = &twi_config_mpu9250;
@@ -658,6 +656,11 @@ uint32_t m_motion_init(m_ble_service_handle_t * p_handle, m_motion_init_t * p_pa
 
     err_code = drv_motion_init(drv_motion_evt_handler, &motion_params_mpu9250, &motion_params_lis2dh12);
     RETURN_IF_ERROR(err_code);
+
+	drv_motion_cfg_t motion_cfg = MOTION_DEFAULT_CONFIG;
+
+	err_code = drv_motion_config(&motion_cfg);
+	APP_ERROR_CHECK(err_code);
 
     return NRF_SUCCESS;
 }

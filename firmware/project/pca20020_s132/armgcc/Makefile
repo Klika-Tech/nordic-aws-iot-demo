@@ -62,6 +62,7 @@ $(abspath ../../../source/drivers/drv_motion.c) \
 $(abspath ../../../source/drivers/drv_acc_lis3dh.c) \
 $(abspath ../../../source/drivers/drv_mic.c) \
 $(abspath ../../../source/modules/m_environment.c) \
+$(abspath ../../../source/modules/m_motion.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu_dmp_motion_driver.c) \
 $(abspath ../../../libs/eMD6/core/mllite/data_builder.c) \
@@ -75,11 +76,6 @@ $(abspath ../../../libs/eMD6/core/mllite/start_manager.c) \
 $(abspath ../../../libs/eMD6/core/mllite/storage_manager.c) \
 $(abspath ../../../libs/eMD6/core/eMPL-hal/eMPL_outputs.c) \
 $(abspath ../../../libs/eMD6/core/driver/nRF52/log_nrf52.c) \
-$(abspath ../../../libs/dvi_adpcm/dvi_adpcm.c) \
-$(abspath ../../../libs/sr3_audio/drv_audio_coder_adpcm.c) \
-$(abspath ../../../libs/sr3_audio/drv_audio_coder_bv32fp.c) \
-$(abspath ../../../libs/sr3_audio/drv_audio_dsp.c) \
-$(abspath ../../../libs/sr3_audio/drv_audio_pdm.c) \
 $(abspath ../../../sdk_components/drivers_nrf/rng/nrf_drv_rng.c) \
 $(abspath ../../../sdk_components/libraries/util/app_error.c) \
 $(abspath ../../../sdk_components/ble/common/ble_advdata.c) \
@@ -227,6 +223,12 @@ ASM_SOURCE_FILES  = $(abspath ../../../sdk_components/toolchain/gcc/gcc_startup_
 LIBS  = $(abspath ../../../sdk_components/iot/ble_6lowpan/lib/ble_6lowpan.a)
 
 #includes common to all targets
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/include)
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/eMPL)
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/mpl)
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/mllite)
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/eMPL-hal)
+INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/nRF52)
 INC_PATHS += -I$(abspath ../../../sdk_components/device)
 INC_PATHS += -I$(abspath ../../../sdk_components/toolchain/cmsis/include)
 INC_PATHS += -I$(abspath ../../../sdk_components/toolchain/gcc)
@@ -292,12 +294,6 @@ INC_PATHS += -I$(abspath ../../../external/sdk/components/iot/ble_6lowpan)
 INC_PATHS += -I$(abspath ../../../external/sdk/components/iot/medium)
 INC_PATHS += -I$(abspath ../../../sdk_components/iot/context_manager)
 INC_PATHS += -I$(abspath ../../../tools/sound)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/include)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/eMPL)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/mpl)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/mllite)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/eMPL-hal)
-INC_PATHS += -I$(abspath ../../../libs/eMD6/core/driver/nRF52)
 INC_PATHS += -I$(abspath ../../../libs/sr3_audio)
 INC_PATHS += -I$(abspath ../../../libs/dvi_adpcm)
 INC_PATHS += -I$(abspath ../../../libs/bv32fp-1.2)
@@ -329,6 +325,7 @@ CFLAGS += -DNRF_DFU_SETTINGS_VERSION=1
 CFLAGS += -DSOFTDEVICE_PRESENT
 CFLAGS += -DSWI_DISABLE0
 CFLAGS += -DDEBUG
+CFLAGS += -DGLOBAL_DEBUG
 CFLAGS += -DBSP_DEFINES_ONLY
 CFLAGS += -DARM_MATH_CM4
 CFLAGS += -DMPU9250

@@ -22,7 +22,7 @@
 
 #include "app_util.h"
 
-#define DEVICE_NAME                      "MQTT_Cloud_Pub"                     /**< Device name used in BLE undirected advertisement. */
+#define DEVICE_NAME                      "Nordic_AWS_Demo"                    /**< Device name used in BLE undirected advertisement. */
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  0
 
 #define COMPANY_IDENTIFIER               0x0059                               /**< Company identifier for Nordic Semiconductor ASA as per www.bluetooth.org. */

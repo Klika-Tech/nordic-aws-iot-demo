@@ -64,7 +64,7 @@
 #include "m_environment.h"
 #include "drv_hts221.h"
 //#include "m_sound.h"
-//#include "m_motion.h"
+#include "m_motion.h"
 //#include "m_ui.h"
 //#include "m_batt_meas.h"
 #include "drv_ext_light.h"
@@ -83,6 +83,8 @@
 #include "ipv6_medium.h"
 #include "iot_errors.h"
 
+#define GLOBAL_DEBUG
+
 #define SCHED_MAX_EVENT_DATA_SIZE   MAX(APP_TIMER_SCHED_EVT_SIZE, BLE_STACK_HANDLER_SCHED_EVT_SIZE) /**< Maximum size of scheduler events. */
 #define SCHED_QUEUE_SIZE            60  /**< Maximum number of events in the scheduler queue. */
 
@@ -100,7 +102,8 @@
 
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
 
-float tmp = 0.0;
+float tmp, prs = 0.0;
+uint16_t hmd = 5;
 
 typedef enum
 {
@@ -127,12 +130,12 @@ typedef enum
 
 #define APP_DATA_INITIAL_TEMPERATURE        20                                                      /**< Initial simulated temperature. */
 #define APP_DATA_MAXIMUM_TEMPERATURE        25                                                      /**< Maximum simulated temperature. */
-#define APP_DATA_MAX_SIZE                   200                                                     /**< Maximum size of data buffer size. */
+#define APP_DATA_MAX_SIZE                   2000                                                    /**< Maximum size of data buffer size. */
 
 #define APP_MQTT_XIVELY_BROKER_PORT         8883                                                    /**< Port number of MQTT Broker. */
 #define APP_MQTT_XIVELY_CHANNEL             "Thermometer"                                           /**< Device's Channel. */
-#define APP_MQTT_XIVELY_FEED_ID             "{PUT FEED ID HERE}"                                    /**< Device's Feed ID. */
-#define APP_MQTT_XIVELY_API_KEY             "{PUT API KEY HERE}"                                    /**< API key used for authentication. */
+#define APP_MQTT_XIVELY_FEED_ID             "637693378"                                    		 /**< Device's Feed ID. */
+#define APP_MQTT_XIVELY_API_KEY             "jAVEnAqZ9IVCFSQ9Oc9XJ7FuMvggmmYIdgqE8ZYKgMbjvm5T"    /**< API key used for authentication. */
 
 // URL of given Xively JSON resource.
 #define APP_MQTT_XIVELY_API_URL             "/v2/feeds/" APP_MQTT_XIVELY_FEED_ID ".json"
@@ -158,6 +161,7 @@ static mqtt_client_t                        m_app_mqtt_id;                      
 static const char                           m_device_id[]      = "nrfPublisher";                    /**< Unique MQTT client identifier. */
 static const char                           m_user[]           = APP_MQTT_XIVELY_API_KEY;           /**< MQTT user name. */
 static uint16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
+static uint16_t                             m_humidity;
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
 
@@ -190,6 +194,10 @@ static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
 //       0x00, 0x00, 0xff, 0xff,
 //       0x00, 0x64, 0x00, 0x00,
 //       0xd8, 0x34, 0xe9, 0x7a
+//	   0x20, 0x01, 0x41, 0xd0,
+//	   0x00, 0x0a, 0x3a, 0x10,
+//	   0x00, 0x00, 0x00, 0x00,
+//	   0x00, 0x00, 0x00, 0x01
 		 0xFE, 0x80, 0x00, 0x00,
 	     0x00, 0x00, 0x00, 0x00,
 	     0xfa, 0x59, 0x71, 0xff,
@@ -629,7 +637,7 @@ static void thingy_init(void)
     uint32_t                 err_code;
 //    m_ui_init_t              ui_params;
     m_environment_init_t     env_params;
-//    m_motion_init_t          motion_params;
+    m_motion_init_t          motion_params;
 //    m_ble_init_t             ble_params;
 //    batt_meas_init_t         batt_meas_init = BATT_MEAS_PARAM_CFG;
 
@@ -648,13 +656,11 @@ static void thingy_init(void)
     err_code = m_environment_init(&env_params);
     APP_ERROR_CHECK(err_code);
 
-//    /**@brief Initialize motion module. */
+    /**@brief Initialize motion module. */
 //    motion_params.p_twi_instance = &m_twi_sensors;
-//
-//    err_code = m_motion_init(&m_ble_service_handles[THINGY_SERVICE_MOTION],
-//                             &motion_params);
+//    err_code = m_motion_init(&motion_params);
 //    APP_ERROR_CHECK(err_code);
-//
+
 //    err_code = m_sound_init(&m_ble_service_handles[THINGY_SERVICE_SOUND]);
 //    APP_ERROR_CHECK(err_code);
 //
@@ -815,8 +821,24 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
 
     m_temperature = (uint16_t)tmp;
 
+    err_code = humidity_start();
+    APP_ERROR_CHECK(err_code);
+
+    hmd = drv_humidity_get();
+
+    err_code = pressure_start();
+    APP_ERROR_CHECK(err_code);
+
+    drv_pressure_get(&prs);
+
     // Prepare data in JSON format.
-    sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
+//    sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
+    sprintf(m_data_body, "{\"temperature\": %d, \"humidity\": %d, \"pressure\": %d, \"marker\": true}",
+    		// \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
+    		(uint16_t)tmp, hmd, (uint16_t)prs
+			/*, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
+			);
+
     
     mqtt_publish_param_t param;
     
@@ -829,7 +851,9 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     param.dup_flag                       = 0;
     param.retain_flag                    = 0;
 
-    APPL_LOG("[APPL]: Publishing value of %02d.00\r\n", m_temperature);
+    APPL_LOG("[TEMPE]: %d\n\r", m_temperature);
+    APPL_LOG("[HUMID]: %d\r\n", hmd);
+    APPL_LOG("[PRESS]: %d\n\r", (uint16_t)prs);
 
     // Publish data.
     err_code = mqtt_publish(&m_app_mqtt_id, &param);
@@ -1000,6 +1024,12 @@ int main(void)
     APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 
     err_code = temperature_start();
+    APP_ERROR_CHECK(err_code);
+
+    err_code = humidity_start();
+    APP_ERROR_CHECK(err_code);
+
+    err_code = pressure_start();
     APP_ERROR_CHECK(err_code);
 
     //Enter main loop.
