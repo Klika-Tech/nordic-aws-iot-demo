@@ -1020,7 +1020,7 @@ int main(void)
 	button_init();
 	thingy_init();
 
-    // Initialize.
+	// Initialize.
     APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 
     err_code = temperature_start();
