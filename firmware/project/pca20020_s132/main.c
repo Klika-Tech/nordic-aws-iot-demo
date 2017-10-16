@@ -60,13 +60,9 @@
 #include "app_util_platform.h"
 #include "app_trace.h"
 #include "SEGGER_RTT.h"
-//#include "m_ble.h"
 #include "m_environment.h"
 #include "drv_hts221.h"
-//#include "m_sound.h"
 #include "m_motion.h"
-//#include "m_ui.h"
-//#include "m_batt_meas.h"
 #include "drv_ext_light.h"
 #include "drv_ext_gpio.h"
 #include "nrf_delay.h"
@@ -84,6 +80,51 @@
 #include "iot_errors.h"
 
 #define GLOBAL_DEBUG
+
+/*******************************************************************/
+/**************** BEGIN MQTT bridge (AWS) settings *****************/
+/*******************************************************************/
+
+static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
+{
+  0xFE, 0x80, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00,
+  0xba, 0x8a, 0x60, 0xff, 
+  0xfe, 0xc5, 0xac, 0x28,
+};
+
+#define APP_MQTT_CONNECT_DELAY              APP_TIMER_TICKS(500, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
+#define APP_MQTT_BROKER_PORT                8883                                                    /**< Port number of MQTT Broker. */
+#define APP_MQTT_THING_NAME                 "Nordic"                                                /**< AWS IoT thing name. */
+#define APP_MQTT_SHADOW_TOPIC               "aws/things/Nordic/shadow/update"                       /**< AWS IoT thing shadow topic path. */
+#define APP_MQTT_DATA_FORMAT                "{"                                                \
+                                                "\"state\":{"                                  \
+                                                    "\"reported\": {"                          \
+                                                      "\"temperature\": %d,"                   \
+                                                      "\"humidity\": %d,"                      \
+                                                      "\"pressure\": %d,"                      \
+                                                      "\"marker\": false"                      \
+                                                    "}"                                        \
+                                                "}"                                            \
+                                             "}"
+
+static const uint8_t identity[] = {0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79};
+static const uint8_t shared_secret[] = {0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x53, 0x4b};
+
+static nrf_tls_preshared_key_t m_preshared_key = {              
+    .p_identity     = &identity[0],
+    .p_secret_key   = &shared_secret[0],
+    .identity_len   = 15,
+    .secret_key_len = 9
+};
+
+static nrf_tls_key_settings_t m_tls_keys = {                                                          /**< TLS keys for connection to secure MQTT bridge */
+    .p_psk = &m_preshared_key
+};
+
+/*****************************************************************/
+/**************** END MQTT bridge (AWS) settings *****************/
+/*****************************************************************/
 
 #define SCHED_MAX_EVENT_DATA_SIZE   MAX(APP_TIMER_SCHED_EVT_SIZE, BLE_STACK_HANDLER_SCHED_EVT_SIZE) /**< Maximum size of scheduler events. */
 #define SCHED_QUEUE_SIZE            60  /**< Maximum number of events in the scheduler queue. */
@@ -116,7 +157,6 @@ typedef enum
 } display_state_t;
 
 #define APP_TIMER_OP_QUEUE_SIZE             5
-#define APP_XIVELY_CONNECT_DELAY            APP_TIMER_TICKS(500, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
 
 #define LWIP_SYS_TICK_MS                    10                                                      /**< Interval for timer used as trigger to send. */
 #define LED_BLINK_INTERVAL_MS               300                                                     /**< LED blinking interval. */
@@ -132,21 +172,6 @@ typedef enum
 #define APP_DATA_MAXIMUM_TEMPERATURE        25                                                      /**< Maximum simulated temperature. */
 #define APP_DATA_MAX_SIZE                   2000                                                    /**< Maximum size of data buffer size. */
 
-#define APP_MQTT_XIVELY_BROKER_PORT         8883                                                    /**< Port number of MQTT Broker. */
-#define APP_MQTT_XIVELY_CHANNEL             "Thermometer"                                           /**< Device's Channel. */
-#define APP_MQTT_XIVELY_FEED_ID             "637693378"                                    		 /**< Device's Feed ID. */
-#define APP_MQTT_XIVELY_API_KEY             "jAVEnAqZ9IVCFSQ9Oc9XJ7FuMvggmmYIdgqE8ZYKgMbjvm5T"    /**< API key used for authentication. */
-
-// URL of given Xively JSON resource.
-#define APP_MQTT_XIVELY_API_URL             "/v2/feeds/" APP_MQTT_XIVELY_FEED_ID ".json"
-
-// Xively data format.
-#define APP_MQTT_XIVELY_DATA_FORMAT         "{"                                                \
-                                                "\"datastreams\":["                            \
-                                                    "{\"id\":\"" APP_MQTT_XIVELY_CHANNEL "\"," \
-                                                    "\"current_value\":\"%d.00\"}"             \
-                                                "]"                                            \
-                                             "}"
 
 APP_TIMER_DEF(m_iot_timer_tick_src_id);                                                             /**< App timer instance used to update the IoT timer wall clock. */
 APP_TIMER_DEF(m_mqtt_conn_timer_id);                                                                /**< Timer for delaying MQTT Connection. */
@@ -158,51 +183,12 @@ static bool                                 m_connection_state = false;         
 static bool                                 m_do_publication   = false;                             /**< Indicates if MQTT publications are enabled. */
 
 static mqtt_client_t                        m_app_mqtt_id;                                          /**< MQTT Client instance reference provided by the MQTT module. */
-static const char                           m_device_id[]      = "nrfPublisher";                    /**< Unique MQTT client identifier. */
-static const char                           m_user[]           = APP_MQTT_XIVELY_API_KEY;           /**< MQTT user name. */
+static const char                           m_device_id[]      = APP_MQTT_THING_NAME;               /**< Unique MQTT client identifier. */
+static const char                           m_user[]           = APP_MQTT_THING_NAME;               /**< MQTT user name. */
 static uint16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
 static uint16_t                             m_humidity;
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
-
-// TLS settings.
-//static nrf_tls_key_settings_t m_tls_keys =
-//{
-//    .p_psk             = NULL, // PSK not used.
-//    .p_ca_cert_pem     = NULL, // No certificate verification.
-//    .p_own_certificate = NULL  // Use server certificiate.
-//};
-
-static const uint8_t identity[] = {0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79};
-static const uint8_t shared_secret[] = {0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x53, 0x4b};
-
-static nrf_tls_preshared_key_t m_preshared_key = {
-    .p_identity     = &identity[0],
-    .p_secret_key   = &shared_secret[0],
-    .identity_len   = 15,
-    .secret_key_len = 9
-};
-
-static nrf_tls_key_settings_t m_tls_keys = {
-    .p_psk = &m_preshared_key
-};
-
-// Address of Xively cloud.
-static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
-{
-//       0x20, 0x01, 0x07, 0x78,
-//       0x00, 0x00, 0xff, 0xff,
-//       0x00, 0x64, 0x00, 0x00,
-//       0xd8, 0x34, 0xe9, 0x7a
-//	   0x20, 0x01, 0x41, 0xd0,
-//	   0x00, 0x0a, 0x3a, 0x10,
-//	   0x00, 0x00, 0x00, 0x00,
-//	   0x00, 0x00, 0x00, 0x01
-		 0xFE, 0x80, 0x00, 0x00,
-	     0x00, 0x00, 0x00, 0x00,
-	     0xfa, 0x59, 0x71, 0xff,
-	     0xfe, 0x9f, 0x80, 0x2a
-};
 
 /**@brief Function to handle interface up event. */
 void nrf_driver_interface_up(void)
@@ -336,7 +322,7 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
             {
                 if (m_connection_state == false)
                 {
-                    err_code = app_timer_start(m_mqtt_conn_timer_id, APP_XIVELY_CONNECT_DELAY, NULL);
+                    err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
                     APP_ERROR_CHECK(err_code);
                 }
                 break;
@@ -772,7 +758,7 @@ static void app_mqtt_evt_handler(mqtt_client_t * p_client, const mqtt_evt_t * p_
             // Make reconnection in case of tcp problem.
             if(p_evt->result == MQTT_ERR_TRANSPORT_CLOSED)
             {
-                err_code = app_timer_start(m_mqtt_conn_timer_id, APP_XIVELY_CONNECT_DELAY, NULL);
+                err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
                 APP_ERROR_CHECK(err_code);
             }
             else
@@ -791,7 +777,7 @@ static void app_mqtt_evt_handler(mqtt_client_t * p_client, const mqtt_evt_t * p_
 /**@brief Timer callback used for publishing simulated temperature periodically.
  *
  */
-static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
+static void app_mqtt_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
 {
     UNUSED_PARAMETER(wall_clock_value);
     uint32_t err_code;
@@ -832,8 +818,8 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     drv_pressure_get(&prs);
 
     // Prepare data in JSON format.
-//    sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
-    sprintf(m_data_body, "{\"temperature\": %d, \"humidity\": %d, \"pressure\": %d, \"marker\": true}",
+//    sprintf(m_data_body, APP_MQTT_DATA_FORMAT, m_temperature);
+    sprintf(m_data_body, APP_MQTT_DATA_FORMAT,
     		// \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
     		(uint16_t)tmp, hmd, (uint16_t)prs
 			/*, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
@@ -843,8 +829,8 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     mqtt_publish_param_t param;
     
     param.message.topic.qos              = MQTT_QoS_0_AT_MOST_ONCE;
-    param.message.topic.topic.p_utf_str  = (uint8_t *)APP_MQTT_XIVELY_API_URL;
-    param.message.topic.topic.utf_strlen = strlen(APP_MQTT_XIVELY_API_URL);
+    param.message.topic.topic.p_utf_str  = (uint8_t *)APP_MQTT_SHADOW_TOPIC;
+    param.message.topic.topic.utf_strlen = strlen(APP_MQTT_SHADOW_TOPIC);
     param.message.payload.p_bin_str      = (uint8_t *)m_data_body;
     param.message.payload.bin_strlen     = strlen(m_data_body);
     param.message_id                     = m_message_counter;
@@ -871,11 +857,11 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     APPL_LOG("[APPL]: mqtt_publish result 0x%08lx\r\n", err_code);
 }
 
-/**@brief Timer callback used for connecting to Xively cloud.
+/**@brief Timer callback used for connecting to AWS cloud.
  *
  * @param[in]   p_context   Pointer used for passing context. No context used in this application.
  */
-static void app_xively_connect(void * p_context)
+static void app_mqtt_connect(void * p_context)
 {
     UNUSED_VARIABLE(p_context);
 
@@ -889,7 +875,7 @@ static void app_xively_connect(void * p_context)
 
     memcpy (m_app_mqtt_id.broker_addr.u8, m_broker_addr, IPV6_ADDR_SIZE);
 
-    m_app_mqtt_id.broker_port             = APP_MQTT_XIVELY_BROKER_PORT;
+    m_app_mqtt_id.broker_port             = APP_MQTT_BROKER_PORT;
     m_app_mqtt_id.evt_cb                  = app_mqtt_evt_handler;
     m_app_mqtt_id.client_id.p_utf_str     = (uint8_t *)m_device_id;
     m_app_mqtt_id.client_id.utf_strlen    = strlen(m_device_id);
@@ -914,10 +900,10 @@ static void timers_init(void)
 //    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);	// iot
     APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);		// thingy
 
-    // Create timer to create delay connection to Xively.
+    // Create timer to create delay connection to AWS.
     err_code = app_timer_create(&m_mqtt_conn_timer_id,
                                 APP_TIMER_MODE_SINGLE_SHOT,
-                                app_xively_connect);
+                                app_mqtt_connect);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -929,7 +915,7 @@ static void iot_timer_init(void)
     static const iot_timer_client_t list_of_clients[] =
     {
         {app_lwip_time_tick,          LWIP_SYS_TICK_MS},
-        {app_xively_publish_callback, MQTT_PUBLISH_INTERVAL_MS},
+        {app_mqtt_publish_callback, MQTT_PUBLISH_INTERVAL_MS},
 #ifdef COMMISSIONING_ENABLED
         {commissioning_time_tick,     SEC_TO_MILLISEC(COMMISSIONING_TICK_INTERVAL_SEC)}
 #endif // COMMISSIONING_ENABLED
