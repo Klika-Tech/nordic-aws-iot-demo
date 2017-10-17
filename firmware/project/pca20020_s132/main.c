@@ -85,15 +85,16 @@
 /**************** BEGIN MQTT bridge (AWS) settings *****************/
 /*******************************************************************/
 
-static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
+static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =							/**< IPv6 addr from bt0 iface. */
 {
   0xFE, 0x80, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00,
-  0xba, 0x8a, 0x60, 0xff, 
+  0xba, 0x8a, 0x60, 0xff,
   0xfe, 0xc5, 0xac, 0x28,
 };
 
-#define APP_MQTT_CONNECT_DELAY              APP_TIMER_TICKS(500, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
+
+#define APP_MQTT_CONNECT_DELAY              APP_TIMER_TICKS(3000, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
 #define APP_MQTT_BROKER_PORT                8883                                                    /**< Port number of MQTT Broker. */
 #define APP_MQTT_THING_NAME                 "Nordic"                                                /**< AWS IoT thing name. */
 #define APP_MQTT_SHADOW_TOPIC               "aws/things/Nordic/shadow/update"                       /**< AWS IoT thing shadow topic path. */
@@ -103,10 +104,12 @@ static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
                                                       "\"temperature\": %d,"                   \
                                                       "\"humidity\": %d,"                      \
                                                       "\"pressure\": %d,"                      \
-                                                      "\"marker\": false"                      \
+                                                      "\"marker\": %s"                         \
                                                     "}"                                        \
                                                 "}"                                            \
                                              "}"
+
+#define MQTT_PUBLISH_INTERVAL_MS            1500                                                   /**< Interval between publishing data. */
 
 static const uint8_t identity[] = {0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79};
 static const uint8_t shared_secret[] = {0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x53, 0x4b};
@@ -142,7 +145,6 @@ static nrf_tls_key_settings_t m_tls_keys = {                                    
 #define HWFC           true
 
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
-
 float tmp, prs = 0.0;
 uint16_t hmd = 5;
 
@@ -160,7 +162,6 @@ typedef enum
 
 #define LWIP_SYS_TICK_MS                    10                                                      /**< Interval for timer used as trigger to send. */
 #define LED_BLINK_INTERVAL_MS               300                                                     /**< LED blinking interval. */
-#define MQTT_PUBLISH_INTERVAL_MS            10000                                                   /**< Interval between publishing data. */
 
 #define DEAD_BEEF                           0xDEADBEEF                                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 #define MAX_LENGTH_FILENAME                 128                                                     /**< Max length of filename to copy for the debug error handler. */
@@ -189,6 +190,8 @@ static uint16_t                             m_temperature      = APP_DATA_INITIA
 static uint16_t                             m_humidity;
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
+static bool									m_marker		   = false;								/**< Indicates if marker was set (button was pushed). */
+static void 								app_mqtt_publish_loop_start();
 
 /**@brief Function to handle interface up event. */
 void nrf_driver_interface_up(void)
@@ -203,6 +206,10 @@ void nrf_driver_interface_up(void)
     // Set flag indicating interface state.
     m_interface_state = true;
     m_display_state = LEDS_IPV6_IF_UP;
+
+    // try connect after stack connnected.
+    app_mqtt_publish_loop_start();
+
 }
 
 
@@ -290,6 +297,28 @@ static void on_ipv6_medium_error(ipv6_medium_error_t * p_ipv6_medium_error)
     // Do something.
 }
 
+/**@brief Function for starting mqtt publish loop.
+ */
+static void app_mqtt_publish_loop_start()
+{
+	APPL_LOG("[APPL]: Start MQTT publish loop \r\n");
+
+	uint32_t err_code;
+
+	// Check if interface has been established.
+	if (m_interface_state == false)
+	{
+		return;
+	}
+
+	if (m_connection_state == false)
+	{
+		err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
+		APP_ERROR_CHECK(err_code);
+	}
+}
+
+
 /**@brief Function for handling button events.
  *
  * @param[in]   pin_no         The pin number of the button pressed.
@@ -306,8 +335,6 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
     }
 #endif // COMMISSIONING_ENABLED
 
-    uint32_t err_code;
-
     // Check if interface has been established.
     if(m_interface_state == false)
     {
@@ -320,22 +347,10 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
         {
             case BSP_BUTTON_0:
             {
-                if (m_connection_state == false)
-                {
-                    err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
-                    APP_ERROR_CHECK(err_code);
-                }
+            	//app_mqtt_publish_loop_start();
+            	m_marker = true;
                 break;
             }
-//            case BSP_BUTTON_1:
-//            {
-//                if (m_connection_state == true)
-//                {
-//                    err_code = mqtt_disconnect(&m_app_mqtt_id);
-//                    APP_ERROR_CHECK(err_code);
-//                }
-//                break;
-//            }
             default:
                 break;
         }
@@ -488,52 +503,6 @@ static void configure_gpio_for_sleep(vdd_state_t vdd_on)
     }
 }
 
-
-/**@brief Function for putting Thingy into sleep mode.
- *
- * @note This function will not return.
- */
-//static void sleep_mode_enter(void)
-//{
-//    uint32_t err_code;
-//
-//    // Enable wake on button press.
-//    nrf_gpio_cfg_sense_input(BUTTON, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-//
-//    (void)SEGGER_RTT_printf(0, "Entering sleep mode \r\n");
-//    err_code = m_motion_sleep_prepare(true);
-//    APP_ERROR_CHECK(err_code);
-//
-//    configure_gpio_for_sleep(VDD_OFF);
-//
-//    // Enable wake on button press.
-//    nrf_gpio_cfg_sense_input(BUTTON, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-//    // Enable wake on low power accelerometer.
-//    nrf_gpio_cfg_sense_input(LIS_INT1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
-//
-//    // Go to system-off (sd_power_system_off() will not return; wakeup will cause a reset). When debugging, this function may return and code execution will continue.
-//    err_code = sd_power_system_off();
-//    (void)SEGGER_RTT_printf(0, "sd_power_system_off() returned. -Probably due to debugger being used. Instructions will still run. \r\n");
-//
-//    #ifdef DEBUG
-//        if(!support_func_sys_halt_debug_enabled())
-//        {
-//            APP_ERROR_CHECK(err_code); // If not in debug mode, return the error and the system will reboot.
-//        }
-//        else
-//        {
-//            (void)SEGGER_RTT_printf(0, "Exec stopped, busy wait \r\n");
-//            while(true) // Only reachable when entering emulated system off.
-//            {
-//                // Infinte loop to ensure that code stops in debug mode.
-//            }
-//        }
-//    #else
-//        APP_ERROR_CHECK(err_code);
-//    #endif
-//}
-
-
 /**@brief Function for placing the application in low power state while waiting for events.
  */
 #define FPU_EXCEPTION_MASK 0x0000009F
@@ -547,116 +516,23 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Battery module data handler.
- */
-//static void m_batt_meas_handler(m_batt_meas_event_t const * p_batt_meas_event)
-//{
-//    (void)SEGGER_RTT_printf(0, "batt meas handler: Voltage: %d V, Charge: %d %%, Event type: %d \n",
-//        p_batt_meas_event->voltage_mv, p_batt_meas_event->level_percent, p_batt_meas_event->type);
-//
-//    if (p_batt_meas_event != NULL)
-//    {
-//        if( p_batt_meas_event->type == M_BATT_MEAS_EVENT_LOW)
-//        {
-//            uint32_t err_code;
-//            configure_gpio_for_sleep(VDD_OFF);
-//
-//            // Enable wake on USB detect only.
-//            nrf_gpio_cfg_sense_input(USB_DETECT, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
-//
-//            (void)SEGGER_RTT_printf(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"Battery voltage low, shutting down Thingy. Connect USB to charge. "RTT_CTRL_RESET"\n");
-//            // Go to system-off mode (This function will not return; wakeup will cause a reset).
-//            err_code = sd_power_system_off();
-//
-//            #ifdef DEBUG
-//                if(!support_func_sys_halt_debug_enabled())
-//                {
-//                    APP_ERROR_CHECK(err_code); // If not in debug mode, return the error and the system will reboot.
-//                }
-//                else
-//                {
-//                    (void)SEGGER_RTT_printf(0, "Exec stopped, busy wait \r\n");
-//                    while(true) // Only reachable when entering emulated system off.
-//                    {
-//                        // Infinte loop to ensure that code stops in debug mode.
-//                    }
-//                }
-//            #else
-//                APP_ERROR_CHECK(err_code);
-//            #endif
-//        }
-//    }
-//}
-
-
-/**@brief Function for handling BLE events.
- */
-//static void thingy_ble_evt_handler(m_ble_evt_t * p_evt)
-//{
-//    switch (p_evt->evt_type)
-//    {
-//        case thingy_ble_evt_connected:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_connected"RTT_CTRL_RESET"\n");
-//            break;
-//
-//        case thingy_ble_evt_disconnected:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_disconnected"RTT_CTRL_RESET"\n");
-//            nrf_delay_ms(5);
-//            NVIC_SystemReset();
-//            break;
-//
-//        case thingy_ble_evt_timeout:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_timeout"RTT_CTRL_RESET"\n");
-//            nrf_delay_ms(5);
-//            sleep_mode_enter();
-//            NVIC_SystemReset();
-//            break;
-//    }
-//}
-
-
 /**@brief Function for initializing the Thingy.
  */
 static void thingy_init(void)
 {
     uint32_t                 err_code;
-//    m_ui_init_t              ui_params;
     m_environment_init_t     env_params;
     m_motion_init_t          motion_params;
-//    m_ble_init_t             ble_params;
-//    batt_meas_init_t         batt_meas_init = BATT_MEAS_PARAM_CFG;
 
     /**@brief Initialize the TWI manager. */
     err_code = twi_manager_init(APP_IRQ_PRIORITY_THREAD);
     APP_ERROR_CHECK(err_code);
-
-//    /**@brief Initialize LED and button UI module. */
-//    ui_params.p_twi_instance = &m_twi_sensors;
-//    err_code = m_ui_init(&m_ble_service_handles[THINGY_SERVICE_UI],
-//                         &ui_params);
-//    APP_ERROR_CHECK(err_code);
 
     /**@brief Initialize environment module. */
     env_params.p_twi_instance = &m_twi_sensors;
     err_code = m_environment_init(&env_params);
     APP_ERROR_CHECK(err_code);
 
-    /**@brief Initialize motion module. */
-//    motion_params.p_twi_instance = &m_twi_sensors;
-//    err_code = m_motion_init(&motion_params);
-//    APP_ERROR_CHECK(err_code);
-
-//    err_code = m_sound_init(&m_ble_service_handles[THINGY_SERVICE_SOUND]);
-//    APP_ERROR_CHECK(err_code);
-//
-//    /**@brief Initialize the battery measurement. */
-//    batt_meas_init.evt_handler = m_batt_meas_handler;
-//    err_code = m_batt_meas_init(&m_ble_service_handles[THINGY_SERVICE_BATTERY], &batt_meas_init);
-//    APP_ERROR_CHECK(err_code);
-//
-//    err_code = m_batt_meas_enable(BATT_MEAS_INTERVAL_MS);
-//    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -818,13 +694,10 @@ static void app_mqtt_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     drv_pressure_get(&prs);
 
     // Prepare data in JSON format.
-//    sprintf(m_data_body, APP_MQTT_DATA_FORMAT, m_temperature);
     sprintf(m_data_body, APP_MQTT_DATA_FORMAT,
-    		// \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
-    		(uint16_t)tmp, hmd, (uint16_t)prs
-			/*, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
+    		(uint16_t)tmp, hmd, (uint16_t)prs,
+			(m_marker ? "true" : "false")
 			);
-
     
     mqtt_publish_param_t param;
     
@@ -840,6 +713,7 @@ static void app_mqtt_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     APPL_LOG("[TEMPE]: %d\n\r", m_temperature);
     APPL_LOG("[HUMID]: %d\r\n", hmd);
     APPL_LOG("[PRESS]: %d\n\r", (uint16_t)prs);
+    APPL_LOG("[MARKER]: %s\n\r", (m_marker ? "true" : "false"));
 
     // Publish data.
     err_code = mqtt_publish(&m_app_mqtt_id, &param);
@@ -852,7 +726,10 @@ static void app_mqtt_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     }
 
     // Increase temperature value.
-//    m_temperature++;
+    // m_temperature++;
+
+    // Flash marker value
+	m_marker = false;
 
     APPL_LOG("[APPL]: mqtt_publish result 0x%08lx\r\n", err_code);
 }
@@ -1000,7 +877,6 @@ int main(void)
     connectable_mode_enter();
 
     board_init();
-//  app_trace_init();
 	timers_init();
 	iot_timer_init();
 	button_init();
@@ -1021,16 +897,7 @@ int main(void)
     //Enter main loop.
     for (;;)
     {
-        //Sleep waiting for an application event.
-//        err_code = sd_app_evt_wait();
-//        APP_ERROR_CHECK(err_code);
 		app_sched_execute();
-//		power_manage();
     }
 
-//    for (;;)
-//    {
-//        app_sched_execute();
-//        power_manage();
-//    }
 }
