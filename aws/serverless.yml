@@ -1,0 +1,200 @@
+# Serverless AWS IoT Demo Template
+
+service:
+  name: aws-iot-demo
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+custom:
+  ownApiKey: ${file(config.${self:provider.stage}.yml):ownApiKey}
+  thingName: ${file(config.${self:provider.stage}.yml):thingName}
+  dynamoWeatherTableName: ${file(config.${self:provider.stage}.yml):dynamoWeatherTableName}
+  dynamoMetricsTableName: ${file(config.${self:provider.stage}.yml):dynamoMetricsTableName}
+  dynamoMetricsTableKey: ${file(config.${self:provider.stage}.yml):dynamoMetricsTableKey}
+  context: ${file(config.${self:provider.stage}.yml):context}
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  memorySize: 256
+  timeout: 10
+  versionFunctions: true
+  stackTags:
+    CONTEXT: ${self:custom.context}
+
+package:
+  exclude:
+    - .idea/**
+    - .git/**
+    - .travis.yml
+  excludeDevDependencies: true
+
+functions:
+  getData:
+    role: GetDataLambdaExecutionRole
+    handler: lambdas/getData/index.handler
+    name: ${self:custom.context}_getData
+    timeout: 60
+    environment:
+      THING_NAME: ${self:custom.thingName}
+      DYNAMO_DB_WEATHER_TABLE_NAME: ${self:custom.dynamoWeatherTableName}
+      DYNAMO_DB_METRICS_TABLE_NAME: ${self:custom.dynamoMetricsTableName}
+      DYNAMO_DB_METRICS_TABLE_KEY: ${self:custom.dynamoMetricsTableKey}
+    tags:
+      CONTEXT: ${self:custom.context}
+    events:
+      - http:
+          method: get
+          integration: lambda
+          path: getData
+          cors: true
+          request:
+            passThrough: WHEN_NO_MATCH
+            parameters:
+              querystrings:
+                since: true
+            template:
+              application/json: '{ "since" : $input.params(''since'') }'
+            response:
+             statusCodes:
+                 200:
+                   pattern: ''
+                   headers:
+                     Content-Type: "'application/json'"
+  fetchWeather:
+    role: FetchWeatherLambdaExecutionRole
+    handler: lambdas/fetchWeather/index.handler
+    name: ${self:custom.context}_fetchWeather
+    environment:
+      OWN_API_KEY: ${self:custom.ownApiKey}
+      DYNAMO_DB_WEATHER_TABLE_NAME: ${self:custom.dynamoWeatherTableName}
+    tags:
+      CONTEXT: ${self:custom.context}
+    events:
+      - schedule:
+          rate: cron(0/15 * * * ? *)
+          enabled: true
+
+resources:
+  Resources:
+    DashboardS3Bucket:
+      Type: 'AWS::S3::Bucket'
+      DeletionPolicy: Delete
+      Properties:
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
+        Tags:
+          - Key: Context
+            Value: ${self:custom.context}
+    DashboardS3BucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        Bucket:
+          Ref: DashboardS3Bucket
+        PolicyDocument:
+          Id: DashboardS3PublicPolicy
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Ref: DashboardS3Bucket
+                    - '/*'
+    MetricsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.dynamoMetricsTableName}
+        AttributeDefinitions:
+          - AttributeName: ${self:custom.dynamoMetricsTableKey}
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: 'N'
+        KeySchema:
+          - AttributeName: ${self:custom.dynamoMetricsTableKey}
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        Tags:
+          - Key: Context
+            Value: ${self:custom.context}
+    WeatherDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.dynamoWeatherTableName}
+        AttributeDefinitions:
+          - AttributeName: city
+            AttributeType: 'N'
+          - AttributeName: timestamp
+            AttributeType: 'N'
+        KeySchema:
+          - AttributeName: city
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        Tags:
+          - Key: Context
+            Value: ${self:custom.context}
+    GetDataLambdaExecutionRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - 'sts:AssumeRole'
+        Policies:
+          - PolicyName: GetDataRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: '*'
+                  Resource:
+                    Fn::GetAtt: [ WeatherDynamoDBTable, Arn ]
+                - Effect: Allow
+                  Action: '*'
+                  Resource:
+                    Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]
+    FetchWeatherLambdaExecutionRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - 'sts:AssumeRole'
+        Policies:
+          - PolicyName: FetchWeatherRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: '*'
+                  Resource:
+                    Fn::GetAtt: [ WeatherDynamoDBTable, Arn ]
+  Outputs:
+    MetricsTableArn:
+      Description: The ARN for the Metrics Table
+      Value:
+        Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]

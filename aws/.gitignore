@@ -1,0 +1,4 @@
+tmp/
+.serverless/
+config.dev.yml
+config.prod.yml
