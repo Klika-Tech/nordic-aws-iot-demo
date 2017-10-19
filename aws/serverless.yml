@@ -5,22 +5,24 @@ service:
 
 frameworkVersion: ">=1.0.0 <2.0.0"
 
-custom:
-  ownApiKey: ${file(config.${self:provider.stage}.yml):ownApiKey}
-  thingName: ${file(config.${self:provider.stage}.yml):thingName}
-  dynamoWeatherTableName: ${file(config.${self:provider.stage}.yml):dynamoWeatherTableName}
-  dynamoMetricsTableName: ${file(config.${self:provider.stage}.yml):dynamoMetricsTableName}
-  dynamoMetricsTableKey: ${file(config.${self:provider.stage}.yml):dynamoMetricsTableKey}
-  context: ${file(config.${self:provider.stage}.yml):context}
-
 provider:
   name: aws
   runtime: nodejs6.10
   memorySize: 256
   timeout: 10
   versionFunctions: true
+  variableSyntax: "\\${{([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)}}"
   stackTags:
-    CONTEXT: ${self:custom.context}
+    CONTEXT: ${{self:custom.context}}
+
+custom:
+  context: ${{file(config.${{self:provider.stage}}.yml):context}}
+  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):ownApiKey}}
+  dynamoMetricsTableKey: thing
+  thingName: ${{self:custom.context}}_thingy_1
+  iotPublicTopic: ${{self:custom.context}}/public
+  dynamoWeatherTableName: ${{self:custom.context}}_own-weather
+  dynamoMetricsTableName: ${{self:custom.context}}_metrics
 
 package:
   exclude:
@@ -33,15 +35,15 @@ functions:
   getData:
     role: GetDataLambdaExecutionRole
     handler: lambdas/getData/index.handler
-    name: ${self:custom.context}_getData
+    name: ${{self:custom.context}}_getData
     timeout: 60
     environment:
-      THING_NAME: ${self:custom.thingName}
-      DYNAMO_DB_WEATHER_TABLE_NAME: ${self:custom.dynamoWeatherTableName}
-      DYNAMO_DB_METRICS_TABLE_NAME: ${self:custom.dynamoMetricsTableName}
-      DYNAMO_DB_METRICS_TABLE_KEY: ${self:custom.dynamoMetricsTableKey}
+      THING_NAME: ${{self:custom.thingName}}
+      DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
+      DYNAMO_DB_METRICS_TABLE_NAME: ${{self:custom.dynamoMetricsTableName}}
+      DYNAMO_DB_METRICS_TABLE_KEY: ${{self:custom.dynamoMetricsTableKey}}
     tags:
-      CONTEXT: ${self:custom.context}
+      CONTEXT: ${{self:custom.context}}
     events:
       - http:
           method: get
@@ -54,22 +56,22 @@ functions:
               querystrings:
                 since: true
             template:
-              application/json: '{ "since" : $input.params(''since'') }'
+              application/json: "{ 'since' : $input.params('since') }"
             response:
              statusCodes:
                  200:
-                   pattern: ''
+                   pattern: ""
                    headers:
                      Content-Type: "'application/json'"
   fetchWeather:
     role: FetchWeatherLambdaExecutionRole
     handler: lambdas/fetchWeather/index.handler
-    name: ${self:custom.context}_fetchWeather
+    name: ${{self:custom.context}}_fetchWeather
     environment:
-      OWN_API_KEY: ${self:custom.ownApiKey}
-      DYNAMO_DB_WEATHER_TABLE_NAME: ${self:custom.dynamoWeatherTableName}
+      OWN_API_KEY: ${{self:custom.ownApiKey}}
+      DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
     tags:
-      CONTEXT: ${self:custom.context}
+      CONTEXT: ${{self:custom.context}}
     events:
       - schedule:
           rate: cron(0/15 * * * ? *)
@@ -78,7 +80,7 @@ functions:
 resources:
   Resources:
     DashboardS3Bucket:
-      Type: 'AWS::S3::Bucket'
+      Type: "AWS::S3::Bucket"
       DeletionPolicy: Delete
       Properties:
         AccessControl: PublicRead
@@ -87,37 +89,37 @@ resources:
           ErrorDocument: error.html
         Tags:
           - Key: Context
-            Value: ${self:custom.context}
+            Value: ${{self:custom.context}}
     DashboardS3BucketPolicy:
-      Type: 'AWS::S3::BucketPolicy'
+      Type: "AWS::S3::BucketPolicy"
       Properties:
         Bucket:
           Ref: DashboardS3Bucket
         PolicyDocument:
           Id: DashboardS3PublicPolicy
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Sid: PublicReadForGetBucketObjects
               Effect: Allow
-              Principal: '*'
-              Action: 's3:GetObject'
+              Principal: "*"
+              Action: "s3:GetObject"
               Resource:
                 Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
+                  - ""
+                  - - "arn:aws:s3:::"
                     - Ref: DashboardS3Bucket
-                    - '/*'
+                    - "/*"
     MetricsDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       Properties:
-        TableName: ${self:custom.dynamoMetricsTableName}
+        TableName: ${{self:custom.dynamoMetricsTableName}}
         AttributeDefinitions:
-          - AttributeName: ${self:custom.dynamoMetricsTableKey}
+          - AttributeName: ${{self:custom.dynamoMetricsTableKey}}
             AttributeType: S
           - AttributeName: timestamp
-            AttributeType: 'N'
+            AttributeType: "N"
         KeySchema:
-          - AttributeName: ${self:custom.dynamoMetricsTableKey}
+          - AttributeName: ${{self:custom.dynamoMetricsTableKey}}
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE
@@ -126,16 +128,16 @@ resources:
           WriteCapacityUnits: 3
         Tags:
           - Key: Context
-            Value: ${self:custom.context}
+            Value: ${{self:custom.context}}
     WeatherDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       Properties:
-        TableName: ${self:custom.dynamoWeatherTableName}
+        TableName: ${{self:custom.dynamoWeatherTableName}}
         AttributeDefinitions:
           - AttributeName: city
-            AttributeType: 'N'
+            AttributeType: "N"
           - AttributeName: timestamp
-            AttributeType: 'N'
+            AttributeType: "N"
         KeySchema:
           - AttributeName: city
             KeyType: HASH
@@ -146,53 +148,146 @@ resources:
           WriteCapacityUnits: 1
         Tags:
           - Key: Context
-            Value: ${self:custom.context}
+            Value: ${{self:custom.context}}
     GetDataLambdaExecutionRole:
-      Type: 'AWS::IAM::Role'
+      Type: "AWS::IAM::Role"
       Properties:
         AssumeRolePolicyDocument:
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Principal:
                 Service:
                   - lambda.amazonaws.com
               Action:
-                - 'sts:AssumeRole'
+                - "sts:AssumeRole"
         Policies:
-          - PolicyName: GetDataRolePolicy
+          - PolicyName: ${{self:custom.context}}_GetDataRolePolicy
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
-                  Action: '*'
+                  Action: "*"
                   Resource:
                     Fn::GetAtt: [ WeatherDynamoDBTable, Arn ]
                 - Effect: Allow
-                  Action: '*'
+                  Action: "*"
                   Resource:
                     Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]
     FetchWeatherLambdaExecutionRole:
-      Type: 'AWS::IAM::Role'
+      Type: "AWS::IAM::Role"
       Properties:
         AssumeRolePolicyDocument:
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Principal:
                 Service:
                   - lambda.amazonaws.com
               Action:
-                - 'sts:AssumeRole'
+                - "sts:AssumeRole"
         Policies:
-          - PolicyName: FetchWeatherRolePolicy
+          - PolicyName: ${{self:custom.context}}_FetchWeatherRolePolicy
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
-                  Action: '*'
+                  Action: "*"
                   Resource:
                     Fn::GetAtt: [ WeatherDynamoDBTable, Arn ]
+    IotThing:
+      Type: "AWS::IoT::Thing"
+      Properties:
+        ThingName: ${{self:custom.thingName}}
+    IotThingPolicy:
+      Type: "AWS::IoT::Policy"
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action: "iot:*"
+              Effect: Allow
+              Resource: "*"
+    StoreMetricsIotRule:
+      Type: "AWS::IoT::TopicRule"
+      Properties:
+        RuleName: ${{self:custom.context}}_StoreMetrics
+        TopicRulePayload:
+          RuleDisabled: "false"
+          AwsIotSqlVersion: "2016-03-23"
+          Sql:
+            Fn::Join:
+              - ""
+              - - "SELECT state.reported.temperature,"
+                - "state.reported.humidity,"
+                - "state.reported.pressure,"
+                - "timestamp "
+                - "FROM '$aws/things/+/shadow/update/accepted' "
+                - "WHERE startswith(topic(3),'${{self:custom.context}}') = true"
+          Actions:
+            - DynamoDB:
+                RoleArn:
+                  Fn::GetAtt: [ IotDynamoPutRole, Arn ]
+                TableName: ${{self:custom.dynamoMetricsTableName}}
+                HashKeyField: ${{self:custom.dynamoMetricsTableKey}}
+                HashKeyType: STRING
+                HashKeyValue: ${{self:custom.thingName}}
+                RangeKeyField: timestamp
+                RangeKeyType: NUMBER
+                RangeKeyValue: "${metadata.reported.temperature.timestamp}"
+                PayloadField: payload
+            - Republish:
+                RoleArn:
+                  Fn::GetAtt: [ IotRepublishRole, Arn ]
+                Topic: ${{self:custom.iotPublicTopic}}
+    IotDynamoPutRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - iot.amazonaws.com
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: ${{self:custom.context}}_IotPutMetricsTable
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: "dynamodb:PutItem"
+                  Resource:
+                    Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]
+    IotRepublishRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - iot.amazonaws.com
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: ${{self:custom.context}}_IotRepublishToPublicTopic
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: "iot:Publish"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topic/"
+                        - ${{self:custom.iotPublicTopic}}
+
   Outputs:
     MetricsTableArn:
       Description: The ARN for the Metrics Table
