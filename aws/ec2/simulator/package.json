@@ -1,0 +1,14 @@
+{
+  "name": "aws-iot-demo-device-simulator",
+  "version": "1.0.0",
+  "description": "Nordic thingy device emulator",
+  "main": "index.js",
+  "scripts": {
+    "tick": "node index.js"
+  },
+  "author": "Mikhail Vataleu (mvataleu@klika-tech.com)",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.139.0"
+  }
+}

@@ -17,10 +17,10 @@ echo "Enable the bluetooth 6lowpan module."
 echo 1 > /sys/kernel/debug/bluetooth/6lowpan_enable
 
 echo "Look for available HCI devices."
-hciconfig
+#hciconfig
 
 echo "Reset HCI0 device."
-hciconfig hci0 reset
+#hciconfig hci0 reset
 
 echo "Connect to Nordic Thingy 52."
 echo "connect 00:AA:13:A1:5C:A5 1" > /sys/kernel/debug/bluetooth/6lowpan_control

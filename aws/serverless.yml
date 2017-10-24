@@ -5,6 +5,16 @@ service:
 
 frameworkVersion: ">=1.0.0 <2.0.0"
 
+custom:
+  context: nordic
+  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):ownApiKey}}
+  dynamoMetricsTableKey: thing
+  thingName: ${{self:custom.context}}_thingy_52
+  federationName: ${{self:custom.context}}_federation
+  iotPublicTopic: ${{self:custom.context}}/public
+  dynamoWeatherTableName: ${{self:custom.context}}_own-weather
+  dynamoMetricsTableName: ${{self:custom.context}}_metrics
+
 provider:
   name: aws
   runtime: nodejs6.10
@@ -12,18 +22,14 @@ provider:
   timeout: 10
   versionFunctions: true
   variableSyntax: "\\${{([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)}}"
+  environment:
+    THING_NAME: ${{self:custom.thingName}}
+    OWN_API_KEY: ${{self:custom.ownApiKey}}
+    DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
+    DYNAMO_DB_METRICS_TABLE_NAME: ${{self:custom.dynamoMetricsTableName}}
+    DYNAMO_DB_METRICS_TABLE_KEY: ${{self:custom.dynamoMetricsTableKey}}
   stackTags:
     CONTEXT: ${{self:custom.context}}
-
-custom:
-  context: ${{file(config.${{self:provider.stage}}.yml):context}}
-  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):ownApiKey}}
-  dynamoMetricsTableKey: thing
-  thingName: ${{self:custom.context}}_thingy_1
-  federationName: ${{self:custom.context}}_federation
-  iotPublicTopic: ${{self:custom.context}}/public
-  dynamoWeatherTableName: ${{self:custom.context}}_own-weather
-  dynamoMetricsTableName: ${{self:custom.context}}_metrics
 
 package:
   exclude:
@@ -33,23 +39,18 @@ package:
   excludeDevDependencies: true
 
 functions:
-  getData:
-    role: GetDataLambdaExecutionRole
-    handler: lambdas/getData/index.handler
-    name: ${{self:custom.context}}_getData
+  getHistory:
+    role: GetHistoryLambdaExecutionRole
+    handler: lambdas/getHistory.handler
+    name: ${{self:custom.context}}_getHistory
     timeout: 60
-    environment:
-      THING_NAME: ${{self:custom.thingName}}
-      DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
-      DYNAMO_DB_METRICS_TABLE_NAME: ${{self:custom.dynamoMetricsTableName}}
-      DYNAMO_DB_METRICS_TABLE_KEY: ${{self:custom.dynamoMetricsTableKey}}
     tags:
       CONTEXT: ${{self:custom.context}}
     events:
       - http:
           method: get
           integration: lambda
-          path: getData
+          path: getHistory
           cors: true
           request:
             passThrough: WHEN_NO_MATCH
@@ -66,11 +67,8 @@ functions:
                      Content-Type: "'application/json'"
   fetchWeather:
     role: FetchWeatherLambdaExecutionRole
-    handler: lambdas/fetchWeather/index.handler
+    handler: lambdas/fetchWeather.handler
     name: ${{self:custom.context}}_fetchWeather
-    environment:
-      OWN_API_KEY: ${{self:custom.ownApiKey}}
-      DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
     tags:
       CONTEXT: ${{self:custom.context}}
     events:
@@ -150,7 +148,7 @@ resources:
         Tags:
           - Key: Context
             Value: ${{self:custom.context}}
-    GetDataLambdaExecutionRole:
+    GetHistoryLambdaExecutionRole:
       Type: "AWS::IAM::Role"
       Properties:
         AssumeRolePolicyDocument:
@@ -163,7 +161,7 @@ resources:
               Action:
                 - "sts:AssumeRole"
         Policies:
-          - PolicyName: ${{self:custom.context}}_GetDataRolePolicy
+          - PolicyName: ${{self:custom.context}}_GetHistoryRolePolicy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -200,7 +198,11 @@ resources:
       Type: "AWS::IoT::Thing"
       Properties:
         ThingName: ${{self:custom.thingName}}
-    IotThingPolicy:
+    IotSimulatorThing:
+      Type: "AWS::IoT::Thing"
+      Properties:
+        ThingName: ${{self:custom.thingName}}_simulator
+    BleRouterPolicy:
       Type: "AWS::IoT::Policy"
       Properties:
         PolicyDocument:
@@ -379,6 +381,9 @@ resources:
             - .amazonaws.com
     MqttTopic:
       Value: ${{self:custom.iotPublicTopic}}
+    BleRouterPolicyArn:
+      Value:
+        Fn::GetAtt: [ BleRouterPolicy, Arn ]
     WebsiteURL:
       Value:
         Fn::GetAtt: [ DashboardS3Bucket, WebsiteURL ]

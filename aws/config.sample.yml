@@ -1,6 +1,1 @@
-context: "Nordic"
 ownApiKey: "<Your API Key>"
-thingName: "Nordic"
-dynamoWeatherTableName: "own-weather"
-dynamoMetricsTableName: "metrics"
-dynamoMetricsTableKey: "thing"
