@@ -35,7 +35,6 @@ const mapStateToProps = state => ({
 });
 
 class Main extends React.Component {
-
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({ type: AWS_CONNECT });
@@ -139,7 +138,6 @@ class Main extends React.Component {
             </MainContainerWR>
         );
     }
-
 }
 
 export default connect(mapStateToProps)(Main);

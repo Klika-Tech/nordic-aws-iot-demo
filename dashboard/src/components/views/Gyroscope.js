@@ -10,10 +10,10 @@ const mapStateToProps = state => ({
 
 const Gyroscope = ({ data, markersData }) => (
     <DimensionsChart
-            type="gyroscope"
-            units={DEGREES}
-            data={data}
-            markersData={markersData}
+        type="gyroscope"
+        units={DEGREES}
+        data={data}
+        markersData={markersData}
     />
 );
 

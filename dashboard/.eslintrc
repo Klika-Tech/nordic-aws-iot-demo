@@ -13,6 +13,9 @@
     "consistent-return": "off",
     "no-unused-vars": "off",
     "no-use-before-define": "off",
+    "object-curly-newline": "off",
+    "prefer-destructuring": "off",
+    "function-paren-newline": "off",
     "class-methods-use-this": "off",
     "no-mixed-operators": "off",
     "no-unneeded-ternary": "off",
@@ -28,6 +31,11 @@
     "react/jsx-indent-props": "off",
     "react/jsx-filename-extension": "off",
     "react/no-find-dom-node": "off",
-    "react/forbid-prop-types": "off"
+    "react/forbid-prop-types": "off",
+    "react/require-default-props": "off",
+    "react/jsx-closing-tag-location": "off",
+    "react/jsx-max-props-per-line": "off",
+    "jsx-a11y/mouse-events-have-key-events": "off",
+    "jsx-a11y/anchor-is-valid": "off"
   }
 }

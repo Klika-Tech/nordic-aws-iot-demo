@@ -1,9 +1,10 @@
+import { get } from 'lodash';
 import { getActualData } from './utils';
 
 export function fetch(type, key) {
     const pdi = prepareDataItem(key);
     return (fullData) => {
-        const items = _.get(fullData, 'sensorData', []);
+        const items = get(fullData, 'sensorData', []);
         const data = items.map(pdi);
         return {
             type,
@@ -15,7 +16,7 @@ export function fetch(type, key) {
 export function push(type, key) {
     const pdi = prepareDataItem(key);
     return (chunks, state) => {
-        let data = _.get(state, 'data', []);
+        let data = get(state, 'data', []);
         data = data.concat(chunks.map(pdi));
         data = getActualData(data);
         return {

@@ -54,7 +54,7 @@ export const fetch = (actionType, type, pdi) => (fullData) => {
 
 
 export const push = (actionType, pdi) => (chunks, state) => {
-    let sensorData = state.sensorData;
+    let { sensorData } = state;
     sensorData = sensorData.concat(chunks.map(pdi));
     sensorData = getActualData(sensorData);
     const citiesData = getUpdatedCitiesDataStub(state.citiesData, sensorData);

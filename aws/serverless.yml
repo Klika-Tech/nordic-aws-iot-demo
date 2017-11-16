@@ -329,8 +329,19 @@ resources:
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                - Effect: Allow
-                  Action: 'iot:*'
+                -
+                  Effect: Allow
+                  Action:
+                    - "mobileanalytics:PutEvents"
+                    - "cognito-sync:*"
+                  Resource:
+                    - "*"
+                -
+                  Effect: Allow
+                  Action:
+                    - "iot:Connect"
+                    - "iot:Receive"
+                    - "iot:Subscribe"
                   Resource:
                     Fn::Join:
                       - ""
@@ -362,9 +373,26 @@ resources:
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                - Effect: Allow
-                  Action: 'iot:*'
-                  Resource: '*'
+                -
+                  Effect: Allow
+                  Action:
+                    - "mobileanalytics:PutEvents"
+                    - "cognito-sync:*"
+                    - "cognito-identity:*"
+                  Resource:
+                    - "*"
+                -
+                  Effect: Allow
+                  Action: "iot:*"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topic/"
+                        - ${{self:custom.iotPublicTopic}}
   Outputs:
     AwsRegion:
       Value:

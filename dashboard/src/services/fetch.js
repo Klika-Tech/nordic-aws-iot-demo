@@ -5,8 +5,8 @@ import 'whatwg-fetch';
  * @param apiUrl
  * @return {*|Promise.<Object>}
  */
-export function fetchAwsMetrics({ apiUrl }) {
+export function fetchAwsMetrics({ fetchApiUrl }) {
     const since = Math.round(Date.now() / 1000) - 14400;
-    return fetch(`${apiUrl}getNucleoData?metric=temperature&since=${since}`)
+    return fetch(`${fetchApiUrl}?since=${since}`)
         .then(response => response.json());
 }

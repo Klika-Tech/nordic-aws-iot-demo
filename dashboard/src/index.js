@@ -1,4 +1,3 @@
-import 'file?name=[name].[ext]!./index.html';
 import React from 'react';
 import { render } from 'react-dom';
 import configureStore from './configureStore';

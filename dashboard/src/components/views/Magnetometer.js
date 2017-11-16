@@ -10,10 +10,10 @@ const mapStateToProps = state => ({
 
 const Magnetometer = ({ data, markersData }) => (
     <DimensionsChart
-            type="magnetometer"
-            units={TESLAS}
-            data={data}
-            markersData={markersData}
+        type="magnetometer"
+        units={TESLAS}
+        data={data}
+        markersData={markersData}
     />
 );
 

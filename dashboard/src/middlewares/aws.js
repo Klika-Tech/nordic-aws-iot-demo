@@ -1,10 +1,13 @@
-import AWS from 'exports?AWS!aws-sdk/dist/aws-sdk';
 import { AWS_CONNECT, MQTT_DISCONNECTED } from '../actionTypes';
 import * as FetchService from '../services/fetch';
 import config from '../config';
 import { fetchData } from '../actions/data';
 import * as SigV4Utils from '../services/awsSign';
 import { connect } from '../actions/mqtt';
+
+require('aws-sdk/dist/aws-sdk');
+
+const AWS = window.AWS;
 
 const awsMiddleware = store => next => (action) => {
     switch (action.type) {

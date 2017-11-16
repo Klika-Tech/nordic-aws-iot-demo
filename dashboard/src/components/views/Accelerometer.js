@@ -10,10 +10,10 @@ const mapStateToProps = state => ({
 
 const Accelerometer = ({ data, markersData }) => (
     <DimensionsChart
-            type="accelerometer"
-            units={G}
-            data={data}
-            markersData={markersData}
+        type="accelerometer"
+        units={G}
+        data={data}
+        markersData={markersData}
     />
 );
 

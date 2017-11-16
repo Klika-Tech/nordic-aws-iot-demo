@@ -84,9 +84,4 @@ Axis.contextTypes = {
     containerWidth: PropTypes.number,
 };
 
-Axis.defaultProps = {
-    translateX: 0,
-    translateY: 0,
-};
-
 export default Axis;

@@ -1,48 +1,61 @@
-const WebpackShellPlugin = require('webpack-shell-plugin');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    entry: ['babel-polyfill', './src/'],
+    entry: './src/index.js',
     output: {
-        path: `${__dirname}/dist`,
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
-    devtool: 'source-map',
-    devServer: {
-        host: '0.0.0.0',
-        port: 8080,
-    },
+    devtool: 'cheap-module-eval-source-map',
+    plugins: [
+        new CleanWebpackPlugin(['dist']),
+        new ExtractTextPlugin('styles.css'),
+        new HtmlWebpackPlugin({ template: './src/index.html' }),
+    ],
     module: {
-        loaders: [
+        rules: [
+            {
+                enforce: 'pre',
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: ['eslint-loader'],
+            },
             {
                 test: /\.(js|jsx)$/,
-                loader: 'babel',
+                use: ['babel-loader'],
                 exclude: /node_modules/,
-                query: {
-                    presets: ['es2015', 'react'],
-                    plugins: ['transform-object-rest-spread'],
-                },
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                ],
             },
             {
                 test: /\.scss$/,
-                loaders: ['style', 'css', 'sass'],
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        { loader: 'css-loader', options: { importLoaders: 1 } },
+                        { loader: 'sass-loader', options: {} },
+                    ],
+                }),
             },
             {
-                test: /\.svg$/,
-                loader: 'svg-sprite',
-            }, {
-                test: /\.(woff2?|png|gif)$/,
-                loader: 'file',
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                loaders: [
+                    'file-loader?hash=sha512&digest=hex&name=[hash].[ext]',
+                    'image-webpack-loader?bypassOnDebug&optipng.optimizationLevel=7&gifsicle.interlaced=false',
+                ],
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf)$/,
+                use: 'file-loader',
             },
         ],
-        noParse: [
-            /aws-sdk/,
-        ],
     },
-    plugins: [
-        new WebpackShellPlugin({
-            onBuildStart: ['npm install; npm prune'],
-        }),
-        new CleanWebpackPlugin(['dist']),
-    ],
 };

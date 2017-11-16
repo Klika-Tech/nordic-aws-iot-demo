@@ -170,7 +170,7 @@ const Dashboard = ({ data }) => (
             </Col>
         </Row>
     </Grid>
-    );
+);
 
 
 export default Dashboard;
