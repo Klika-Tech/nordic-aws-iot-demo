@@ -21,9 +21,6 @@ const RouterComponent = ({ store }) => (
                 <Route path="temperature" component={Temperature} />
                 <Route path="humidity" component={Humidity} />
                 <Route path="barometer" component={Barometer} />
-                <Route path="magnetometer" component={Magnetometer} />
-                <Route path="gyroscope" component={Gyroscope} />
-                <Route path="accelerometer" component={Accelerometer} />
             </Route>
         </Router>
     </Provider>

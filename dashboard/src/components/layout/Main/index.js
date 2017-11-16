@@ -112,7 +112,7 @@ class Main extends React.Component {
                                         </Col>
                                         <Col xs={6} sm={4}>
                                             <NavbarHeader>
-                                                <NavbarBrand>Nucleo Board</NavbarBrand>
+                                                <NavbarBrand>Nordic Thingy 52</NavbarBrand>
                                             </NavbarHeader>
                                         </Col>
                                         <Col xs={3} sm={8}>

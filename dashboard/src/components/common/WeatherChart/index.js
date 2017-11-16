@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import WeatherParams from './Params';
 import WeatherChart from './Chart';
+import NoDataAvailable from '../NoDataAvailable';
 
 const WeatherChartContainer = ({
     type, chartType, displayedCitiesData, units, sensorData, markersData, citiesData,
@@ -18,14 +19,19 @@ const WeatherChartContainer = ({
             onChangeUnits={onChangeUnits}
         />
         <div className="weather-chart">
-            <WeatherChart
-                type={type}
-                chartType={chartType}
-                units={units}
-                data={sensorData}
-                markersData={markersData}
-                citiesData={displayedCitiesData}
-            />
+            { !sensorData.length && (
+                <NoDataAvailable />
+            ) }
+            { !!sensorData.length && (
+                <WeatherChart
+                    type={type}
+                    chartType={chartType}
+                    units={units}
+                    data={sensorData}
+                    markersData={markersData}
+                    citiesData={displayedCitiesData}
+                />
+            ) }
         </div>
     </div>
 );

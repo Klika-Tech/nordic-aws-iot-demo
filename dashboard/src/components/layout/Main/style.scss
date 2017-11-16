@@ -1,3 +1,5 @@
+@import "../../../theme/variables";
+
 body {
   font-family: Lato, sans-serif;
   margin: 0;
@@ -64,7 +66,7 @@ body {
   height: 75px;
 
   &.online {
-    color: #2EB398;
+    color: $theme-primary-color;
   }
 }
 

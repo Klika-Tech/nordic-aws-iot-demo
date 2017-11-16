@@ -20,18 +20,6 @@ const Menu = () => (
                 name="Barometer" href="/barometer"
                 glyph="icon-fontello-gauge"
             />
-            <SidebarNavItem
-                name="Magnetometer" href="/magnetometer"
-                glyph="icon-fontello-magnet"
-            />
-            <SidebarNavItem
-                name="Gyroscope" href="/gyroscope"
-                glyph="icon-fontello-direction"
-            />
-            <SidebarNavItem
-                name="Accelerometer" href="/accelerometer"
-                glyph="icon-fontello-chart-line"
-            />
         </SidebarNav>
     </div>
 );

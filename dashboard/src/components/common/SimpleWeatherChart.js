@@ -5,6 +5,7 @@ import './style.scss';
 import Chart from './Chart';
 import Axis from './Axis';
 import Area from './Area';
+import NoDataAvailable from './NoDataAvailable';
 
 const bisector = d3.bisector(d => d.date).right;
 
@@ -74,45 +75,50 @@ class SimpleWeatherChart extends Component {
         const { margin, x, y, height, width, focusData, focusYDomain } = this;
         return (
             <div className="nucleo-chart-container">
-                <div className="weather-chart">
-                    <svg width={containerWidth} height={containerHeight}>
-                        <defs>
-                            <clipPath id="clip">
-                                <rect width={width} height={height} />
-                            </clipPath>
-                        </defs>
-                        <g
-                            className="focus"
-                            transform={`translate(${margin.left},${margin.top})`}
-                        >
-                            <g className="zoom">
-                                <Area
+                { !focusData.length && (
+                    <NoDataAvailable />
+                ) }
+                { !!focusData.length && (
+                    <div className="weather-chart">
+                        <svg width={containerWidth} height={containerHeight}>
+                            <defs>
+                                <clipPath id="clip">
+                                    <rect width={width} height={height} />
+                                </clipPath>
+                            </defs>
+                            <g
+                                className="focus"
+                                transform={`translate(${margin.left},${margin.top})`}
+                            >
+                                <g className="zoom">
+                                    <Area
+                                        data={focusData}
+                                        domain={focusYDomain}
+                                        y0={d => y(focusYDomain[0])}
+                                        y1={d => y(d[type][units.key])}
+                                        x={d => x(d.date)}
+                                    />
+                                </g>
+                                <Axis
+                                    type="x"
+                                    scale={x}
+                                    data={focusData}
+                                    ticks={4}
+                                    translate={[0, height]}
+                                />
+                                <Axis
+                                    type="y"
+                                    scale={y}
                                     data={focusData}
                                     domain={focusYDomain}
-                                    y0={d => y(focusYDomain[0])}
-                                    y1={d => y(d[type][units.key])}
-                                    x={d => x(d.date)}
+                                    tickSize={0}
+                                    ticks={4}
+                                    tickFormat={v => (`${y.tickFormat()(v)}${units.label}`)}
                                 />
                             </g>
-                            <Axis
-                                type="x"
-                                scale={x}
-                                data={focusData}
-                                ticks={4}
-                                translate={[0, height]}
-                            />
-                            <Axis
-                                type="y"
-                                scale={y}
-                                data={focusData}
-                                domain={focusYDomain}
-                                tickSize={0}
-                                ticks={4}
-                                tickFormat={v => (`${y.tickFormat()(v)}${units.label}`)}
-                            />
-                        </g>
-                    </svg>
-                </div>
+                        </svg>
+                    </div>
+                )}
             </div>
         );
     }

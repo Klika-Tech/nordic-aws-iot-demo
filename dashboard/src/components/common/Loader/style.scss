@@ -1,3 +1,5 @@
+@import "../../../theme/variables";
+
 .loader,
 .loader:after {
   border-radius: 50%;
@@ -5,15 +7,16 @@
   height: 20em;
 }
 .loader {
-  //margin: 60px auto;
+  $theme-primary-color-l: lighten($theme-primary-color, 20%);
+
   margin: 0;
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
-  border-top: 1.1em solid rgba(46,179,152, 0.2);
-  border-right: 1.1em solid rgba(46,179,152, 0.2);
-  border-bottom: 1.1em solid rgba(46,179,152, 0.2);
-  border-left: 1.1em solid #2eb398;
+  border-top: 1.1em solid $theme-primary-color-l;
+  border-right: 1.1em solid $theme-primary-color-l;
+  border-bottom: 1.1em solid $theme-primary-color-l;
+  border-left: 1.1em solid $theme-primary-color;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
