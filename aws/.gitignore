@@ -1,5 +1,7 @@
 node_modules/
-tmp/
+dist/
+.spa/
+npm-debug.log
 .serverless/
 config.dev.yml
 config.prod.yml

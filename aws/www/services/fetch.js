@@ -10,3 +10,12 @@ export function fetchAwsMetrics({ fetchApiUrl }) {
     return fetch(`${fetchApiUrl}?since=${since}`)
         .then(response => response.json());
 }
+
+/**
+ * Load load pre-signed wss url for AWS IoT
+ * @param iotPresignedApiUrl
+ * @return {*|Promise.<Object>}
+ */
+export function fetchIotUrl({ iotPresignedApiUrl }) {
+    return fetch(iotPresignedApiUrl).then(response => response.json());
+}

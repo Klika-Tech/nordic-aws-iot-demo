@@ -1,9 +1,25 @@
 {
-  "name": "aws-iot-demo-dashboard",
-  "version": "0.1.2",
+  "name": "aws-iot-demo",
+  "version": "0.0.1",
+  "description": "Back-end and front-end running on AWS",
+  "main": "index.js",
+  "scripts": {
+    "lint:lambdas": "eslint lambdas",
+    "lint:lambdas:fix": "eslint lambdas --fix",
+    "lint:www": "eslint www",
+    "lint:www:fix": "eslint www --fix",
+    "build": "webpack -p --define process.env.NODE_ENV='\"production\"' --progress --colors",
+    "start:dev": "webpack-dev-server"
+  },
+  "keywords": [
+    "aws"
+  ],
+  "author": "Mikhail Vataleu (mvataleu@klika-tech.com)",
+  "license": "MIT",
   "dependencies": {
     "@sketchpixy/rubix": "2.9.11",
     "aws-sdk": "2.7.7",
+    "aws-signature-v4": "^1.1.0",
     "classnames": "2.2.5",
     "crypto-js": "3.1.8",
     "d3": "4.4.0",
@@ -23,6 +39,8 @@
     "whatwg-fetch": "1.1.1"
   },
   "devDependencies": {
+    "@jimdo/serverless-dotenv": "^1.0.0",
+    "aws-sdk": "^2.151.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^21.2.0",
@@ -34,6 +52,8 @@
     "babel-preset-stage-3": "^6.24.1",
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "^0.28.4",
+    "dotenv": "^4.0.0",
+    "dotenv-webpack": "^1.5.4",
     "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
@@ -53,6 +73,10 @@
     "react-addons-test-utils": "^15.6.2",
     "react-hot-loader": "^3.1.2",
     "sass-loader": "^6.0.6",
+    "serverless-dynamodb-local": "^0.2.26",
+    "serverless-offline": "^3.16.0",
+    "serverless-offline-scheduler": "^0.3.3",
+    "serverless-spa": "^1.2.0",
     "style-loader": "^0.19.0",
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0",
@@ -61,13 +85,5 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.9.4",
     "webpack-merge": "^4.1.1"
-  },
-  "scripts": {
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "build": "webpack -p --define process.env.NODE_ENV='\"production\"' --progress --colors",
-    "start:dev": "webpack-dev-server"
-  },
-  "author": "Mikhail Vataleu <mvataleu@klika-tech.com>",
-  "license": "MIT"
+  }
 }

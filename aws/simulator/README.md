@@ -1,7 +1,7 @@
 ## Nordic Thingy 52 Simulator
 
 For development and testing purposes you can use a simulator of [Nordic Thingy 52](https://www.nordicsemi.com/eng/Products/Nordic-Thingy-52). 
-You can use the simulator as the [local script](./start.sh), or you can deploy simulator standalone on [EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html). For setup, detail sees below.
+You can use the simulator as the [local script](start.sh), or you can deploy simulator standalone on [EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html). For setup, detail sees below.
 
 ### Requirements
 

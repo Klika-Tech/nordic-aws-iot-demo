@@ -5,15 +5,37 @@ service:
 
 frameworkVersion: ">=1.0.0 <2.0.0"
 
+plugins:
+  - '@jimdo/serverless-dotenv'
+  - serverless-dynamodb-local
+  - serverless-spa
+  - serverless-offline-scheduler
+  - serverless-offline
+
 custom:
   context: nordic
-  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):ownApiKey}}
+  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):OWN_API_KEY}}
   dynamoMetricsTableKey: thing
   thingName: ${{self:custom.context}}_thingy_52
   federationName: ${{self:custom.context}}_federation
-  iotPublicTopic: ${{self:custom.context}}/public
+  iotPublicTopic: publicData
   dynamoWeatherTableName: ${{self:custom.context}}_own-weather
   dynamoMetricsTableName: ${{self:custom.context}}_metrics
+  dashbardS3Bucket: ${{self:custom.context}}-${{self:provider.stage}}-serverless-site-s3
+
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+
+  spa:
+    appFolder: "www"
+    gzip: true
+    webpack:
+      dev: "webpack.spa.config.js"
+    bucket:
+      dev: ${{self:custom.dashbardS3Bucket}}
 
 provider:
   name: aws
@@ -23,6 +45,7 @@ provider:
   versionFunctions: true
   variableSyntax: "\\${{([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)}}"
   environment:
+    SERVICE_ENDPOINT: ${{cf:${{self:service}}-${{self:provider.stage}}.ServiceEndpoint}}
     THING_NAME: ${{self:custom.thingName}}
     OWN_API_KEY: ${{self:custom.ownApiKey}}
     DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
@@ -35,17 +58,16 @@ package:
   exclude:
     - .idea/**
     - .git/**
+    - simulator/**
+    - node_modules/**
     - .travis.yml
   excludeDevDependencies: true
 
 functions:
   getHistory:
-    role: GetHistoryLambdaExecutionRole
+    role: APILambdaExecutionRole
     handler: lambdas/getHistory.handler
-    name: ${{self:custom.context}}_getHistory
-    timeout: 60
-    tags:
-      CONTEXT: ${{self:custom.context}}
+    timeout: 30
     events:
       - http:
           method: get
@@ -65,12 +87,20 @@ functions:
                    pattern: ""
                    headers:
                      Content-Type: "'application/json'"
+
+  iotPresignedUrl:
+    role: APILambdaExecutionRole
+    handler: lambdas/iotPresignedUrl.handler
+    timeout: 30
+    events:
+      - http:
+          method: GET
+          cors: true
+          path: /iotPresignedUrl
+
   fetchWeather:
-    role: FetchWeatherLambdaExecutionRole
+    role: APILambdaExecutionRole
     handler: lambdas/fetchWeather.handler
-    name: ${{self:custom.context}}_fetchWeather
-    tags:
-      CONTEXT: ${{self:custom.context}}
     events:
       - schedule:
           rate: cron(0/15 * * * ? *)
@@ -82,13 +112,11 @@ resources:
       Type: "AWS::S3::Bucket"
       DeletionPolicy: Delete
       Properties:
+        BucketName: ${{self:custom.dashbardS3Bucket}}
         AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: error.html
-        Tags:
-          - Key: Context
-            Value: ${{self:custom.context}}
     DashboardS3BucketPolicy:
       Type: "AWS::S3::BucketPolicy"
       Properties:
@@ -123,11 +151,8 @@ resources:
           - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
-        Tags:
-          - Key: Context
-            Value: ${{self:custom.context}}
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     WeatherDynamoDBTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
@@ -145,10 +170,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        Tags:
-          - Key: Context
-            Value: ${{self:custom.context}}
-    GetHistoryLambdaExecutionRole:
+    APILambdaExecutionRole:
       Type: "AWS::IAM::Role"
       Properties:
         AssumeRolePolicyDocument:
@@ -161,7 +183,7 @@ resources:
               Action:
                 - "sts:AssumeRole"
         Policies:
-          - PolicyName: ${{self:custom.context}}_GetHistoryRolePolicy
+          - PolicyName: ${{self:custom.context}}_AdminDynamo
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -173,27 +195,13 @@ resources:
                   Action: "*"
                   Resource:
                     Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]
-    FetchWeatherLambdaExecutionRole:
-      Type: "AWS::IAM::Role"
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service:
-                  - lambda.amazonaws.com
-              Action:
-                - "sts:AssumeRole"
-        Policies:
-          - PolicyName: ${{self:custom.context}}_FetchWeatherRolePolicy
+          - PolicyName: ${{self:custom.context}}_CloudWatchLogStreams
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
                 - Effect: Allow
-                  Action: "*"
-                  Resource:
-                    Fn::GetAtt: [ WeatherDynamoDBTable, Arn ]
+                  Action: "logs:*"
+                  Resource: "*"
     IotThing:
       Type: "AWS::IoT::Thing"
       Properties:
