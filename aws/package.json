@@ -4,18 +4,27 @@
   "description": "Back-end and front-end running on AWS",
   "main": "index.js",
   "scripts": {
+    "login": "serverless login",
+    "setup": "serverless dynamodb install",
+    "info": "serverless info",
+    "offline": "cross-env IS_OFFLINE=true serverless offline start",
+    "offline:invoke": "cross-env IS_OFFLINE=true serverless invoke local",
+    "offline:invoke:fetchWeather": "npm run offline:invoke -- --function=fetchWeather",
+    "spa:build": "serverless spa bundle",
+    "spa:build:offline": "cross-env IS_OFFLINE=true npm run spa:build",
+    "spa:serve": "serverless spa serve",
+    "spa:serve:offline": "cross-env IS_OFFLINE=true serverless spa serve",
     "lint:lambdas": "eslint lambdas",
     "lint:lambdas:fix": "eslint lambdas --fix",
     "lint:www": "eslint www",
     "lint:www:fix": "eslint www --fix",
-    "build": "webpack -p --define process.env.NODE_ENV='\"production\"' --progress --colors",
-    "start:dev": "webpack-dev-server"
+    "deploy:sls": "serverless deploy --verbose",
+    "deploy:spa": "serverless spa deploy",
+    "remove:sls": "serverless remove --verbose"
   },
   "keywords": [
     "aws"
   ],
-  "author": "Mikhail Vataleu (mvataleu@klika-tech.com)",
-  "license": "MIT",
   "dependencies": {
     "@sketchpixy/rubix": "2.9.11",
     "aws-sdk": "2.7.7",
@@ -39,7 +48,6 @@
     "whatwg-fetch": "1.1.1"
   },
   "devDependencies": {
-    "@jimdo/serverless-dotenv": "^1.0.0",
     "aws-sdk": "^2.151.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -51,9 +59,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "clean-webpack-plugin": "^0.1.17",
+    "cross-env": "^5.1.1",
     "css-loader": "^0.28.4",
-    "dotenv": "^4.0.0",
-    "dotenv-webpack": "^1.5.4",
     "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
@@ -73,10 +80,12 @@
     "react-addons-test-utils": "^15.6.2",
     "react-hot-loader": "^3.1.2",
     "sass-loader": "^6.0.6",
+    "serverless": "^1.24.1",
     "serverless-dynamodb-local": "^0.2.26",
     "serverless-offline": "^3.16.0",
     "serverless-offline-scheduler": "^0.3.3",
     "serverless-spa": "^1.2.0",
+    "serverless-stack-output": "^0.2.3",
     "style-loader": "^0.19.0",
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0",
@@ -85,5 +94,7 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.9.4",
     "webpack-merge": "^4.1.1"
-  }
+  },
+  "author": "Mikhail Vataleu (mvataleu@klika-tech.com)",
+  "license": "MIT"
 }

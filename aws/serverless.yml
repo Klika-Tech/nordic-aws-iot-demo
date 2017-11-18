@@ -6,36 +6,34 @@ service:
 frameworkVersion: ">=1.0.0 <2.0.0"
 
 plugins:
-  - '@jimdo/serverless-dotenv'
+  - serverless-stack-output
   - serverless-dynamodb-local
   - serverless-spa
   - serverless-offline-scheduler
   - serverless-offline
 
 custom:
+  stage: ${{opt:stage, self:provider.stage}}
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+  spa:
+    appFolder: "www"
+    gzip: true
+    webpack: "webpack.spa.config.js"
+    bucket: ${{self:custom.context}}-${{self:custom.stage}}-serverless-site-s3
+  output:
+    file: .serverless/stack.json
   context: nordic
-  ownApiKey: ${{file(config.${{self:provider.stage}}.yml):OWN_API_KEY}}
+  ownApiKey: ${{file(config.${{self:custom.stage}}.yml):OWN_API_KEY}}
   dynamoMetricsTableKey: thing
   thingName: ${{self:custom.context}}_thingy_52
   federationName: ${{self:custom.context}}_federation
   iotPublicTopic: publicData
   dynamoWeatherTableName: ${{self:custom.context}}_own-weather
   dynamoMetricsTableName: ${{self:custom.context}}_metrics
-  dashbardS3Bucket: ${{self:custom.context}}-${{self:provider.stage}}-serverless-site-s3
-
-  dynamodb:
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-
-  spa:
-    appFolder: "www"
-    gzip: true
-    webpack:
-      dev: "webpack.spa.config.js"
-    bucket:
-      dev: ${{self:custom.dashbardS3Bucket}}
 
 provider:
   name: aws
@@ -45,7 +43,6 @@ provider:
   versionFunctions: true
   variableSyntax: "\\${{([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)}}"
   environment:
-    SERVICE_ENDPOINT: ${{cf:${{self:service}}-${{self:provider.stage}}.ServiceEndpoint}}
     THING_NAME: ${{self:custom.thingName}}
     OWN_API_KEY: ${{self:custom.ownApiKey}}
     DYNAMO_DB_WEATHER_TABLE_NAME: ${{self:custom.dynamoWeatherTableName}}
@@ -58,8 +55,8 @@ package:
   exclude:
     - .idea/**
     - .git/**
+    - .spa/**
     - simulator/**
-    - node_modules/**
     - .travis.yml
   excludeDevDependencies: true
 
@@ -94,9 +91,9 @@ functions:
     timeout: 30
     events:
       - http:
-          method: GET
+          path: iotPresignedUrl
+          method: get
           cors: true
-          path: /iotPresignedUrl
 
   fetchWeather:
     role: APILambdaExecutionRole
@@ -108,34 +105,6 @@ functions:
 
 resources:
   Resources:
-    DashboardS3Bucket:
-      Type: "AWS::S3::Bucket"
-      DeletionPolicy: Delete
-      Properties:
-        BucketName: ${{self:custom.dashbardS3Bucket}}
-        AccessControl: PublicRead
-        WebsiteConfiguration:
-          IndexDocument: index.html
-          ErrorDocument: error.html
-    DashboardS3BucketPolicy:
-      Type: "AWS::S3::BucketPolicy"
-      Properties:
-        Bucket:
-          Ref: DashboardS3Bucket
-        PolicyDocument:
-          Id: DashboardS3PublicPolicy
-          Version: "2012-10-17"
-          Statement:
-            - Sid: PublicReadForGetBucketObjects
-              Effect: Allow
-              Principal: "*"
-              Action: "s3:GetObject"
-              Resource:
-                Fn::Join:
-                  - ""
-                  - - "arn:aws:s3:::"
-                    - Ref: DashboardS3Bucket
-                    - "/*"
     MetricsDynamoDBTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
@@ -195,6 +164,13 @@ resources:
                   Action: "*"
                   Resource:
                     Fn::GetAtt: [ MetricsDynamoDBTable, Arn ]
+          - PolicyName: ${{self:custom.context}}_AdminIoT
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: "iot:*"
+                  Resource: "*"
           - PolicyName: ${{self:custom.context}}_CloudWatchLogStreams
             PolicyDocument:
               Version: "2012-10-17"
@@ -402,12 +378,6 @@ resources:
                         - ":topic/"
                         - ${{self:custom.iotPublicTopic}}
   Outputs:
-    AwsRegion:
-      Value:
-        Ref: "AWS::Region"
-    CognitoIdentityPool:
-      Value:
-        Ref: CognitoPool
     IotEndpoint:
       Value:
         Fn::Join:
@@ -420,6 +390,3 @@ resources:
     BleRouterPolicyArn:
       Value:
         Fn::GetAtt: [ BleRouterPolicy, Arn ]
-    WebsiteURL:
-      Value:
-        Fn::GetAtt: [ DashboardS3Bucket, WebsiteURL ]

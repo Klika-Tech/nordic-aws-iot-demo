@@ -3,5 +3,6 @@ dist/
 .spa/
 npm-debug.log
 .serverless/
+config.offline.yml
 config.dev.yml
 config.prod.yml

@@ -1,27 +1,23 @@
-const dotEnvPath = '.serverless/.env';
-require('dotenv').config({ path: dotEnvPath });
-
-const path = require('path');
-const Dotenv = require('dotenv-webpack');
+const { DefinePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-if (!process.env.IS_OFFLINE) { // XXX
-    process.env.API_ENDPOINT = `${process.env.SERVICE_ENDPOINT}/`;
+const definition = {};
+
+if (process.env.IS_OFFLINE) {
+    definition["SERVICE_ENDPOINT"] = JSON.stringify("http://localhost:3000");
+} else {
+    const stack = require("./.serverless/stack.json");
+    definition["SERVICE_ENDPOINT"] = JSON.stringify(stack.ServiceEndpoint);
 }
-console.log(`API Endpoint: ${process.env.API_ENDPOINT}`);
+
+console.log('Definition: ', definition);
 
 module.exports = {
     entry: './www/index.js',
-    output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist'),
-    },
     devtool: 'cheap-module-eval-source-map',
     plugins: [
-        new Dotenv({ path: dotEnvPath, safe: false }),
-        new CleanWebpackPlugin(['dist']),
+        new DefinePlugin(definition),
         new ExtractTextPlugin('styles.css'),
         new HtmlWebpackPlugin({ template: './www/index.ejs' }),
     ],

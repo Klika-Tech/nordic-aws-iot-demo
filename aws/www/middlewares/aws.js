@@ -16,7 +16,7 @@ const awsMiddleware = store => next => (action) => {
         setTimeout(() => {
             if (config.debug) console.log('MQTT: Reconnect...');
             identifyAndConnect(store.dispatch, config);
-        }, 1000);
+        }, 5000);
         break;
     default:
         return next(action);
