@@ -5,7 +5,7 @@
  * */
 
 const http = require('http');
-const dc = require('./common/dynamodb');
+import dc from './common/dynamodb';
 
 exports.handler = (event, context, callback) => {
     const cities = [

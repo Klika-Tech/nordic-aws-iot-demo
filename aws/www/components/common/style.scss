@@ -36,7 +36,7 @@
     }
 
     .area {
-      fill: #6dcab7;
+      fill: darken($theme-primary-color, 15%);
       clip-path: url(#clip);
     }
 

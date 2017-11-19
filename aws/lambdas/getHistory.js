@@ -6,7 +6,7 @@
  * - DYNAMO_DB_WEATHER_TABLE_NAME - Dynamo DB weather table name
  * */
 
-const dc = require('./common/dynamodb');
+import dc from './common/dynamodb';
 
 exports.handler = (event, context, callback) => {
     const thingName = process.env.THING_NAME;
@@ -16,7 +16,6 @@ exports.handler = (event, context, callback) => {
 
     const since = event.since || Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
 
-    console.log('metricsTableName:', metricsTableName);
     console.log('since:', since);
 
     const metricsQueryParams = {

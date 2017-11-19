@@ -28,7 +28,6 @@
   "dependencies": {
     "@sketchpixy/rubix": "2.9.11",
     "aws-sdk": "2.7.7",
-    "aws-signature-v4": "^1.1.0",
     "classnames": "2.2.5",
     "crypto-js": "3.1.8",
     "d3": "4.4.0",
@@ -86,14 +85,14 @@
     "serverless-offline-scheduler": "^0.3.3",
     "serverless-spa": "^1.2.0",
     "serverless-stack-output": "^0.2.3",
+    "serverless-webpack": "^4.0.0",
     "style-loader": "^0.19.0",
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0",
     "stylelint-webpack-plugin": "^0.9.0",
     "webpack": "^3.8.1",
     "webpack-dev-middleware": "^1.12.0",
-    "webpack-dev-server": "^2.9.4",
-    "webpack-merge": "^4.1.1"
+    "webpack-dev-server": "^2.9.4"
   },
   "author": "Mikhail Vataleu (mvataleu@klika-tech.com)",
   "license": "MIT"

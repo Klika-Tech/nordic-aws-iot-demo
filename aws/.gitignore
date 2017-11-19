@@ -1,8 +1,8 @@
 node_modules/
-dist/
 .spa/
-npm-debug.log
+.webpack/
 .serverless/
+npm-debug.log
 config.offline.yml
 config.dev.yml
 config.prod.yml
