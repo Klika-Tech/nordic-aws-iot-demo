@@ -15,6 +15,15 @@ plugins:
 
 custom:
   stage: ${{opt:stage, self:provider.stage}}
+  context: nordic
+  ownApiKey: ${{file(config.${{self:custom.stage}}.yml):OWN_API_KEY}}
+  thingName: ${{self:custom.context}}_thingy_52
+  federationName: ${{self:custom.context}}_federation
+  iotPublicTopic: publicData
+  dynamoMetricsTableKey: thing
+  dynamoMetricsTableName: ${{self:custom.context}}_metrics
+  dynamoWeatherTableName: ${{self:custom.context}}_own-weather
+  spaS3BucketName: ${{self:custom.context}}-${{self:custom.stage}}-spa
   dynamodb:
     start:
       port: 8000
@@ -24,23 +33,15 @@ custom:
     appFolder: "www"
     gzip: true
     webpack: "webpack.spa.config.js"
-    bucket: ${{self:custom.context}}-${{self:custom.stage}}-serverless-site-s3
+    bucket: ${{self:custom.spaS3BucketName}}
   output:
     file: .serverless/stack.json
-  context: nordic
-  ownApiKey: ${{file(config.${{self:custom.stage}}.yml):OWN_API_KEY}}
-  dynamoMetricsTableKey: thing
-  thingName: ${{self:custom.context}}_thingy_52
-  federationName: ${{self:custom.context}}_federation
-  iotPublicTopic: publicData
-  dynamoWeatherTableName: ${{self:custom.context}}_own-weather
-  dynamoMetricsTableName: ${{self:custom.context}}_metrics
 
 provider:
   name: aws
   runtime: nodejs6.10
   memorySize: 256
-  timeout: 10
+  timeout: 30
   versionFunctions: true
   variableSyntax: "\\${{([ ~:a-zA-Z0-9._\\'\",\\-\\/\\(\\)]+?)}}"
   environment:
@@ -67,7 +68,6 @@ functions:
   getHistory:
     role: APILambdaExecutionRole
     handler: lambdas/getHistory.handler
-    timeout: 30
     events:
       - http:
           method: get
@@ -91,7 +91,6 @@ functions:
   iotPresignedUrl:
     role: APILambdaExecutionRole
     handler: lambdas/iotPresignedUrl.handler
-    timeout: 30
     events:
       - http:
           path: iotPresignedUrl
@@ -123,7 +122,7 @@ resources:
           - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
+          ReadCapacityUnits: 3
           WriteCapacityUnits: 1
     WeatherDynamoDBTable:
       Type: "AWS::DynamoDB::Table"
@@ -140,7 +139,7 @@ resources:
           - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
+          ReadCapacityUnits: 3
           WriteCapacityUnits: 1
     APILambdaExecutionRole:
       Type: "AWS::IAM::Role"
@@ -312,21 +311,41 @@ resources:
                 'ForAnyValue:StringLike':
                   'cognito-identity.amazonaws.com:amr': unauthenticated
         Policies:
-          - PolicyName: CognitoIotUnAuthRole
+          - PolicyName: CognitoIotUnAuthPolicy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                -
-                  Effect: Allow
+                - Effect: Allow
                   Action:
                     - "mobileanalytics:PutEvents"
                     - "cognito-sync:*"
-                  Resource:
-                    - "*"
-                -
-                  Effect: Allow
-                  Action: "iot:*"
                   Resource: "*"
+                - Effect: Allow
+                  Action: "iot:Connect"
+                  Resource: "*"
+                - Effect: Allow
+                  Action: "iot:Subscribe"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topicfilter/"
+                        - ${{self:custom.iotPublicTopic}}
+                - Effect: Allow
+                  Action:
+                    - "iot:Receive"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topic/"
+                        - ${{self:custom.iotPublicTopic}}
     CognitoAuthorizedRole:
       Type: "AWS::IAM::Role"
       Properties:
@@ -345,26 +364,57 @@ resources:
                 'ForAnyValue:StringLike':
                   'cognito-identity.amazonaws.com:amr': authenticated
         Policies:
-          - PolicyName: CognitoIotAuthRole
+          - PolicyName: CognitoIotAuthPolicy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                -
-                  Effect: Allow
+                - Effect: Allow
                   Action:
                     - "mobileanalytics:PutEvents"
                     - "cognito-sync:*"
                     - "cognito-identity:*"
-                  Resource:
-                    - "*"
-                -
-                  Effect: Allow
-                  Action: "iot:*"
                   Resource: "*"
+                - Effect: Allow
+                  Action: "iot:Connect"
+                  Resource: "*"
+                - Effect: Allow
+                  Action: "iot:Subscribe"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topicfilter/"
+                        - ${{self:custom.iotPublicTopic}}
+                - Effect: Allow
+                  Action:
+                    - "iot:Receive"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iot:"
+                        - Ref: "AWS::Region"
+                        - ":"
+                        - Ref: "AWS::AccountId"
+                        - ":topic/"
+                        - ${{self:custom.iotPublicTopic}}
   Outputs:
-    CognitoPoolId:
+    Region:
       Value:
-        Ref: CognitoPool
+        Ref: "AWS::Region"
+    MetricsTableKey:
+      Value: ${{self:custom.dynamoMetricsTableKey}}
+    MetricsTableName:
+      Value: ${{self:custom.dynamoMetricsTableName}}
+    WeatherTableName:
+      Value: ${{self:custom.dynamoWeatherTableName}}
+    OwnApiKey:
+      Value: ${{self:custom.ownApiKey}}
+    BleRouterPolicyArn:
+      Value:
+        Fn::GetAtt: [ BleRouterPolicy, Arn ]
     IotEndpoint:
       Value:
         Fn::Join:
@@ -372,8 +422,12 @@ resources:
           - - data.iot.
             - Ref: "AWS::Region"
             - .amazonaws.com
+    ThingName:
+      Value: ${{self:custom.thingName}}
     MqttTopic:
       Value: ${{self:custom.iotPublicTopic}}
-    BleRouterPolicyArn:
+    CognitoPoolId:
       Value:
-        Fn::GetAtt: [ BleRouterPolicy, Arn ]
+        Ref: CognitoPool
+    SpaS3BucketName:
+      Value: ${{self:custom.spaS3BucketName}}
