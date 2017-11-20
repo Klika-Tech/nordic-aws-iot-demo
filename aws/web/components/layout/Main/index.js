@@ -31,7 +31,7 @@ const MainContainerWR = withRouter(MainContainer);
 
 const mapStateToProps = state => ({
     loader: !state.data.fetched,
-    online: state.mqtt.connected,
+    online: state.device.connected,
 });
 
 class Main extends React.Component {

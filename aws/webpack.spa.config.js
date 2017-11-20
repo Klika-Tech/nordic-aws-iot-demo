@@ -14,12 +14,12 @@ if (process.env.IS_OFFLINE) {
 console.log('Definition: ', definition);
 
 module.exports = {
-    entry: './www/index.js',
+    entry: './web/index.js',
     devtool: 'cheap-module-eval-source-map',
     plugins: [
         new DefinePlugin(definition),
         new ExtractTextPlugin('styles.css'),
-        new HtmlWebpackPlugin({ template: './www/index.ejs' }),
+        new HtmlWebpackPlugin({ template: './web/index.ejs' }),
     ],
     module: {
         rules: [

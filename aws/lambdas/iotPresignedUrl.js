@@ -6,13 +6,11 @@
 
 import { CognitoIdentityCredentials } from 'aws-sdk';
 import { getSignedUrl } from './common/sigv4';
+import { ok } from './common/response';
 
 exports.handler = (event, context, callback) => {
     if (process.env.IS_OFFLINE) {
-        callback(null, {
-            statusCode: 200,
-            body: JSON.stringify({ url: 'ws://127.0.0.1:1883' }), // local mosquitto over websockets
-        });
+        callback(null, ok({ url: 'ws://127.0.0.1:1883' }));
         return;
     }
     const region = process.env.AWS_REGION;
@@ -34,14 +32,6 @@ exports.handler = (event, context, callback) => {
             credentials.secretAccessKey,
             credentials.sessionToken
         );
-        const response = {
-            statusCode: 200,
-            "headers": {
-                "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-                "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-            },
-            body: JSON.stringify({ url })
-        };
-        callback(null, response);
+        callback(null, ok({ url }));
     });
 };

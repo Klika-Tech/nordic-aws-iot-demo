@@ -1,6 +1,7 @@
 import mqtt from 'mqtt';
 import { MQTT_CONNECT } from '../actionTypes';
-import { connect, connected, disconnected } from '../actions/mqtt';
+import { connected, disconnected } from '../actions/mqtt';
+import { notifyConnected } from '../actions/device';
 import { pushData } from '../actions/data';
 import config from '../config';
 
@@ -17,6 +18,7 @@ const mqttMiddleware = (function () {
             if (messages.length) {
                 if (config.debug) console.log('MQTT: dispatch batch update');
                 store.dispatch(pushData(messages));
+                store.dispatch(notifyConnected());
                 messages = [];
             }
         }, 1000);

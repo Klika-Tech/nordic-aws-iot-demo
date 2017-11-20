@@ -23,14 +23,15 @@ custom:
   dynamoMetricsTableKey: thing
   dynamoMetricsTableName: ${{self:custom.context}}_metrics
   dynamoWeatherTableName: ${{self:custom.context}}_own-weather
-  spaS3BucketName: ${{self:custom.context}}-${{self:custom.stage}}-spa
+  defaultSpaS3BucketName: ${{self:custom.context}}-${{self:custom.stage}}-spa
+  spaS3BucketName: ${{opt:spaBucket, self:custom.defaultSpaS3BucketName}}
   dynamodb:
     start:
       port: 8000
       inMemory: true
       migrate: true
   spa:
-    appFolder: "www"
+    appFolder: "web"
     gzip: true
     webpack: "webpack.spa.config.js"
     bucket: ${{self:custom.spaS3BucketName}}
@@ -70,24 +71,9 @@ functions:
     handler: lambdas/getHistory.handler
     events:
       - http:
-          method: get
-          integration: lambda
           path: getHistory
+          method: get
           cors: true
-          request:
-            passThrough: WHEN_NO_MATCH
-            parameters:
-              querystrings:
-                since: true
-            template:
-              application/json: '{ "since" : $input.params("since") }'
-            response:
-             statusCodes:
-                 200:
-                   pattern: ""
-                   headers:
-                     Content-Type: "'application/json'"
-
   iotPresignedUrl:
     role: APILambdaExecutionRole
     handler: lambdas/iotPresignedUrl.handler
@@ -96,7 +82,6 @@ functions:
           path: iotPresignedUrl
           method: get
           cors: true
-
   fetchWeather:
     role: APILambdaExecutionRole
     handler: lambdas/fetchWeather.handler
@@ -431,3 +416,12 @@ resources:
         Ref: CognitoPool
     SpaS3BucketName:
       Value: ${{self:custom.spaS3BucketName}}
+    SpaS3WebsiteUrl:
+      Value:
+        Fn::Join:
+          - ""
+          - - "http://"
+            - ${{self:custom.spaS3BucketName}
+            - ".s3-website."
+            - Ref: "AWS::Region"
+            - ".amazonaws.com"

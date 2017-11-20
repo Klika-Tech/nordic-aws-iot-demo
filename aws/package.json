@@ -4,7 +4,6 @@
   "description": "Back-end and front-end running on AWS",
   "main": "index.js",
   "scripts": {
-    "login": "serverless login",
     "setup": "serverless dynamodb install",
     "info": "serverless info",
     "offline": "cross-env IS_OFFLINE=true serverless offline start",
@@ -14,6 +13,8 @@
     "spa:build:offline": "cross-env IS_OFFLINE=true npm run spa:build",
     "spa:serve": "serverless spa serve",
     "spa:serve:offline": "cross-env IS_OFFLINE=true serverless spa serve",
+    "sls:build": "serverless webpack",
+    "sls:build:offline": "cross-env IS_OFFLINE=true npm run sls:build",
     "lint:lambdas": "eslint lambdas",
     "lint:lambdas:fix": "eslint lambdas --fix",
     "lint:www": "eslint www",

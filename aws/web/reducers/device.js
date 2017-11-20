@@ -1,14 +1,14 @@
 import {
-    MQTT_CONNECTED,
-    MQTT_DISCONNECTED,
+    DEVICE_CONNECTED,
+    DEVICE_DISCONNECTED,
 } from '../actionTypes';
 
 export default function (state = {}, { type }) {
     switch (type) {
-    case MQTT_CONNECTED: {
+    case DEVICE_CONNECTED: {
         return { connected: true };
     }
-    case MQTT_DISCONNECTED: {
+    case DEVICE_DISCONNECTED: {
         return { connected: false };
     }
     default:

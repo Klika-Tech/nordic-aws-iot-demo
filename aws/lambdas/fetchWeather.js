@@ -4,7 +4,7 @@
  * - DYNAMO_DB_WEATHER_TABLE_NAME - DynamoDB table for weather
  * */
 
-const http = require('http');
+import http from 'http';
 import dc from './common/dynamodb';
 
 exports.handler = (event, context, callback) => {

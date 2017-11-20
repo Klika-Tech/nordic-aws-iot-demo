@@ -6,7 +6,10 @@
  * - DYNAMO_DB_WEATHER_TABLE_NAME - Dynamo DB weather table name
  * */
 
+import get from 'lodash/get';
+import toInteger from 'lodash/toInteger';
 import dc from './common/dynamodb';
+import { ok } from './common/response';
 
 exports.handler = (event, context, callback) => {
     const thingName = process.env.THING_NAME;
@@ -14,7 +17,8 @@ exports.handler = (event, context, callback) => {
     const weatherTableName = process.env.DYNAMO_DB_WEATHER_TABLE_NAME;
     const metricsTableKey = process.env.DYNAMO_DB_METRICS_TABLE_KEY;
 
-    const since = event.since || Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
+    const defaultSince = Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
+    const since = toInteger(get(event, "queryStringParameters.since", defaultSince));
 
     console.log('since:', since);
 
@@ -138,7 +142,9 @@ exports.handler = (event, context, callback) => {
                     })),
                 });
 
-                if (!cities.length) { callback(null, { sensorData, citiesData: weatherData }); } else goThroughCities();
+                if (!cities.length) {
+                    callback(null, ok({ sensorData, citiesData: weatherData }));
+                } else goThroughCities();
             });
         };
 

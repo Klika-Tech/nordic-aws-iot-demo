@@ -7,12 +7,12 @@ import magnetometer from './magnetometer';
 import pressure from './pressure';
 import humidity from './humidity';
 import temperature from './temperature';
-import mqtt from './mqtt';
+import device from './device';
 
 export default enableBatching(
     combineReducers({
         data,
-        mqtt,
+        device,
         accelerometer,
         gyroscope,
         magnetometer,
