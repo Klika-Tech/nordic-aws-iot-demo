@@ -112,7 +112,7 @@ int16_t drv_humidity_get(void);
  *
  * @retval Temperature data.
  */
-float drv_humidity_temp_get(void);
+float drv_humidity_temp_get(float * p_temp);
 
 /**@brief Function to start sampling.
  *

@@ -19,7 +19,6 @@
 #ifdef ENABLE_DEBUG_LOG_SUPPORT
 #include "app_uart.h"
 #include "nordic_common.h"
-#include "boards.h"
 #include "app_trace.h"
 #include "app_error.h"
 

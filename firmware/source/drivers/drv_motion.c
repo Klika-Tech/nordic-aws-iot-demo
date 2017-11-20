@@ -818,8 +818,8 @@ uint32_t drv_motion_init(drv_motion_evt_handler_t evt_handler, drv_motion_twi_in
     m_motion.motion_freq_hz        = DEFAULT_MPU_HZ;
     m_motion.wake_on_motion        = 1;
 
-    err_code = drv_acc_init(&lis_init_params);
-    RETURN_IF_ERROR(err_code);
+//    err_code = drv_acc_init(&lis_init_params);
+//    RETURN_IF_ERROR(err_code);
 
     err_code = drv_mpu9250_init(&mpu_init_params);
     RETURN_IF_ERROR(err_code);

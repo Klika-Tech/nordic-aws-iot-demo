@@ -51,7 +51,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "m_ble.h"
+//#include "m_ble.h"
 #include "nrf_drv_twi.h"
 
 /**@brief Motion module default configuration.
@@ -79,7 +79,7 @@ typedef struct
  *
  * @retval NRF_SUCCESS.
  */
-uint32_t m_motion_init(m_ble_service_handle_t * p_handle, m_motion_init_t * p_params);
+uint32_t m_motion_init(m_motion_init_t * p_params);
 
 /**@brief Function to prepare for sleep mode.
  *

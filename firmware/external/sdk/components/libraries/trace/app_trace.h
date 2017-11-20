@@ -32,6 +32,8 @@ void app_trace_init(void);
  */
 #define app_trace_log seg_printf
 
+#define seg_printf(sFormat, ...) SEGGER_RTT_printf(0, sFormat, ##__VA_ARGS__);
+
 /**
  * @brief Dump auxiliary byte buffer to the debug trace.
  *

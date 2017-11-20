@@ -51,7 +51,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "m_ble.h"
-#include "ble_tes.h"
 #include "nrf_drv_twi.h"
 
 /**@brief Initialization parameters. */
@@ -100,10 +99,12 @@ uint32_t m_environment_stop(void);
 
 /**@brief Function for initializing the environment module.
  *
- * @param[in] p_handle    Pointer to the location to store the service handle.
  * @param[in] p_params    Pointer to the init parameters.
  */
-uint32_t m_environment_init(m_ble_service_handle_t * p_handle, m_environment_init_t * p_params);
+uint32_t m_environment_init(m_environment_init_t * p_params);
+
+uint32_t temperature_start(void);
+
 #endif
 
 /** @} */
