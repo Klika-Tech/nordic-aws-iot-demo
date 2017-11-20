@@ -9,6 +9,7 @@
     "offline": "cross-env IS_OFFLINE=true serverless offline start",
     "offline:invoke": "cross-env IS_OFFLINE=true serverless invoke local",
     "offline:invoke:fetchWeather": "npm run offline:invoke -- --function=fetchWeather",
+    "simulator:device:aws": "node simulator/device/aws.js",
     "spa:build": "serverless spa bundle",
     "spa:build:offline": "cross-env IS_OFFLINE=true npm run spa:build",
     "spa:serve": "serverless spa serve",
