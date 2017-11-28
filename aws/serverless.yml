@@ -14,8 +14,9 @@ plugins:
   - serverless-offline
 
 custom:
+  region: ${{file(config.${{self:custom.stage}}.yml):AWS_REGION}}
   stage: ${{opt:stage, self:provider.stage}}
-  context: nordic
+  context: ${{file(config.${{self:custom.stage}}.yml):CONTEXT}}
   ownApiKey: ${{file(config.${{self:custom.stage}}.yml):OWN_API_KEY}}
   thingName: ${{self:custom.context}}_thingy_52
   federationName: ${{self:custom.context}}_federation
@@ -23,8 +24,7 @@ custom:
   dynamoMetricsTableKey: thing
   dynamoMetricsTableName: ${{self:custom.context}}_metrics
   dynamoWeatherTableName: ${{self:custom.context}}_own-weather
-  defaultSpaS3BucketName: ${{self:custom.context}}-${{self:custom.stage}}-spa
-  spaS3BucketName: ${{opt:spaBucket, self:custom.defaultSpaS3BucketName}}
+  spaS3BucketName: ${{file(config.${{self:custom.stage}}.yml):SPA_S3_BUCKET_NAME}}
   dynamodb:
     start:
       port: 8000
@@ -40,6 +40,7 @@ custom:
 
 provider:
   name: aws
+  region: ${{opt:region, self:custom.region}}
   runtime: nodejs6.10
   memorySize: 256
   timeout: 30
