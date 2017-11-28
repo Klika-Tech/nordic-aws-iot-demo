@@ -17,10 +17,12 @@ export const toggleVisibility = actionType => value => ({
 
 export function getUpdatedCitiesDataStub(citiesData, sensorData) {
     citiesData.forEach((d) => {
-        const last = _.last(d.data);
-        last.date = _.last(sensorData).date;
-        d.data.push(last);
-        d.data = getActualData(d.data);
+        if (!_.isEmpty(d.data)) {
+            const last = _.last(d.data);
+            last.date = _.last(sensorData).date;
+            d.data.push(last);
+            d.data = getActualData(d.data);
+        }
     });
     return citiesData;
 }
@@ -51,7 +53,6 @@ export const fetch = (actionType, type, pdi) => (fullData) => {
         },
     };
 };
-
 
 export const push = (actionType, pdi) => (chunks, state) => {
     let { sensorData } = state;
