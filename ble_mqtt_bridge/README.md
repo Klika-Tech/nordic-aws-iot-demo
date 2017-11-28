@@ -1,7 +1,17 @@
-## Overview
+BLE MQTT Router
+=============
 
 Due to difficulties with getting global IPv6 connectivity (not all providers supported) we provide work around.
 Setup MQTT bridge from local IPv6 network to AWS IoT (based on the official [guide](https://aws.amazon.com/blogs/iot/how-to-bridge-mosquitto-mqtt-broker-to-aws-iot/)).
+
+_Note: Current documentation describe setup and workflow processes on linux-based systems (tested on Ubuntu 16.04)._
+
+##### Contents
+
+- [Requirements](#requirements)
+- [Setup bridge to AWS IoT](#requirements)
+- [Workflow](#workflow)
+- [External Resources](#external-resources)
 
 ### Requirements
 
@@ -28,3 +38,12 @@ net.ipv6.conf.lo.disable_ipv6 = 0</pre>
 1) Run mosquitto broker, execute [mos_bro.sh](./mos_bro.sh).
 1) Subscribe to thing topic, execute [mos_sub.sh](./mos_sub.sh).
 1) Connect to Thingy from PC and setup PAN network, execute [ble6_conn.sh](./ble6_conn.sh).
+
+### External Resources
+
+- Core Modules
+	- [bluetooth_6lowpan](https://wiki.openwrt.org/doc/howto/bluetooth.6lowpan)
+- CLI Tools
+	- [AWS CLI](https://aws.amazon.com/cli/)
+- Daemons
+	- [Mosquitto](https://mosquitto.org/)
