@@ -9,9 +9,9 @@ You can see the live demo [here](http://nordic-dev-serverless-site-s3.s3-website
 
 ##### Contents
 
-- [Overview](doc/OVERVIEW.md)
-	- [Platform Scheme](doc/OVERVIEW.md#platform-scheme)
-	- [Components](doc/OVERVIEW.md#components)
+- [Overview](docs/OVERVIEW.md)
+	- [Platform Scheme](docs/OVERVIEW.md#platform-scheme)
+	- [Components](docs/OVERVIEW.md#components)
 - [AWS Serverless Full-Stack](docs/AWS.md)
 	- [Features](docs/AWS.md#features)
     - [Requirements](docs/AWS.md#requirements)
