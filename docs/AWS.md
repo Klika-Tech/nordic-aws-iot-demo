@@ -7,6 +7,8 @@ Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/
 
 - [Features](#features)
 - [Requirements](#requirements)
+- [Back-end](#back-end)
+- [Front-end](#front-end)
 - [Setup](#setup)
 - [Deploy](#deploy)
 - [Offline Development](#offline-development)
@@ -25,6 +27,16 @@ Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/
 1. [aws cli](https://aws.amazon.com/cli/) should be available in the system. See [configuration guide](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html).
 1. [Node.js 8+](https://nodejs.org/en/) should be available in the system. See [setup guide](https://github.com/creationix/nvm#installation).
 
+### Back-end
+
+The back-end is entirely powered by [Amazon Web Services](https://aws.amazon.com/). See [platform schema](./OVERVIEW.md#platform-scheme). If you don't have an AWS account, create one. Amazon provides the [AWS Free Tier](https://aws.amazon.com/free/) for new accounts. Demo platform is lightweight and should fit into the free tier limits.
+
+### Front-end
+
+It is a [React](https://facebook.github.io/react/) application which renders the board sensors data as [D3.js](https://d3js.org/) charts. On the application start initial data set is fetched from a public API endpoint. 
+By default data for last 4 hours is rendered. Charts are updated in real time using data coming from Cloud via MQTT over Websocket protocol. They have two visualization modes: line and area.
+Here are links to dashboard [source code](../aws/web) and [live demo](http://nordic-dev-serverless-site-s3.s3-website.eu-central-1.amazonaws.com/#/dashboard). 
+
 ### Setup
 
 1. Clone repository
@@ -37,7 +49,7 @@ Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/
 
 1. Go to project subdirectory `aws` 
 1. Deploy back-end to AWS, run `npm run deploy:sls` 
-1. Deploy front-end to S3, run `npm run deploy:spa` 
+1. Deploy front-end to S3, run `npm run deploy:spa`
 
 ### Offline Development
 
@@ -59,8 +71,11 @@ _Note: Current version of device simulator is AWS-based, you should deploy serve
 	- [Node.js](https://nodejs.org/en/)
 	- [Webpack](https://webpack.github.io/)
 	- [Serverless](https://serverless.com/)
+    - [Eclipse IDE for GNU ARM & RISC-V C/C++ Developers](https://gnu-mcu-eclipse.github.io/)
+    - [Segger J-Link Software](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack)
+    - [nRF5x Command Line Tools](https://www.nordicsemi.com/eng/nordic/Products/nRF51822/nRF5x-Command-Line-Tools-Win32/33444)
 - Libraries
-	- [React.js](https://facebook.github.io/react/)
+    - [React.js](https://facebook.github.io/react/)
 	- [D3.js](https://d3js.org/)
 	- [MQTT.js](https://github.com/mqttjs/MQTT.js)
 	- [AWS SDK for Browser](https://aws.amazon.com/sdk-for-browser/)
