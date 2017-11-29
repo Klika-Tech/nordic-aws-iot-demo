@@ -40,14 +40,14 @@ Here are links to dashboard [source code](../aws/web) and [live demo](http://nor
 ### Setup
 
 1. Clone repository
-1. Go to project subdirectory `aws` 
+1. Go to project subdirectory [aws](../aws) 
 1. Install dependencies, run CLI command `npm install` 
 1. Copy [config.sample.yml](../aws/config.sample.yml) to `config.dev.yml` and set your own settings. _Note: Replace OWN_API_KEY in `config.dev.yml` for valid [Open Weather Map API Key](https://openweathermap.org/appid)_
 1. Setup local dependencies (serverless-local-dynamo), run `npm run setup`
 
 ### Deploy
 
-1. Go to project subdirectory `aws` 
+1. Go to project subdirectory [aws](../aws) 
 1. Deploy back-end to AWS, run `npm run deploy:sls` 
 1. Deploy front-end to S3, run `npm run deploy:spa`
 
@@ -55,14 +55,14 @@ Here are links to dashboard [source code](../aws/web) and [live demo](http://nor
 
 _Note: For local AWS IoT we use [BLE mqtt router](../ble_mqtt_router), setup on local machine with enabled websocket protocol (127.0.0.1:1883), without auth_
 
-1. Go to project subdirectory `aws` 
+1. Go to project subdirectory [aws](../aws) 
 1. Start local development server, run `npm run offline`
 
 ### Device Simulation
 
 _Note: Current version of device simulator is AWS-based, you should deploy serverless stack before launch._
 
-1. Go to project subdirectory `aws` 
+1. Go to project subdirectory [aws](../aws) 
 1. Launch simulator, run `npm run simulator:device:aws`
 
 ### External Resources
