@@ -170,10 +170,6 @@ resources:
       Type: "AWS::IoT::Thing"
       Properties:
         ThingName: ${{self:custom.thingName}}
-    IotSimulatorThing:
-      Type: "AWS::IoT::Thing"
-      Properties:
-        ThingName: ${{self:custom.thingName}}_simulator
     BleRouterPolicy:
       Type: "AWS::IoT::Policy"
       Properties:
