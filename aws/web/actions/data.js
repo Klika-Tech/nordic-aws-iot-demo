@@ -1,9 +1,6 @@
 import _ from 'lodash';
 import { batchActions } from 'redux-batched-actions';
 import { DATA_FETCHED } from '../actionTypes';
-import { accelerometerFetch } from './accelerometer';
-import { gyroscopeFetch } from './gyroscope';
-import { magnetometerFetch } from './magnetometer';
 import { pressureFetch, pressurePush } from './pressure';
 import { humidityFetch, humidityPush } from './humidity';
 import { temperatureFetch, temperaturePush } from './temperature';
@@ -12,9 +9,6 @@ export function fetchData(data) {
     return (dispatch) => {
         const pd = prepareData(data);
         dispatch(batchActions([
-            accelerometerFetch(pd),
-            gyroscopeFetch(pd),
-            magnetometerFetch(pd),
             pressureFetch(pd),
             humidityFetch(pd),
             temperatureFetch(pd),
