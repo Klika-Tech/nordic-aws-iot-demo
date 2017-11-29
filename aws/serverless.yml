@@ -422,7 +422,7 @@ resources:
         Fn::Join:
           - ""
           - - "http://"
-            - ${{self:custom.spaS3BucketName}
+            - ${{self:custom.spaS3BucketName}}
             - ".s3-website."
             - Ref: "AWS::Region"
             - ".amazonaws.com"
