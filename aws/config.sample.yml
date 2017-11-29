@@ -1,0 +1,4 @@
+AWS_REGION: "eu-central-1"
+CONTEXT: "nordic"
+OWN_API_KEY: "<your OpenWeatherMap API key>"
+SPA_S3_BUCKET_NAME: "my-dashboard-website"

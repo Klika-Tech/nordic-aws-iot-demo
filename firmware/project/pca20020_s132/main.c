@@ -60,13 +60,9 @@
 #include "app_util_platform.h"
 #include "app_trace.h"
 #include "SEGGER_RTT.h"
-//#include "m_ble.h"
 #include "m_environment.h"
 #include "drv_hts221.h"
-//#include "m_sound.h"
 #include "m_motion.h"
-//#include "m_ui.h"
-//#include "m_batt_meas.h"
 #include "drv_ext_light.h"
 #include "drv_ext_gpio.h"
 #include "nrf_delay.h"
@@ -85,6 +81,54 @@
 
 #define GLOBAL_DEBUG
 
+/*******************************************************************/
+/**************** BEGIN MQTT bridge (AWS) settings *****************/
+/*******************************************************************/
+
+static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =							/**< IPv6 addr from bt0 iface. */
+{
+  0xFE, 0x80, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00,
+  0xba, 0x8a, 0x60, 0xff,
+  0xfe, 0xc5, 0xac, 0x28,
+};
+
+
+#define APP_MQTT_CONNECT_DELAY              APP_TIMER_TICKS(3000, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
+#define APP_MQTT_BROKER_PORT                8883                                                    /**< Port number of MQTT Broker. */
+#define APP_MQTT_THING_NAME                 "Nordic"                                                /**< AWS IoT thing name. */
+#define APP_MQTT_SHADOW_TOPIC               "aws/things/Nordic/shadow/update"                       /**< AWS IoT thing shadow topic path. */
+#define APP_MQTT_DATA_FORMAT                "{"                                                \
+                                                "\"state\":{"                                  \
+                                                    "\"reported\": {"                          \
+                                                      "\"temperature\": %d,"                   \
+                                                      "\"humidity\": %d,"                      \
+                                                      "\"pressure\": %d,"                      \
+                                                      "\"marker\": %s"                         \
+                                                    "}"                                        \
+                                                "}"                                            \
+                                             "}"
+
+#define MQTT_PUBLISH_INTERVAL_MS            1500                                                   /**< Interval between publishing data. */
+
+static const uint8_t identity[] = {0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79};
+static const uint8_t shared_secret[] = {0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x53, 0x4b};
+
+static nrf_tls_preshared_key_t m_preshared_key = {              
+    .p_identity     = &identity[0],
+    .p_secret_key   = &shared_secret[0],
+    .identity_len   = 15,
+    .secret_key_len = 9
+};
+
+static nrf_tls_key_settings_t m_tls_keys = {                                                          /**< TLS keys for connection to secure MQTT bridge */
+    .p_psk = &m_preshared_key
+};
+
+/*****************************************************************/
+/**************** END MQTT bridge (AWS) settings *****************/
+/*****************************************************************/
+
 #define SCHED_MAX_EVENT_DATA_SIZE   MAX(APP_TIMER_SCHED_EVT_SIZE, BLE_STACK_HANDLER_SCHED_EVT_SIZE) /**< Maximum size of scheduler events. */
 #define SCHED_QUEUE_SIZE            60  /**< Maximum number of events in the scheduler queue. */
 
@@ -101,7 +145,6 @@
 #define HWFC           true
 
 static const nrf_drv_twi_t     m_twi_sensors = NRF_DRV_TWI_INSTANCE(TWI_SENSOR_INSTANCE);
-
 float tmp, prs = 0.0;
 uint16_t hmd = 5;
 
@@ -116,11 +159,9 @@ typedef enum
 } display_state_t;
 
 #define APP_TIMER_OP_QUEUE_SIZE             5
-#define APP_XIVELY_CONNECT_DELAY            APP_TIMER_TICKS(500, APP_TIMER_PRESCALER)               /**< MQTT Connection delay. */
 
 #define LWIP_SYS_TICK_MS                    10                                                      /**< Interval for timer used as trigger to send. */
 #define LED_BLINK_INTERVAL_MS               300                                                     /**< LED blinking interval. */
-#define MQTT_PUBLISH_INTERVAL_MS            10000                                                   /**< Interval between publishing data. */
 
 #define DEAD_BEEF                           0xDEADBEEF                                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 #define MAX_LENGTH_FILENAME                 128                                                     /**< Max length of filename to copy for the debug error handler. */
@@ -132,21 +173,6 @@ typedef enum
 #define APP_DATA_MAXIMUM_TEMPERATURE        25                                                      /**< Maximum simulated temperature. */
 #define APP_DATA_MAX_SIZE                   2000                                                    /**< Maximum size of data buffer size. */
 
-#define APP_MQTT_XIVELY_BROKER_PORT         8883                                                    /**< Port number of MQTT Broker. */
-#define APP_MQTT_XIVELY_CHANNEL             "Thermometer"                                           /**< Device's Channel. */
-#define APP_MQTT_XIVELY_FEED_ID             "637693378"                                    		 /**< Device's Feed ID. */
-#define APP_MQTT_XIVELY_API_KEY             "jAVEnAqZ9IVCFSQ9Oc9XJ7FuMvggmmYIdgqE8ZYKgMbjvm5T"    /**< API key used for authentication. */
-
-// URL of given Xively JSON resource.
-#define APP_MQTT_XIVELY_API_URL             "/v2/feeds/" APP_MQTT_XIVELY_FEED_ID ".json"
-
-// Xively data format.
-#define APP_MQTT_XIVELY_DATA_FORMAT         "{"                                                \
-                                                "\"datastreams\":["                            \
-                                                    "{\"id\":\"" APP_MQTT_XIVELY_CHANNEL "\"," \
-                                                    "\"current_value\":\"%d.00\"}"             \
-                                                "]"                                            \
-                                             "}"
 
 APP_TIMER_DEF(m_iot_timer_tick_src_id);                                                             /**< App timer instance used to update the IoT timer wall clock. */
 APP_TIMER_DEF(m_mqtt_conn_timer_id);                                                                /**< Timer for delaying MQTT Connection. */
@@ -158,51 +184,14 @@ static bool                                 m_connection_state = false;         
 static bool                                 m_do_publication   = false;                             /**< Indicates if MQTT publications are enabled. */
 
 static mqtt_client_t                        m_app_mqtt_id;                                          /**< MQTT Client instance reference provided by the MQTT module. */
-static const char                           m_device_id[]      = "nrfPublisher";                    /**< Unique MQTT client identifier. */
-static const char                           m_user[]           = APP_MQTT_XIVELY_API_KEY;           /**< MQTT user name. */
+static const char                           m_device_id[]      = APP_MQTT_THING_NAME;               /**< Unique MQTT client identifier. */
+static const char                           m_user[]           = APP_MQTT_THING_NAME;               /**< MQTT user name. */
 static uint16_t                             m_temperature      = APP_DATA_INITIAL_TEMPERATURE;      /**< Actual simulated temperature. */
 static uint16_t                             m_humidity;
 static char                                 m_data_body[APP_DATA_MAX_SIZE];                         /**< Buffer used for publishing data. */
 static uint16_t                             m_message_counter = 1;                                  /**< Message counter used to generated message ids for MQTT messages. */
-
-// TLS settings.
-//static nrf_tls_key_settings_t m_tls_keys =
-//{
-//    .p_psk             = NULL, // PSK not used.
-//    .p_ca_cert_pem     = NULL, // No certificate verification.
-//    .p_own_certificate = NULL  // Use server certificiate.
-//};
-
-static const uint8_t identity[] = {0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79};
-static const uint8_t shared_secret[] = {0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x53, 0x4b};
-
-static nrf_tls_preshared_key_t m_preshared_key = {
-    .p_identity     = &identity[0],
-    .p_secret_key   = &shared_secret[0],
-    .identity_len   = 15,
-    .secret_key_len = 9
-};
-
-static nrf_tls_key_settings_t m_tls_keys = {
-    .p_psk = &m_preshared_key
-};
-
-// Address of Xively cloud.
-static const uint8_t                        m_broker_addr[IPV6_ADDR_SIZE] =
-{
-//       0x20, 0x01, 0x07, 0x78,
-//       0x00, 0x00, 0xff, 0xff,
-//       0x00, 0x64, 0x00, 0x00,
-//       0xd8, 0x34, 0xe9, 0x7a
-//	   0x20, 0x01, 0x41, 0xd0,
-//	   0x00, 0x0a, 0x3a, 0x10,
-//	   0x00, 0x00, 0x00, 0x00,
-//	   0x00, 0x00, 0x00, 0x01
-		 0xFE, 0x80, 0x00, 0x00,
-	     0x00, 0x00, 0x00, 0x00,
-	     0xfa, 0x59, 0x71, 0xff,
-	     0xfe, 0x9f, 0x80, 0x2a
-};
+static bool									m_marker		   = false;								/**< Indicates if marker was set (button was pushed). */
+static void 								app_mqtt_publish_loop_start();
 
 /**@brief Function to handle interface up event. */
 void nrf_driver_interface_up(void)
@@ -217,6 +206,10 @@ void nrf_driver_interface_up(void)
     // Set flag indicating interface state.
     m_interface_state = true;
     m_display_state = LEDS_IPV6_IF_UP;
+
+    // try connect after stack connnected.
+    app_mqtt_publish_loop_start();
+
 }
 
 
@@ -304,6 +297,28 @@ static void on_ipv6_medium_error(ipv6_medium_error_t * p_ipv6_medium_error)
     // Do something.
 }
 
+/**@brief Function for starting mqtt publish loop.
+ */
+static void app_mqtt_publish_loop_start()
+{
+	APPL_LOG("[APPL]: Start MQTT publish loop \r\n");
+
+	uint32_t err_code;
+
+	// Check if interface has been established.
+	if (m_interface_state == false)
+	{
+		return;
+	}
+
+	if (m_connection_state == false)
+	{
+		err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
+		APP_ERROR_CHECK(err_code);
+	}
+}
+
+
 /**@brief Function for handling button events.
  *
  * @param[in]   pin_no         The pin number of the button pressed.
@@ -320,8 +335,6 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
     }
 #endif // COMMISSIONING_ENABLED
 
-    uint32_t err_code;
-
     // Check if interface has been established.
     if(m_interface_state == false)
     {
@@ -334,22 +347,10 @@ static void button_event_handler(uint8_t pin_no, uint8_t button_action)
         {
             case BSP_BUTTON_0:
             {
-                if (m_connection_state == false)
-                {
-                    err_code = app_timer_start(m_mqtt_conn_timer_id, APP_XIVELY_CONNECT_DELAY, NULL);
-                    APP_ERROR_CHECK(err_code);
-                }
+            	//app_mqtt_publish_loop_start();
+            	m_marker = true;
                 break;
             }
-//            case BSP_BUTTON_1:
-//            {
-//                if (m_connection_state == true)
-//                {
-//                    err_code = mqtt_disconnect(&m_app_mqtt_id);
-//                    APP_ERROR_CHECK(err_code);
-//                }
-//                break;
-//            }
             default:
                 break;
         }
@@ -502,52 +503,6 @@ static void configure_gpio_for_sleep(vdd_state_t vdd_on)
     }
 }
 
-
-/**@brief Function for putting Thingy into sleep mode.
- *
- * @note This function will not return.
- */
-//static void sleep_mode_enter(void)
-//{
-//    uint32_t err_code;
-//
-//    // Enable wake on button press.
-//    nrf_gpio_cfg_sense_input(BUTTON, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-//
-//    (void)SEGGER_RTT_printf(0, "Entering sleep mode \r\n");
-//    err_code = m_motion_sleep_prepare(true);
-//    APP_ERROR_CHECK(err_code);
-//
-//    configure_gpio_for_sleep(VDD_OFF);
-//
-//    // Enable wake on button press.
-//    nrf_gpio_cfg_sense_input(BUTTON, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-//    // Enable wake on low power accelerometer.
-//    nrf_gpio_cfg_sense_input(LIS_INT1, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
-//
-//    // Go to system-off (sd_power_system_off() will not return; wakeup will cause a reset). When debugging, this function may return and code execution will continue.
-//    err_code = sd_power_system_off();
-//    (void)SEGGER_RTT_printf(0, "sd_power_system_off() returned. -Probably due to debugger being used. Instructions will still run. \r\n");
-//
-//    #ifdef DEBUG
-//        if(!support_func_sys_halt_debug_enabled())
-//        {
-//            APP_ERROR_CHECK(err_code); // If not in debug mode, return the error and the system will reboot.
-//        }
-//        else
-//        {
-//            (void)SEGGER_RTT_printf(0, "Exec stopped, busy wait \r\n");
-//            while(true) // Only reachable when entering emulated system off.
-//            {
-//                // Infinte loop to ensure that code stops in debug mode.
-//            }
-//        }
-//    #else
-//        APP_ERROR_CHECK(err_code);
-//    #endif
-//}
-
-
 /**@brief Function for placing the application in low power state while waiting for events.
  */
 #define FPU_EXCEPTION_MASK 0x0000009F
@@ -561,116 +516,23 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Battery module data handler.
- */
-//static void m_batt_meas_handler(m_batt_meas_event_t const * p_batt_meas_event)
-//{
-//    (void)SEGGER_RTT_printf(0, "batt meas handler: Voltage: %d V, Charge: %d %%, Event type: %d \n",
-//        p_batt_meas_event->voltage_mv, p_batt_meas_event->level_percent, p_batt_meas_event->type);
-//
-//    if (p_batt_meas_event != NULL)
-//    {
-//        if( p_batt_meas_event->type == M_BATT_MEAS_EVENT_LOW)
-//        {
-//            uint32_t err_code;
-//            configure_gpio_for_sleep(VDD_OFF);
-//
-//            // Enable wake on USB detect only.
-//            nrf_gpio_cfg_sense_input(USB_DETECT, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
-//
-//            (void)SEGGER_RTT_printf(0, RTT_CTRL_TEXT_BRIGHT_YELLOW"Battery voltage low, shutting down Thingy. Connect USB to charge. "RTT_CTRL_RESET"\n");
-//            // Go to system-off mode (This function will not return; wakeup will cause a reset).
-//            err_code = sd_power_system_off();
-//
-//            #ifdef DEBUG
-//                if(!support_func_sys_halt_debug_enabled())
-//                {
-//                    APP_ERROR_CHECK(err_code); // If not in debug mode, return the error and the system will reboot.
-//                }
-//                else
-//                {
-//                    (void)SEGGER_RTT_printf(0, "Exec stopped, busy wait \r\n");
-//                    while(true) // Only reachable when entering emulated system off.
-//                    {
-//                        // Infinte loop to ensure that code stops in debug mode.
-//                    }
-//                }
-//            #else
-//                APP_ERROR_CHECK(err_code);
-//            #endif
-//        }
-//    }
-//}
-
-
-/**@brief Function for handling BLE events.
- */
-//static void thingy_ble_evt_handler(m_ble_evt_t * p_evt)
-//{
-//    switch (p_evt->evt_type)
-//    {
-//        case thingy_ble_evt_connected:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_connected"RTT_CTRL_RESET"\n");
-//            break;
-//
-//        case thingy_ble_evt_disconnected:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_disconnected"RTT_CTRL_RESET"\n");
-//            nrf_delay_ms(5);
-//            NVIC_SystemReset();
-//            break;
-//
-//        case thingy_ble_evt_timeout:
-//            (void)SEGGER_RTT_WriteString(0, RTT_CTRL_TEXT_BRIGHT_GREEN"Thingy_ble_evt_timeout"RTT_CTRL_RESET"\n");
-//            nrf_delay_ms(5);
-//            sleep_mode_enter();
-//            NVIC_SystemReset();
-//            break;
-//    }
-//}
-
-
 /**@brief Function for initializing the Thingy.
  */
 static void thingy_init(void)
 {
     uint32_t                 err_code;
-//    m_ui_init_t              ui_params;
     m_environment_init_t     env_params;
     m_motion_init_t          motion_params;
-//    m_ble_init_t             ble_params;
-//    batt_meas_init_t         batt_meas_init = BATT_MEAS_PARAM_CFG;
 
     /**@brief Initialize the TWI manager. */
     err_code = twi_manager_init(APP_IRQ_PRIORITY_THREAD);
     APP_ERROR_CHECK(err_code);
-
-//    /**@brief Initialize LED and button UI module. */
-//    ui_params.p_twi_instance = &m_twi_sensors;
-//    err_code = m_ui_init(&m_ble_service_handles[THINGY_SERVICE_UI],
-//                         &ui_params);
-//    APP_ERROR_CHECK(err_code);
 
     /**@brief Initialize environment module. */
     env_params.p_twi_instance = &m_twi_sensors;
     err_code = m_environment_init(&env_params);
     APP_ERROR_CHECK(err_code);
 
-    /**@brief Initialize motion module. */
-//    motion_params.p_twi_instance = &m_twi_sensors;
-//    err_code = m_motion_init(&motion_params);
-//    APP_ERROR_CHECK(err_code);
-
-//    err_code = m_sound_init(&m_ble_service_handles[THINGY_SERVICE_SOUND]);
-//    APP_ERROR_CHECK(err_code);
-//
-//    /**@brief Initialize the battery measurement. */
-//    batt_meas_init.evt_handler = m_batt_meas_handler;
-//    err_code = m_batt_meas_init(&m_ble_service_handles[THINGY_SERVICE_BATTERY], &batt_meas_init);
-//    APP_ERROR_CHECK(err_code);
-//
-//    err_code = m_batt_meas_enable(BATT_MEAS_INTERVAL_MS);
-//    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -772,7 +634,7 @@ static void app_mqtt_evt_handler(mqtt_client_t * p_client, const mqtt_evt_t * p_
             // Make reconnection in case of tcp problem.
             if(p_evt->result == MQTT_ERR_TRANSPORT_CLOSED)
             {
-                err_code = app_timer_start(m_mqtt_conn_timer_id, APP_XIVELY_CONNECT_DELAY, NULL);
+                err_code = app_timer_start(m_mqtt_conn_timer_id, APP_MQTT_CONNECT_DELAY, NULL);
                 APP_ERROR_CHECK(err_code);
             }
             else
@@ -791,7 +653,7 @@ static void app_mqtt_evt_handler(mqtt_client_t * p_client, const mqtt_evt_t * p_
 /**@brief Timer callback used for publishing simulated temperature periodically.
  *
  */
-static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
+static void app_mqtt_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
 {
     UNUSED_PARAMETER(wall_clock_value);
     uint32_t err_code;
@@ -832,19 +694,16 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     drv_pressure_get(&prs);
 
     // Prepare data in JSON format.
-//    sprintf(m_data_body, APP_MQTT_XIVELY_DATA_FORMAT, m_temperature);
-    sprintf(m_data_body, "{\"temperature\": %d, \"humidity\": %d, \"pressure\": %d, \"marker\": true}",
-    		// \"accelerometer\": [%f, %f, %f], \"gyroscope\": [%f, %f, %f], \"magnetometer\": [%f, %f, %f], \"marker\": true}",
-    		(uint16_t)tmp, hmd, (uint16_t)prs
-			/*, Accelerometer.x, Accelerometer.y, Accelerometer.z, Gyroscope.x, Gyroscope.y, Gyroscope.z, Magnetometer.x, Magnetometer.y, Magnetometer.z*/
+    sprintf(m_data_body, APP_MQTT_DATA_FORMAT,
+    		(uint16_t)tmp, hmd, (uint16_t)prs,
+			(m_marker ? "true" : "false")
 			);
-
     
     mqtt_publish_param_t param;
     
     param.message.topic.qos              = MQTT_QoS_0_AT_MOST_ONCE;
-    param.message.topic.topic.p_utf_str  = (uint8_t *)APP_MQTT_XIVELY_API_URL;
-    param.message.topic.topic.utf_strlen = strlen(APP_MQTT_XIVELY_API_URL);
+    param.message.topic.topic.p_utf_str  = (uint8_t *)APP_MQTT_SHADOW_TOPIC;
+    param.message.topic.topic.utf_strlen = strlen(APP_MQTT_SHADOW_TOPIC);
     param.message.payload.p_bin_str      = (uint8_t *)m_data_body;
     param.message.payload.bin_strlen     = strlen(m_data_body);
     param.message_id                     = m_message_counter;
@@ -854,6 +713,7 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     APPL_LOG("[TEMPE]: %d\n\r", m_temperature);
     APPL_LOG("[HUMID]: %d\r\n", hmd);
     APPL_LOG("[PRESS]: %d\n\r", (uint16_t)prs);
+    APPL_LOG("[MARKER]: %s\n\r", (m_marker ? "true" : "false"));
 
     // Publish data.
     err_code = mqtt_publish(&m_app_mqtt_id, &param);
@@ -866,16 +726,19 @@ static void app_xively_publish_callback(iot_timer_time_in_ms_t wall_clock_value)
     }
 
     // Increase temperature value.
-//    m_temperature++;
+    // m_temperature++;
+
+    // Flash marker value
+	m_marker = false;
 
     APPL_LOG("[APPL]: mqtt_publish result 0x%08lx\r\n", err_code);
 }
 
-/**@brief Timer callback used for connecting to Xively cloud.
+/**@brief Timer callback used for connecting to AWS cloud.
  *
  * @param[in]   p_context   Pointer used for passing context. No context used in this application.
  */
-static void app_xively_connect(void * p_context)
+static void app_mqtt_connect(void * p_context)
 {
     UNUSED_VARIABLE(p_context);
 
@@ -889,7 +752,7 @@ static void app_xively_connect(void * p_context)
 
     memcpy (m_app_mqtt_id.broker_addr.u8, m_broker_addr, IPV6_ADDR_SIZE);
 
-    m_app_mqtt_id.broker_port             = APP_MQTT_XIVELY_BROKER_PORT;
+    m_app_mqtt_id.broker_port             = APP_MQTT_BROKER_PORT;
     m_app_mqtt_id.evt_cb                  = app_mqtt_evt_handler;
     m_app_mqtt_id.client_id.p_utf_str     = (uint8_t *)m_device_id;
     m_app_mqtt_id.client_id.utf_strlen    = strlen(m_device_id);
@@ -914,10 +777,10 @@ static void timers_init(void)
 //    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);	// iot
     APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);		// thingy
 
-    // Create timer to create delay connection to Xively.
+    // Create timer to create delay connection to AWS.
     err_code = app_timer_create(&m_mqtt_conn_timer_id,
                                 APP_TIMER_MODE_SINGLE_SHOT,
-                                app_xively_connect);
+                                app_mqtt_connect);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -929,7 +792,7 @@ static void iot_timer_init(void)
     static const iot_timer_client_t list_of_clients[] =
     {
         {app_lwip_time_tick,          LWIP_SYS_TICK_MS},
-        {app_xively_publish_callback, MQTT_PUBLISH_INTERVAL_MS},
+        {app_mqtt_publish_callback, MQTT_PUBLISH_INTERVAL_MS},
 #ifdef COMMISSIONING_ENABLED
         {commissioning_time_tick,     SEC_TO_MILLISEC(COMMISSIONING_TICK_INTERVAL_SEC)}
 #endif // COMMISSIONING_ENABLED
@@ -1014,13 +877,12 @@ int main(void)
     connectable_mode_enter();
 
     board_init();
-//  app_trace_init();
 	timers_init();
 	iot_timer_init();
 	button_init();
 	thingy_init();
 
-    // Initialize.
+	// Initialize.
     APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 
     err_code = temperature_start();
@@ -1035,16 +897,7 @@ int main(void)
     //Enter main loop.
     for (;;)
     {
-        //Sleep waiting for an application event.
-//        err_code = sd_app_evt_wait();
-//        APP_ERROR_CHECK(err_code);
 		app_sched_execute();
-//		power_manage();
     }
 
-//    for (;;)
-//    {
-//        app_sched_execute();
-//        power_manage();
-//    }
 }

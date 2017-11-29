@@ -1,0 +1,17 @@
+@import "~@sketchpixy/rubix/sass/variables";
+@import "~@sketchpixy/rubix/sass/rubix";
+@import "~@sketchpixy/rubix/sass/vendor";
+@import "~@sketchpixy/rubix/sass/theme";
+
+@import "variables";
+@import "colors";
+
+@import "fonts/fontello/font-face";
+@import "~@sketchpixy/rubix/sass/fonts/fontello";
+
+// Build theme
+@include theme-maker("default", (
+  theme (
+      bg $theme-primary-color
+  )
+));

@@ -58,11 +58,9 @@ $(abspath ../../../source/drivers/drv_bh1745.c) \
 $(abspath ../../../source/drivers/drv_color.c) \
 $(abspath ../../../source/drivers/drv_speaker.c) \
 $(abspath ../../../source/drivers/drv_mpu9250.c) \
-$(abspath ../../../source/drivers/drv_motion.c) \
 $(abspath ../../../source/drivers/drv_acc_lis3dh.c) \
 $(abspath ../../../source/drivers/drv_mic.c) \
 $(abspath ../../../source/modules/m_environment.c) \
-$(abspath ../../../source/modules/m_motion.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu.c) \
 $(abspath ../../../libs/eMD6/core/driver/eMPL/inv_mpu_dmp_motion_driver.c) \
 $(abspath ../../../libs/eMD6/core/mllite/data_builder.c) \
@@ -459,20 +457,12 @@ flash: nrf52832_xxaa_s132
 	@echo Flashing: $(OUTPUT_BINARY_DIRECTORY)/$<.hex
 	nrfjprog --program $(OUTPUT_BINARY_DIRECTORY)/$<.hex -f nrf52  --sectorerase
 	nrfjprog --reset -f nrf52
-
-## Flash softdevice
+	
 flash_softdevice:
-	@echo Flashing: s132_nrf52_2.0.0_softdevice.hex
-	nrfjprog --program ../../../sdk_components/softdevice/s132/hex/s132_nrf52_3.0.0_softdevice.hex -f nrf52 --chiperase
-	nrfjprog --reset -f nrf52
-	
-# Flash IoT softdevice
-flash_iot_softdevice:
 	@echo Flashing: s1xx-iot-prototype3_nrf52_softdevice.hex
-	nrfjprog --program /home/eugene/nrf5_iot_sdk_3288530/components/softdevice/s1xx_iot/s1xx-iot-prototype3_nrf52_softdevice.hex -f nrf52 --chiperase
+	nrfjprog --program ../../../sdk_components/softdevice/s1xx_iot/s1xx-iot-prototype3_nrf52_softdevice.hex -f nrf52 --chiperase
 	nrfjprog --reset -f nrf52
 	
-# Erases all user available program flash memory and the UICR page.
 erase_all:
 	@echo Erasing all
 	nrfjprog --eraseall
