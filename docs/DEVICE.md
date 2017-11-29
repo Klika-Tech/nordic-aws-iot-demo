@@ -28,7 +28,7 @@ The demo device is [Nordic Thingy:52](https://www.nordicsemi.com/eng/Products/No
 
 1. Clone repo.
 1. (Optional) Setup local [BLE MQTT Router](./ROUTER.md) 
-1. Import Project in to Eclipse IDE from [firmware](../firmware) directory.
+1. Import Project into Eclipse IDE from [firmware](../firmware) directory.
 1. Get MQTT broker ipv6 address.
 1. Local broker address shall be set in [main.c](../firmware/project/pca20020_s132/main.c). <p align="left"><img src="./assets/brocker-addr.png" atl="Brocker addr" /></p> 
 1. Execute Make target `erase_all`.
@@ -40,14 +40,14 @@ The demo device is [Nordic Thingy:52](https://www.nordicsemi.com/eng/Products/No
 _Located in main.c_
 
 1. BLE connection settings and mqtt connection setting shall be set here: <p align="left"><img src="./assets/firmware-settings.png" atl="Brocker addr" /></p> 
-1. Debug output can be seen via Segger RTT (real time terminal): <p align="left"><img src="./assets/rtt.png" atl="Segger RTT" /></p>
+1. Debug output can be seen via Segger RTT (real-time terminal): <p align="left"><img src="./assets/rtt.png" atl="Segger RTT" /></p>
 
 ### J-Link Connection Setup
 
 1. Plug-in Segger to USB and Nordic to Segger via Oumex connector.
-1. Run in command line: `JLinkExe`.
-1. Execute in J-Link shell: `connect`.
-1. Type `NRF52832_XXAA` as device name.
+1. Run on the command line: `JLinkExe`.
+1. Execute in the J-Link shell: `connect`.
+1. Type `NRF52832_XXAA` as the device name.
 1. Select target interface: `SWD`.
 1. Specify target interface speed 4000 kHz.
 
