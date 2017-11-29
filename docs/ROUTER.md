@@ -26,18 +26,18 @@ net.ipv6.conf.lo.disable_ipv6 = 0</pre>
 ### Setup bridge to AWS IoT
 
 1) Install [Mosquitto](https://mosquitto.org/).
-1) Copy (edit) [mosquitto.conf](./mosquitto.conf) to `/etc/mosquitto/mosquitto.conf`.
-1) Copy (edit) [psk_file.txt](./psk_file.txt) to `/etc/mosquitto/psk_file.txt`.
-1) Copy [bridge.conf](./bridge.conf) to `/etc/mosquitto/conf.d/bridge.conf`. 
+1) Copy (edit) [mosquitto.conf](../ble_mqtt_bridge/mosquitto.conf) to `/etc/mosquitto/mosquitto.conf`.
+1) Copy (edit) [psk_file.txt](../ble_mqtt_bridge/psk_file.txt) to `/etc/mosquitto/psk_file.txt`.
+1) Copy [bridge.conf](../ble_mqtt_bridge/bridge.conf) to `/etc/mosquitto/conf.d/bridge.conf`. 
 1) Edit `/etc/mosquitto/conf.d/bridge.conf` change `address` to your [AWS IoT Endpoint](http://docs.aws.amazon.com/cli/latest/reference/iot/describe-endpoint.html). 
-1) Execute [gen_aws_bridge_certs.sh](./gen_aws_bridge_certs.sh) in the command line (with sudo permissions).
-1) Modify [ble6_conn.sh](./ble6_conn.sh), change Thingy link-local IPv6 addresses (see details [here](https://developer.nordicsemi.com/nRF5_IoT_SDK/doc/0.9.0/html/a00088.html)).  
+1) Execute [gen_aws_bridge_certs.sh](../ble_mqtt_bridge/gen_aws_bridge_certs.sh) in the command line (with sudo permissions).
+1) Modify [ble6_conn.sh](../ble_mqtt_bridge/ble6_conn.sh), change Thingy link-local IPv6 addresses (see details [here](https://developer.nordicsemi.com/nRF5_IoT_SDK/doc/0.9.0/html/a00088.html)).  
 
 ### Workflow
 
-1) Run mosquitto broker, execute [mos_bro.sh](./mos_bro.sh).
-1) Subscribe to thing topic, execute [mos_sub.sh](./mos_sub.sh).
-1) Connect to Thingy from PC and setup PAN network, execute [ble6_conn.sh](./ble6_conn.sh).
+1) Run Mosquitto broker, execute [mos_bro.sh](../ble_mqtt_bridge/mos_bro.sh).
+1) Subscribe to thing topic, execute [mos_sub.sh](../ble_mqtt_bridge/mos_sub.sh).
+1) Connect to Thingy from PC and setup PAN network, execute [ble6_conn.sh](../ble_mqtt_bridge/ble6_conn.sh).
 
 ### External Resources
 

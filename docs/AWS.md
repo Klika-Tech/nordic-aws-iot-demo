@@ -1,7 +1,7 @@
 AWS Serverless Full-Stack
 =============
 
-Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/), deployment provided via [serverless](https://serverless.com/). <br/> [serverless.yml](./serverless.yml) - [serverless](https://serverless.com/) template provide all resources for setup cloud and [BLE mqtt router](../ble_mqtt_router).
+Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/), deployment provided via [serverless](https://serverless.com/). <br/> [serverless.yml](../aws/serverless.yml) - [serverless](https://serverless.com/) template provide all resources for setup cloud and [BLE mqtt router](../ble_mqtt_router).
 
 ##### Contents
 
@@ -30,7 +30,7 @@ Back-end (AWS-base) and front-end (SPA) running on [AWS](https://aws.amazon.com/
 1. Clone repository
 1. Go to project subdirectory `aws` 
 1. Install dependencies, run CLI command `npm install` 
-1. Copy [config.sample.yml](./config.sample.yml) to `config.dev.yml` and set your own settings. _Note: Replace OWN_API_KEY in `config.dev.yml` for valid [Open Weather Map API Key](https://openweathermap.org/appid)_
+1. Copy [config.sample.yml](../aws/config.sample.yml) to `config.dev.yml` and set your own settings. _Note: Replace OWN_API_KEY in `config.dev.yml` for valid [Open Weather Map API Key](https://openweathermap.org/appid)_
 1. Setup local dependencies (serverless-local-dynamo), run `npm run setup`
 
 ### Deploy
