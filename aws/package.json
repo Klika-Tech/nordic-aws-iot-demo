@@ -9,7 +9,8 @@
     "offline": "cross-env IS_OFFLINE=true serverless offline start",
     "offline:invoke": "cross-env IS_OFFLINE=true serverless invoke local",
     "offline:invoke:fetchWeather": "npm run offline:invoke -- --function=fetchWeather",
-    "simulator:device:aws": "node simulator/device/aws.js",
+    "thingy52:simulator:aws": "node thingy52/simulator/aws.js",
+    "thingy52:device:connect": "node thingy52/device/connect.js",
     "spa:build": "serverless spa bundle",
     "spa:build:offline": "cross-env IS_OFFLINE=true npm run spa:build",
     "spa:serve": "serverless spa serve",
@@ -38,6 +39,7 @@
     "lodash": "4.17.2",
     "moment": "2.17.0",
     "mqtt": "1.14.1",
+    "noble-device": "^1.4.1",
     "react": "15.4.1",
     "react-dimensions": "1.3.0",
     "react-dom": "15.4.1",
@@ -46,6 +48,7 @@
     "redux": "3.6.0",
     "redux-batched-actions": "0.1.4",
     "redux-thunk": "2.1.0",
+    "thingy52": "^1.0.4",
     "whatwg-fetch": "1.1.1"
   },
   "devDependencies": {
