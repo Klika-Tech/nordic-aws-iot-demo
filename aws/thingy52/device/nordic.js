@@ -8,6 +8,7 @@ const TELEMETRY_INTERVAL = 1000;
 let scanResults = [];
 let sigint = false;
 
+let connected = false;
 let currentTemperature = 0;
 let currentPressure = 0;
 let currentHumidity = 0;
@@ -101,6 +102,7 @@ function connectAndSetupEnvironment(thingy) {
 
             setTimeout(() => {
                 console.log('Connected!');
+                connected = true;
                 resolve(thingy);
             }, SENSOR_INIT_TIMEOUT);
         });
@@ -109,6 +111,7 @@ function connectAndSetupEnvironment(thingy) {
 
 function connect(thingy) {
     thingy.on('disconnect', function() {
+        connected = false;
         if (!sigint) {
             console.log('Disconnected! Trying to reconnect');
             connectAndSetupEnvironment(this);
@@ -125,10 +128,15 @@ function getCurrentValues() {
     };
 }
 
+function isConnected() {
+    return connected;
+}
+
 module.exports = {
     scan,
     renderScanResults,
     questionChooseThingy,
     connect,
-    getCurrentValues
+    getCurrentValues,
+    isConnected
 };

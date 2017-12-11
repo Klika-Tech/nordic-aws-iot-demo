@@ -10,7 +10,7 @@ nordic.scan()
     .then(nordic.questionChooseThingy)
     .then(nordic.connect)
     .then(aws.iotInit)
-    .then(aws.startPublishLoop(nordic.getCurrentValues))
+    .then(aws.startPublishLoop(nordic.isConnected, nordic.getCurrentValues))
     .catch((e) => {
         console.error(e);
         process.exit(1);

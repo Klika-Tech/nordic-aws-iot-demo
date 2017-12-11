@@ -27,30 +27,32 @@ function iotInit() {
     });
 }
 
-function startPublishLoop(getDataCb) {
+function startPublishLoop(isConnectedCb, getDataCb) {
     return (iotData) => {
         return new Promise((resolve, reject) => {
             try {
                 const stack = getStackInfo();
                 const topic = 'aws/things/'+stack.ThingName+'/shadow/update';
                 const interval = setInterval(() => {
-                    const params = {
-                        topic,
-                        payload: JSON.stringify({
-                            state: {
-                                reported: getDataCb()
+                    if (isConnectedCb()) {
+                        const params = {
+                            topic,
+                            payload: JSON.stringify({
+                                state: {
+                                    reported: getDataCb()
+                                }
+                            })
+                        };
+                        iotData.publish(params, err => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                console.log('Publish to AWS IoT:', params);
                             }
-                        })
-                    };
-                    iotData.publish(params, err => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            console.log('Publish to AWS IoT:', params);
-                        }
-                    });
-                    setTimeout(() => { resolve(interval) }, PUBLISH_INTERVAL);
+                        });
+                    }
                 }, PUBLISH_INTERVAL);
+                setTimeout(() => { resolve(interval) }, PUBLISH_INTERVAL);
             } catch (e) {
                 console.warn('Can\'t find a serverless stack info. You should deploy stack first!');
                 reject(e);
