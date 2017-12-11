@@ -5,13 +5,17 @@ const toInteger = require('lodash/toInteger');
 const SCAN_WINDOW = 5000;
 const SENSOR_INIT_TIMEOUT = 2000;
 const TELEMETRY_INTERVAL = 1000;
+const MAX_ECO2_LEVEL = 600;
 let scanResults = [];
 let sigint = false;
 
 let connected = false;
+let gasAlarmEnabled = false;
 let currentTemperature = 0;
 let currentPressure = 0;
 let currentHumidity = 0;
+let currentECO2 = 0;
+let currentTVOC = 0;
 
 function scan() {
     console.log(`Searching Thingy:52 (${SCAN_WINDOW}ms) ...`);
@@ -87,6 +91,10 @@ function connectAndSetupEnvironment(thingy) {
                     });
                 }
             };
+            const setLED = (c) => {
+                const color = c ? c : { r:0, g:0, b:0 };
+                thingy.led_set(color);
+            };
 
             thingy.temperature_interval_set(TELEMETRY_INTERVAL, intervalSetErrorCb);
             thingy.temperature_enable(intervalStartErrorCb);
@@ -99,6 +107,26 @@ function connectAndSetupEnvironment(thingy) {
             thingy.humidity_interval_set(TELEMETRY_INTERVAL, intervalSetErrorCb);
             thingy.humidity_enable(intervalStartErrorCb);
             thingy.on('humidityNotif', (metric) => { currentHumidity = metric });
+
+            thingy.gas_mode_set(1, intervalSetErrorCb);
+            thingy.gas_enable(intervalStartErrorCb);
+            thingy.on('gasNotif', (metric) => {
+                currentECO2 = metric.eco2;
+                currentTVOC = metric.tvoc;
+                if (currentECO2 >= MAX_ECO2_LEVEL) {
+                    if (!gasAlarmEnabled) {
+                        setLED({ r:255, g:0, b:0 });
+                    }
+                    gasAlarmEnabled = true;
+                } else {
+                    if (gasAlarmEnabled) {
+                        setLED();
+                        gasAlarmEnabled = false;
+                    }
+                }
+            });
+
+            setLED();
 
             setTimeout(() => {
                 console.log('Connected!');
@@ -122,6 +150,8 @@ function connect(thingy) {
 
 function getCurrentValues() {
     return {
+        eco2: currentECO2,
+        tvoc: currentTVOC,
         temperature: currentTemperature,
         humidity: currentHumidity,
         pressure: currentPressure
