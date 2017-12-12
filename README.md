@@ -5,7 +5,7 @@ The platform demonstrates an [Nordic Thingy:52](https://www.nordicsemi.com/eng/P
 The [back-end and front-end](docs/AWS.md) is entirely powered by [Amazon Web Services](https://aws.amazon.com/).
 The [device](./docs/DEVICE.md) send metrics over MQTT (IPv6) to AWS IoT via [BLE MQTT Router](docs/ROUTER.md).
 
-You can see the live demo [here](http://nordic-dev-serverless-site-s3.s3-website.eu-central-1.amazonaws.com/#/dashboard).
+You can see the live demo [here](http://iot-demo.nordic.s3-website.eu-central-1.amazonaws.com/#/dashboard).
 
 ##### Contents
 
