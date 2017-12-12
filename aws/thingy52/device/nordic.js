@@ -134,7 +134,7 @@ function connectAndSetupEnvironment(thingy) {
             thingy.humidity_enable(handleError('Set humidity enable error'));
             thingy.on('humidityNotif', (metric) => { currentHumidity = metric });
 
-            thingy.gas_mode_set(1, handleError('Gas mode set error'));
+            thingy.gas_mode_set(2, handleError('Gas mode set error'));
             thingy.gas_enable(handleError('Gas enable error'));
             thingy.on('gasNotif', (metric) => {
                 currentECO2 = metric.eco2;

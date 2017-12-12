@@ -20,8 +20,8 @@
     "sls:build:offline": "cross-env IS_OFFLINE=true npm run sls:build",
     "lint:lambdas": "eslint lambdas",
     "lint:lambdas:fix": "eslint lambdas --fix",
-    "lint:www": "eslint www",
-    "lint:www:fix": "eslint www --fix",
+    "lint:web": "eslint web",
+    "lint:web:fix": "eslint web --fix",
     "deploy:sls": "serverless deploy --verbose",
     "deploy:spa": "serverless spa deploy",
     "remove:sls": "serverless remove --verbose"

@@ -33,3 +33,7 @@ export const HYPER_PASCALS = {
     key: 'pascal',
 };
 
+export const PPM = {
+    label: 'ppm',
+    key: 'ppm',
+};

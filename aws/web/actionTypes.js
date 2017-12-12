@@ -25,5 +25,11 @@ export const TEMPERATURE_TOGGLE_VISIBILITY = 'temperature_toggle_visibility';
 export const TEMPERATURE_CHANGE_CHART_TYRE = 'temperature_change_chart_type';
 export const TEMPERATURE_CHANGE_UNITS = 'temperature_change_units';
 
+export const ECO2_UPDATE = 'eco2_update';
+
+export const TVOC_UPDATE = 'tvoc_update';
+
+export const BATTERY_UPDATE = 'battery_update';
+
 export const DEVICE_CONNECTED = 'device_connected';
 export const DEVICE_DISCONNECTED = 'device_disconnected';

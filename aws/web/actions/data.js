@@ -4,6 +4,9 @@ import { DATA_FETCHED } from '../actionTypes';
 import { pressureFetch, pressurePush } from './pressure';
 import { humidityFetch, humidityPush } from './humidity';
 import { temperatureFetch, temperaturePush } from './temperature';
+import { eco2Fetch, eco2Push } from './eco2';
+import { tvocFetch, tvocPush } from './tvoc';
+import { batteryLevelFetch, batteryLevelPush } from './batteryLevel';
 
 export function fetchData(data) {
     return (dispatch) => {
@@ -12,6 +15,9 @@ export function fetchData(data) {
             pressureFetch(pd),
             humidityFetch(pd),
             temperatureFetch(pd),
+            eco2Fetch(pd),
+            tvocFetch(pd),
+            batteryLevelFetch(pd),
             { type: DATA_FETCHED },
         ]));
     };
@@ -20,11 +26,14 @@ export function fetchData(data) {
 export function pushData(chunks) {
     return (dispatch, getState) => {
         const pds = chunks.map(prepareDataItem);
-        const { pressure, humidity, temperature } = getState();
+        const { pressure, humidity, temperature, eco2, tvoc, batteryLevel } = getState();
         dispatch(batchActions([
             pressurePush(pds, pressure),
             humidityPush(pds, humidity),
             temperaturePush(pds, temperature),
+            eco2Push(pds, eco2),
+            tvocPush(pds, tvoc),
+            batteryLevelPush(pds, batteryLevel),
         ]));
     };
 }
@@ -52,6 +61,9 @@ function prepareDataItem(dataItem) {
     if (dataItem.magnetometer !== undefined) result.magnetometer = dataItem.magnetometer;
     if (dataItem.accelerometer !== undefined) result.accelerometer = dataItem.accelerometer;
     if (dataItem.gyroscope !== undefined) result.gyroscope = dataItem.gyroscope;
+    if (dataItem.eco2 !== undefined) result.eco2 = parseFloat(dataItem.eco2);
+    if (dataItem.tvoc !== undefined) result.tvoc = parseFloat(dataItem.tvoc);
+    if (dataItem.batteryLevel !== undefined) result.batteryLevel = parseFloat(dataItem.batteryLevel);
 
     return result;
 }
