@@ -35,7 +35,7 @@ The back-end is entirely powered by [Amazon Web Services](https://aws.amazon.com
 
 It is a [React](https://facebook.github.io/react/) application which renders the board sensors data as [D3.js](https://d3js.org/) charts. On the application start initial data set is fetched from a public API endpoint. 
 By default data for last 4 hours is rendered. Charts are updated in real time using data coming from Cloud via MQTT over Websocket protocol. They have two visualization modes: line and area.
-Here are links to dashboard [source code](../aws/web) and [live demo](http://nordic-dev-serverless-site-s3.s3-website.eu-central-1.amazonaws.com/#/dashboard). 
+Here are links to dashboard [source code](../aws/web) and [live demo](http://iot-demo.nordic.s3-website.eu-central-1.amazonaws.com/#/dashboard). 
 
 ### Setup
 

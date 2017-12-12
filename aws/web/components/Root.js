@@ -4,12 +4,12 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRedirect, hashHistory } from 'react-router';
 import Main from './layout/Main';
 import Dashboard from './views/Dashboard';
-import Magnetometer from './views/Magnetometer';
-import Gyroscope from './views/Gyroscope';
-import Accelerometer from './views/Accelerometer';
 import Barometer from './views/Barometer';
 import Humidity from './views/Humidity';
 import Temperature from './views/Temperature';
+import ECO2 from './views/ECO2';
+import TVOC from './views/TVOC';
+import BatteryLevel from './views/BatteryLevel';
 import '../theme/bootstrap.scss';
 
 const RouterComponent = ({ store }) => (
@@ -21,6 +21,9 @@ const RouterComponent = ({ store }) => (
                 <Route path="temperature" component={Temperature} />
                 <Route path="humidity" component={Humidity} />
                 <Route path="barometer" component={Barometer} />
+                <Route path="eco2" component={ECO2} />
+                <Route path="tvoc" component={TVOC} />
+                <Route path="battery" component={BatteryLevel} />
             </Route>
         </Router>
     </Provider>
