@@ -4,7 +4,6 @@
 
 const commandLineArgs = require('command-line-args');
 const nordic = require('./nordic');
-const aws = require('./aws');
 
 // Parse cli options
 const optionDefinitions = [
@@ -26,6 +25,7 @@ flow = flow
 
 // Start Publishing to AWS
 if (!options.disableCloud) {
+    const aws = require('./aws');
     flow = flow
         .then(aws.iotInit)
         .then(aws.startPublishLoop(nordic.isConnected, nordic.getCurrentValues));
