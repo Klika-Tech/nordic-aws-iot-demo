@@ -2,12 +2,17 @@ const readline = require('readline');
 const Thingy = require('thingy52');
 const forEach = require('lodash/forEach');
 const toInteger = require('lodash/toInteger');
+const toLower = require('lodash/toLower');
+const replace = require('lodash/replace');
+
 const SCAN_WINDOW = 5000;
 const SENSOR_INIT_TIMEOUT = 2000;
 const TELEMETRY_INTERVAL = 1000;
-const MAX_ECO2_LEVEL = 600;
+const MAX_ECO2_LEVEL = 700;
 let scanResults = [];
 let sigint = false;
+
+let currentThingy = null;
 
 let connected = false;
 let gasAlarmEnabled = false;
@@ -16,8 +21,13 @@ let currentPressure = 0;
 let currentHumidity = 0;
 let currentECO2 = 0;
 let currentTVOC = 0;
+let currentBatteryLevel = 100;
+
+// setup cleanup handler
+require('./cleanup').Cleanup(handleCleanup);
 
 function scan() {
+
     console.log(`Searching Thingy:52 (${SCAN_WINDOW}ms) ...`);
     scanResults = [];
 
@@ -31,15 +41,30 @@ function scan() {
                 resolve(scanResults);
             } else {
                 reject({
-                    message: "Not found any Thingy:52"
+                    message: 'Not found any Thingy:52'
                 });
             }
         }, SCAN_WINDOW);
     })
 }
 
+function scanByMac(mac) {
+    console.log(`Searching Thingy:52 by MAC: ${mac}`);
+    const id = replace(toLower(mac), new RegExp(':','g'), '');
+    return new Promise((resolve, reject) => {
+        Thingy.discoverById(id, (thingy) => {
+            resolve(thingy);
+        });
+        setTimeout(() => {
+            reject({
+                message: `Not found Thingy:52 by id: ${id}`
+            });
+        }, SCAN_WINDOW);
+    })
+}
+
 function renderScanResults(things) {
-    console.log("Scan results:");
+    console.log('Scan results:');
     forEach(things, (item, index) => {
         console.log(`${index+1}) ${item.address}`);
     });
@@ -58,7 +83,7 @@ function questionChooseThingy(things) {
             if (!isValid) {
                 rl.close();
                 reject({
-                    message: "Invalid value. Interrupting."
+                    message: 'Invalid value. Interrupting.'
                 });
             } else {
                 const thingy = things[answer-1];
@@ -72,61 +97,67 @@ function questionChooseThingy(things) {
 function connectAndSetupEnvironment(thingy) {
     return new Promise((resolve, reject) => {
         thingy.connectAndSetUp((error) => {
-            if (error) {
-                reject({
-                    message: 'Connection error: ' + error
-                });
-            }
-            const intervalSetErrorCb = (error) => {
-                if (error) {
-                    reject({
-                        message: 'Interval set error: ' + error
+            const handleError = (message) => {
+                return (error) => {
+                    if (error) {
+                        reject({
+                            message: message + ': ' + error
+                        });
+                    }
+                };
+            };
+            const setLedAlarm = (isEnabled) => {
+                if (!isEnabled) {
+                    thingy.led_off();
+                } else {
+                    thingy.led_breathe({
+                        color: 1,
+                        intensity: 100,
+                        delay: 1000
                     });
                 }
-            };
-            const intervalStartErrorCb = (error) => {
-                if (error) {
-                    reject({
-                        message: 'Sensor start error: ' + error
-                    });
-                }
-            };
-            const setLED = (c) => {
-                const color = c ? c : { r:0, g:0, b:0 };
-                thingy.led_set(color);
             };
 
-            thingy.temperature_interval_set(TELEMETRY_INTERVAL, intervalSetErrorCb);
-            thingy.temperature_enable(intervalStartErrorCb);
+            handleError('Connection error')(error);
+
+            if (error) return; else currentThingy = thingy;
+
+            thingy.temperature_interval_set(TELEMETRY_INTERVAL, handleError('Set temperature interval error'));
+            thingy.temperature_enable(handleError('Set temperature enable error'));
             thingy.on('temperatureNotif', (metric) => { currentTemperature = metric });
 
-            thingy.pressure_interval_set(TELEMETRY_INTERVAL, intervalSetErrorCb);
-            thingy.pressure_enable(intervalStartErrorCb);
+            thingy.pressure_interval_set(TELEMETRY_INTERVAL, handleError('Set pressure interval error'));
+            thingy.pressure_enable(handleError('Set pressure enable error'));
             thingy.on('pressureNotif', (metric) => { currentPressure = metric });
 
-            thingy.humidity_interval_set(TELEMETRY_INTERVAL, intervalSetErrorCb);
-            thingy.humidity_enable(intervalStartErrorCb);
+            thingy.humidity_interval_set(TELEMETRY_INTERVAL, handleError('Set humidity interval error'));
+            thingy.humidity_enable(handleError('Set humidity enable error'));
             thingy.on('humidityNotif', (metric) => { currentHumidity = metric });
 
-            thingy.gas_mode_set(1, intervalSetErrorCb);
-            thingy.gas_enable(intervalStartErrorCb);
+            thingy.gas_mode_set(1, handleError('Gas mode set error'));
+            thingy.gas_enable(handleError('Gas enable error'));
             thingy.on('gasNotif', (metric) => {
                 currentECO2 = metric.eco2;
                 currentTVOC = metric.tvoc;
                 if (currentECO2 >= MAX_ECO2_LEVEL) {
                     if (!gasAlarmEnabled) {
-                        setLED({ r:255, g:0, b:0 });
+                        console.log(`[${(new Date()).toISOString()}] Gas Alarm (CO2:${currentECO2}) enabled!`);
+                        setLedAlarm(true);
                     }
                     gasAlarmEnabled = true;
                 } else {
                     if (gasAlarmEnabled) {
-                        setLED();
+                        console.log(`[${(new Date()).toISOString()}] Gas Alarm (CO2:${currentECO2}) disabled.`);
+                        setLedAlarm();
                         gasAlarmEnabled = false;
                     }
                 }
             });
 
-            setLED();
+            thingy.on('batteryLevelChange', (level) => { currentBatteryLevel = level });
+            thingy.notifyBatteryLevel(handleError('Enable battery level error'));
+
+            setLedAlarm(false);
 
             setTimeout(() => {
                 console.log('Connected!');
@@ -139,6 +170,7 @@ function connectAndSetupEnvironment(thingy) {
 
 function connect(thingy) {
     thingy.on('disconnect', function() {
+        currentThingy = null;
         connected = false;
         if (!sigint) {
             console.log('Disconnected! Trying to reconnect');
@@ -154,7 +186,8 @@ function getCurrentValues() {
         tvoc: currentTVOC,
         temperature: currentTemperature,
         humidity: currentHumidity,
-        pressure: currentPressure
+        pressure: currentPressure,
+        batteryLevel: currentBatteryLevel
     };
 }
 
@@ -162,8 +195,22 @@ function isConnected() {
     return connected;
 }
 
+function handleCleanup() {
+    if (currentThingy) {
+        console.log('Disabling sensors ...');
+        currentThingy.temperature_disable(console.error);
+        currentThingy.pressure_disable(console.error);
+        currentThingy.humidity_disable(console.error);
+        currentThingy.gas_disable(console.error);
+        currentThingy.led_off();
+        console.log('Disconnecting ...');
+        currentThingy.disconnect(console.error);
+    }
+}
+
 module.exports = {
     scan,
+    scanByMac,
     renderScanResults,
     questionChooseThingy,
     connect,

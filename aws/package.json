@@ -11,6 +11,7 @@
     "offline:invoke:fetchWeather": "npm run offline:invoke -- --function=fetchWeather",
     "thingy52:simulator:aws": "node thingy52/simulator/aws.js",
     "thingy52:device:connect": "node thingy52/device/connect.js",
+    "thingy52:device:radio": "node thingy52/device/radio.js",
     "spa:build": "serverless spa bundle",
     "spa:build:offline": "cross-env IS_OFFLINE=true npm run spa:build",
     "spa:serve": "serverless spa serve",
@@ -30,8 +31,10 @@
   ],
   "dependencies": {
     "@sketchpixy/rubix": "2.9.11",
+    "arraybuffer-to-buffer": "0.0.4",
     "aws-sdk": "2.7.7",
     "classnames": "2.2.5",
+    "command-line-args": "^4.0.7",
     "crypto-js": "3.1.8",
     "d3": "4.4.0",
     "d3-axis": "1.0.4",
