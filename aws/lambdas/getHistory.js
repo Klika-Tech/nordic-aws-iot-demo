@@ -71,7 +71,14 @@ exports.handler = (event, context, callback) => {
                 timestamp: parseInt(x.timestamp, 10),
             };
 
-            const metrics = ['temperature', 'humidity', 'pressure', 'accelerometer', 'gyroscope', 'magnetometer'];
+            const metrics = [
+                'temperature',
+                'humidity',
+                'pressure',
+                'batteryLevel',
+                'eco2',
+                'tvoc'
+            ];
 
             metrics.forEach((metric) => {
                 if (x.payload[metric] !== undefined) { result[metric] = x.payload[metric]; }

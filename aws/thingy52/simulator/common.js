@@ -38,6 +38,24 @@ const sensorsConfig = {
         maxDelta: .1,
         min: 800,
         max: 1060
+    },
+    eco2: {
+        initial: 700,
+        maxDelta: 5,
+        min: 700,
+        max: 1000
+    },
+    tvoc: {
+        initial: 0,
+        maxDelta: 1,
+        min: 0,
+        max: 300
+    },
+    batteryLevel: {
+        initial: 80,
+        maxDelta: .1,
+        min: 0,
+        max: 100
     }
 };
 
