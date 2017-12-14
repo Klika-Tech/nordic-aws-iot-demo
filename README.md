@@ -96,11 +96,12 @@ For setup connection to your [Nordic Thingy:52](https://www.nordicsemi.com/eng/P
 ### Device Simulation
 
 If you don't have a [Nordic Thingy:52](https://www.nordicsemi.com/eng/Products/Nordic-Thingy-52) you can use program simulation of device.
-
-_Note: Current version of device simulator is AWS-based, you should deploy serverless stack before launch._
+For launch simulation do following: 
 
 1. Go to project directory
 1. Launch simulator, run `npm run thingy52:simulator:aws`
+
+_Note: Current version of device simulator is AWS-based, you should deploy serverless stack before launch._
    	
 ##### External Resources
 
