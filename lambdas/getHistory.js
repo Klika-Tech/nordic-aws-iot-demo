@@ -18,7 +18,7 @@ exports.handler = (event, context, callback) => {
     const metricsTableKey = process.env.DYNAMO_DB_METRICS_TABLE_KEY;
 
     const defaultSince = Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
-    const since = toInteger(get(event, "queryStringParameters.since", defaultSince));
+    const since = toInteger(get(event, 'queryStringParameters.since', defaultSince));
 
     console.log('since:', since);
 
@@ -77,7 +77,7 @@ exports.handler = (event, context, callback) => {
                 'pressure',
                 'batteryLevel',
                 'eco2',
-                'tvoc'
+                'tvoc',
             ];
 
             metrics.forEach((metric) => {

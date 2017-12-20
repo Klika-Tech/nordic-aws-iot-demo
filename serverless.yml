@@ -191,12 +191,7 @@ resources:
               - ""
               - - "SELECT "
                 - "topic(3) AS thingName,"
-                - "state.reported.temperature,"
-                - "state.reported.humidity,"
-                - "state.reported.pressure,"
-                - "state.reported.eco2,"
-                - "state.reported.tvoc,"
-                - "state.reported.batteryLevel,"
+                - "state.reported.*,"
                 - "timestamp "
                 - "FROM '$aws/things/+/shadow/update/accepted' "
                 - "WHERE startswith(topic(3),'${{self:custom.context}}') = true"
@@ -210,7 +205,7 @@ resources:
                 HashKeyValue: "${topic(3)}"
                 RangeKeyField: timestamp
                 RangeKeyType: NUMBER
-                RangeKeyValue: "${metadata.reported.temperature.timestamp}"
+                RangeKeyValue: "${timestamp()}"
                 PayloadField: payload
             - Republish:
                 RoleArn:
