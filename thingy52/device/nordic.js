@@ -50,7 +50,7 @@ const deviceShadow = {
         pitch: 0,
         yaw: 0,
     },
-    rotation: {
+    rotation: { // calculate vector of rotation
         m_11: 0,
         m_12: 0,
         m_13: 0,
@@ -61,7 +61,7 @@ const deviceShadow = {
         m_32: 0,
         m_33: 0,
     },
-    heading: 0,
+    heading: 0, // determinate direction
     gravity: [0, 0, 0],
 };
 
@@ -221,7 +221,6 @@ function connectAndSetupEnvironment(thingy) {
             });
             thingy.tap_enable(handleError('Tap enable error'));
             thingy.on('tapNotif', (tap) => {
-                console.log('>>>> tapNotif <<<', tap);
                 deviceShadow.tap = tap;
             });
             thingy.orientation_enable(handleError('Orientation enable error'));
