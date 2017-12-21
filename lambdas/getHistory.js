@@ -7,6 +7,7 @@
  * */
 
 import get from 'lodash/get';
+import defaults from 'lodash/defaults';
 import toInteger from 'lodash/toInteger';
 import dc from './common/dynamodb';
 import { ok } from './common/response';
@@ -18,7 +19,7 @@ exports.handler = (event, context, callback) => {
     const metricsTableKey = process.env.DYNAMO_DB_METRICS_TABLE_KEY;
 
     const defaultSince = Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
-    const since = toInteger(get(event, "queryStringParameters.since", defaultSince));
+    const since = toInteger(get(event, 'queryStringParameters.since', defaultSince));
 
     console.log('since:', since);
 
@@ -66,28 +67,9 @@ exports.handler = (event, context, callback) => {
 
 
     function processResult(items) {
-        const sensorData = items.reverse().map((x) => {
-            const result = {
-                timestamp: parseInt(x.timestamp, 10),
-            };
-
-            const metrics = [
-                'temperature',
-                'humidity',
-                'pressure',
-                'batteryLevel',
-                'eco2',
-                'tvoc'
-            ];
-
-            metrics.forEach((metric) => {
-                if (x.payload[metric] !== undefined) { result[metric] = x.payload[metric]; }
-            });
-
-            if (x.payload.marker !== undefined && x.payload.marker) result.marker = true;
-
-            return result;
-        });
+        const sensorData = items.reverse().map(x => defaults({
+            timestamp: parseInt(x.timestamp, 10),
+        }, x.payload));
 
         const cities = [
             { name: 'Minsk', id: 625144 },

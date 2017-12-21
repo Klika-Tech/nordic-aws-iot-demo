@@ -40,6 +40,8 @@
     "react/jsx-max-props-per-line": "off",
     "jsx-a11y/mouse-events-have-key-events": "off",
     "jsx-a11y/anchor-is-valid": "off",
-    "spaced-comment": "off"
+    "spaced-comment": "off",
+    "prefer-promise-reject-errors": "off",
+    "global-require": "off"
   }
 }

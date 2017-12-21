@@ -8,7 +8,7 @@ const nordic = require('./nordic');
 // Parse cli options
 const optionDefinitions = [
     { name: 'mac', alias: 'm', type: String },
-    { name: 'disableCloud', alias: 'd', type: Boolean }
+    { name: 'disableCloud', alias: 'd', type: Boolean },
 ];
 const options = commandLineArgs(optionDefinitions);
 
