@@ -205,7 +205,7 @@ resources:
                 HashKeyValue: "${topic(3)}"
                 RangeKeyField: timestamp
                 RangeKeyType: NUMBER
-                RangeKeyValue: "${timestamp()}"
+                RangeKeyValue: "${metadata.reported.temperature.timestamp}"
                 PayloadField: payload
             - Republish:
                 RoleArn:

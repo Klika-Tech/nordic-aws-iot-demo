@@ -5,10 +5,11 @@
 
 const aws = require('aws-sdk');
 const toInteger = require('lodash/toInteger');
+const get = require('lodash/get');
 const common = require('./common');
 const stack = require('../../.serverless/stack.json');
 
-const interval = toInteger(process.env.INTERVAL) || 3000;
+const interval = toInteger(process.env.INTERVAL) || 2000;
 
 const awsRegion = stack.Region;
 const thingName = stack.ThingName;
@@ -68,12 +69,30 @@ iot.describeEndpoint((error, data) => {
                 }),
             };
 
-            iotData.publish(message, (e) => {
-                if (e) {
-                    console.log('IoT Data error:', e);
-                    process.exit(1);
+            iotData.getThingShadow({ thingName }, (getErr, res) => {
+                if (getErr) {
+                    console.log(getErr, getErr.stack); // an error occurred
+                    return;
+                }
+
+                const currentTs = Math.round(new Date().getTime() / 1000);
+                const shadowDoc = JSON.parse(res.payload);
+                const connectedTs = get(shadowDoc, 'metadata.reported.connected.timestamp');
+                const isNordicDisconnected = (currentTs - connectedTs) > 5;
+
+                console.log('>>>>>>', currentTs, connectedTs, (currentTs - connectedTs), '<<<<<<<<');
+
+                if (isNordicDisconnected) {
+                    iotData.publish(message, (pubErr) => {
+                        if (pubErr) {
+                            console.log('IoT Data error:', pubErr);
+                            process.exit(1);
+                        } else {
+                            console.log('IoT Data publish success:', message);
+                        }
+                    });
                 } else {
-                    console.log('IoT Data publish success:', message);
+                    console.log('Skip sending telemetry.');
                 }
             });
         });

@@ -1,5 +1,6 @@
 const isArray = require('lodash/isArray');
 const isObject = require('lodash/isObject');
+const round = require('lodash/round');
 const mapValues = require('lodash/mapValues');
 
 function deviateSensor(sensorConfig, currentValue) {
@@ -21,7 +22,13 @@ function deviateSensor(sensorConfig, currentValue) {
     if (currentValue > sensorConfig.max) shift *= 2;
     else if (currentValue < sensorConfig.min) shift *= -2;
 
-    if (rnd < 0.3) newValue = newValue + Math.random() * sensorConfig.maxDelta * 2 - shift;
+    if (rnd < 0.3) newValue = newValue + round(Math.random(), 2) * sensorConfig.maxDelta * 2 - shift;
+
+    const r = sensorConfig.round || false;
+
+    if (r) {
+        newValue = round(newValue);
+    }
 
     return newValue;
 }
@@ -47,18 +54,22 @@ const sensorsConfig = {
     },
     eco2: {
         initial: 700,
+        round: true,
         maxDelta: 5,
         min: 400,
         max: 1000,
     },
     tvoc: {
         initial: 0,
+        round: true,
         maxDelta: 1,
         min: 0,
         max: 300,
     },
     batteryLevel: {
         initial: 80,
+        round: true,
+        fix: 0,
         maxDelta: 0.1,
         min: 0,
         max: 100,
@@ -93,12 +104,14 @@ const sensorsConfig = {
             green: 60,
             blue: 20,
         },
+        round: true,
         maxDelta: 5,
         min: 0,
         max: 255,
     },
     orientation: {
         initial: 0,
+        round: true,
         maxDelta: 1,
         min: 0,
         max: 3,
@@ -108,6 +121,7 @@ const sensorsConfig = {
             direction: 0,
             count: 0,
         },
+        round: true,
         maxDelta: 1,
         min: 0,
         max: 3,
@@ -128,6 +142,7 @@ const sensorsConfig = {
             steps: 0,
             time: 0,
         },
+        round: true,
         maxDelta: 1,
         min: 0,
         max: 1000,
@@ -137,6 +152,7 @@ const sensorsConfig = {
             steps: 0,
             time: 0,
         },
+        round: true,
         maxDelta: 1,
         min: 0,
         max: 1000,

@@ -274,6 +274,7 @@ function connectAndSetupEnvironment(thingy) {
             setTimeout(() => {
                 console.log('Connected!');
                 connected = true;
+                deviceShadow.connected = connected;
                 resolve(thingy);
             }, SENSOR_INIT_TIMEOUT);
         });
