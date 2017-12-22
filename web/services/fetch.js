@@ -6,7 +6,7 @@ import 'whatwg-fetch';
  * @return {*|Promise.<Object>}
  */
 export function fetchAwsMetrics({ fetchApiUrl }) {
-    const since = Math.round(Date.now() / 1000) - 14400;
+    const since = Math.round(Date.now() / 1000) - 2 * 60 * 60;
     return fetch(`${fetchApiUrl}?since=${since}`)
         .then(response => response.json());
 }

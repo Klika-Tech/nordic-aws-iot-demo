@@ -18,7 +18,7 @@ exports.handler = (event, context, callback) => {
     const weatherTableName = process.env.DYNAMO_DB_WEATHER_TABLE_NAME;
     const metricsTableKey = process.env.DYNAMO_DB_METRICS_TABLE_KEY;
 
-    const defaultSince = Math.round((Date.now() - 4 * 60 * 60 * 1000) / 1000);
+    const defaultSince = Math.round((Date.now() - 2 * 60 * 60 * 1000) / 1000);
     const since = toInteger(get(event, 'queryStringParameters.since', defaultSince));
 
     console.log('since:', since);
