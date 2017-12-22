@@ -13,5 +13,11 @@
 @include theme-maker("default", (
   theme (
       bg $theme-primary-color
+  ),
+  header (
+      sidebar-btn (
+        hover-bg $theme-primary-color,
+        bg $theme-primary-color
+      )
   )
 ));
