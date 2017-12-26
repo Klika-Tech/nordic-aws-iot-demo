@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import { Grid, Row, Col, PanelContainer, Panel, PanelBody, PanelHeader, Icon } from '@sketchpixy/rubix';
 
-const MetricsContainer = ({ children, title, glyph }) => (
+const MetricsContainer = ({ children, title, glyph, href }) => (
     <PanelContainer className="nordic-metric-container">
         <Panel>
             <PanelBody>
@@ -13,9 +14,12 @@ const MetricsContainer = ({ children, title, glyph }) => (
                                 <span className="tile-title">{title}</span>
                             </div>
                             <div className="tile-body">
-                                <div className="tile-content">
-                                    {children}
-                                </div>
+                                {!!href &&
+                                <Link to={href} className="tile-content">{children}</Link>
+                                }
+                                {!href &&
+                                <div className="tile-content">{children}</div>
+                                }
                             </div>
                         </Col>
                     </Row>
@@ -29,6 +33,7 @@ MetricsContainer.propTypes = {
     children: PropTypes.node,
     title: PropTypes.string,
     glyph: PropTypes.string,
+    href: PropTypes.string,
 };
 
 export default MetricsContainer;

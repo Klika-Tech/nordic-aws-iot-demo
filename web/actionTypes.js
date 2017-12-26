@@ -14,6 +14,12 @@ export const GYROSCOPE_UPDATE = 'gyroscope_update';
 
 export const MAGNETOMETER_UPDATE = 'magnetometer_update';
 
+export const COMPASS_UPDATE = 'compass_update';
+
+export const GRAVITY_UPDATE = 'gravity_update';
+
+export const HEADING_UPDATE = 'heading_update';
+
 export const PRESSURE_UPDATE = 'pressure_update';
 export const PRESSURE_CHANGE_CHART_TYRE = 'pressure_change_chart_type';
 export const PRESSURE_TOGGLE_VISIBILITY = 'pressure_toggle_visibility';

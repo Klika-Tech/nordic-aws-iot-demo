@@ -9,18 +9,6 @@ const Menu = () => (
                 glyph="icon-fontello-th-large"
             />
             <SidebarNavItem
-                name="ECO2" href="/eco2"
-                glyph="icon-fontello-pagelines"
-            />
-            <SidebarNavItem
-                name="TVOC" href="/tvoc"
-                glyph="icon-fontello-beaker"
-            />
-            <SidebarNavItem
-                name="Battery" href="/battery"
-                glyph="icon-fontello-battery"
-            />
-            <SidebarNavItem
                 name="Temperature" href="/temperature"
                 glyph="icon-fontello-temperatire"
             />
@@ -31,6 +19,38 @@ const Menu = () => (
             <SidebarNavItem
                 name="Barometer" href="/barometer"
                 glyph="icon-fontello-gauge"
+            />
+            <SidebarNavItem
+                name="CO2" href="/eco2"
+                glyph="icon-fontello-pagelines"
+            />
+            <SidebarNavItem
+                name="TVOC" href="/tvoc"
+                glyph="icon-fontello-beaker"
+            />
+            <SidebarNavItem
+                name="Accelerometer" href="/accelerometer"
+                glyph="icon-fontello-chart-line"
+            />
+            <SidebarNavItem
+                name="Gyroscope" href="/gyroscope"
+                glyph="icon-fontello-globe-alt"
+            />
+            <SidebarNavItem
+                name="Compass" href="/compass"
+                glyph="icon-fontello-compass"
+            />
+            <SidebarNavItem
+                name="Gravity" href="/gravity"
+                glyph="icon-fontello-magnet-1"
+            />
+            <SidebarNavItem
+                name="Heading" href="/heading"
+                glyph="icon-fontello-direction"
+            />
+            <SidebarNavItem
+                name="Battery" href="/battery"
+                glyph="icon-fontello-battery"
             />
         </SidebarNav>
     </div>
