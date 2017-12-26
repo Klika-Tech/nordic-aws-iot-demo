@@ -3,7 +3,9 @@ import { enableBatching } from 'redux-batched-actions';
 import data from './data';
 import accelerometer from './accelerometer';
 import gyroscope from './gyroscope';
-import magnetometer from './magnetometer';
+import compass from './compass';
+import gravity from './gravity';
+import heading from './heading';
 import pressure from './pressure';
 import humidity from './humidity';
 import temperature from './temperature';
@@ -18,7 +20,9 @@ export default enableBatching(
         device,
         accelerometer,
         gyroscope,
-        magnetometer,
+        compass,
+        gravity,
+        heading,
         pressure,
         humidity,
         temperature,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SimpleMetricChart from '../../common/SimpleMetricChart';
-import { PPM } from '../../../scaleUnits';
+import { PPB } from '../../../scaleUnits';
 
 const mapStateToProps = state => ({
     data: state.tvoc.data,
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 const TVOCWidget = ({ data, yDomain, xDomain }) => (
     <SimpleMetricChart
         type="tvoc"
-        units={PPM}
+        units={PPB}
         data={data}
     />
 );

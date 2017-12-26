@@ -1,3 +1,6 @@
+@import "~@sketchpixy/rubix/sass/variables";
+@import "../../../theme/variables";
+
 .dashboard {
   .chart-panel-body {
     height: 335px;
@@ -8,4 +11,90 @@
       stroke-width: 1px;
     }
   }
+
+  @media #{$mobile} {
+    .col-md-2.col-sm-3.col-xs-6 {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
+
+}
+
+.nordic-metric-container {
+
+  .rubix-panel-container {
+    border-radius: 4px;
+
+    .tile-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      padding: 5px 1rem;
+      font-size: 1.8rem;
+      line-height: 2rem;
+
+      .tile-icon {
+        font-size: 2.3rem;
+        margin-right: 1rem;
+      }
+
+    }
+
+    .rubix-panel-body {
+      padding: 0;
+
+      .tile-body {
+        min-height: 18rem;
+
+        .tile-content {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          top: 0;
+          display: flex;
+          color: $primary-color;
+        }
+
+        .tile-big-val {
+          margin: 0;
+          font-size: 3.2rem;
+          line-height: 3.3rem;
+          font-weight: bold;
+        }
+
+        .tile-center {
+          align-self: center;
+          width: 100%;
+          padding: 0 1rem;
+        }
+
+        .table {
+          margin: 0;
+          th, td {
+            padding: 0;
+            border: none;
+            text-align: center;
+          }
+          td {
+            font-size: 2rem;
+            font-weight: bold;
+          }
+        }
+
+        .color-circle {
+          line-height: 2rem;
+          font-size: 5rem;
+          text-align: center;
+        }
+
+      }
+
+    }
+
+  }
+
 }

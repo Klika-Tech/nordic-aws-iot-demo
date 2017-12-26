@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
@@ -112,7 +111,16 @@ class Main extends React.Component {
                                         </Col>
                                         <Col xs={6} sm={4}>
                                             <NavbarHeader>
-                                                <NavbarBrand>Nordic Thingy 52</NavbarBrand>
+                                                <NavbarBrand>
+                                                    <a href="/" className="navbar-brand">
+                                                        <img
+                                                            src={require('./logo.png')}
+                                                            className="nordic-logo"
+                                                            alt="logo"
+                                                        />
+                                                        <span className="nordic-device-model">Thingy:52</span>
+                                                    </a>
+                                                </NavbarBrand>
                                             </NavbarHeader>
                                         </Col>
                                         <Col xs={3} sm={8}>

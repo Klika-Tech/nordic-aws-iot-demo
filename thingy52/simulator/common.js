@@ -149,8 +149,9 @@ const sensorsConfig = {
     },
     euler: {
         initial: {
-            steps: 0,
-            time: 0,
+            roll: -0.710784912109375,
+            pitch: 0.7258148193359375,
+            yaw: 7.2629241943359375,
         },
         round: true,
         maxDelta: 1,
