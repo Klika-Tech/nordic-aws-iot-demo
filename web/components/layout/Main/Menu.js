@@ -14,7 +14,7 @@ const Menu = () => (
             />
             <SidebarNavItem
                 name="TVOC" href="/tvoc"
-                glyph="icon-fontello-extinguisher"
+                glyph="icon-fontello-beaker"
             />
             <SidebarNavItem
                 name="Battery" href="/battery"

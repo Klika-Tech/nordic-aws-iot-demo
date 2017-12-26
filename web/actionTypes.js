@@ -6,6 +6,8 @@ export const MQTT_DISCONNECTED = 'mqtt_disconnected';
 
 export const DATA_FETCHED = 'data_fetched';
 
+export const DATA_STATE_RECEIVED = 'data_state_received';
+
 export const ACCELEROMETER_UPDATE = 'accelerometer_update';
 
 export const GYROSCOPE_UPDATE = 'gyroscope_update';

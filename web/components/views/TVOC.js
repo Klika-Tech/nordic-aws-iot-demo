@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { PPM } from '../../scaleUnits';
+import { PPB } from '../../scaleUnits';
 import MetricChart from '../common/MetricChart';
 
 const mapStateToProps = state => ({
@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 const Magnetometer = ({ data, markersData }) => (
     <MetricChart
         type="tvoc"
-        units={PPM}
+        units={PPB}
         data={data}
         markersData={markersData}
     />

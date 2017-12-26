@@ -37,3 +37,8 @@ export const PPM = {
     label: 'ppm',
     key: 'ppm',
 };
+
+export const PPB = {
+    label: 'ppb',
+    key: 'ppb',
+};

@@ -1,6 +1,8 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import forEach from 'lodash/forEach';
+import last from 'lodash/last';
 import { batchActions } from 'redux-batched-actions';
-import { DATA_FETCHED } from '../actionTypes';
+import { DATA_FETCHED, DATA_STATE_RECEIVED } from '../actionTypes';
 import { pressureFetch, pressurePush } from './pressure';
 import { humidityFetch, humidityPush } from './humidity';
 import { temperatureFetch, temperaturePush } from './temperature';
@@ -18,7 +20,8 @@ export function fetchData(data) {
             eco2Fetch(pd),
             tvocFetch(pd),
             batteryLevelFetch(pd),
-            { type: DATA_FETCHED },
+            dataFetch(data.sensorData),
+            deviceStateReceived(data.sensorData),
         ]));
     };
 }
@@ -34,17 +37,30 @@ export function pushData(chunks) {
             eco2Push(pds, eco2),
             tvocPush(pds, tvoc),
             batteryLevelPush(pds, batteryLevel),
+            deviceStateReceived(chunks),
         ]));
     };
 }
 
 function prepareData(data) {
-    _.forEach(data.weatherData, (d) => {
-        d.tempData = _.map(d.tempData, prepareDataItem);
-        d.humidityData = _.map(d.humidityData, prepareDataItem);
-        d.pressureData = _.map(d.pressureData, prepareDataItem);
+    forEach(data.weatherData, (d) => {
+        d.tempData = map(d.tempData, prepareDataItem);
+        d.humidityData = map(d.humidityData, prepareDataItem);
+        d.pressureData = map(d.pressureData, prepareDataItem);
     });
     return data;
+}
+
+function dataFetch(sensorData) {
+    return { type: DATA_FETCHED, payload: sensorData };
+}
+
+function deviceStateReceived(states) {
+    const latest = last(states);
+    return {
+        type: DATA_STATE_RECEIVED,
+        payload: latest,
+    };
 }
 
 function prepareDataItem(dataItem) {
