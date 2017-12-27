@@ -176,9 +176,9 @@ const sensorsConfig = {
     },
     heading: {
         initial: 0,
-        maxDelta: 0.03,
+        maxDelta: 1,
         min: 0,
-        max: 400,
+        max: 360,
     },
 };
 

@@ -5,10 +5,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const definition = {};
 
 if (process.env.IS_OFFLINE) {
-    definition["SERVICE_ENDPOINT"] = JSON.stringify("http://localhost:3000");
+    definition.SERVICE_ENDPOINT = JSON.stringify('http://localhost:3000');
 } else {
-    const stack = require("./.serverless/stack.json");
-    definition["SERVICE_ENDPOINT"] = JSON.stringify(stack.ServiceEndpoint);
+    const stack = require('./.serverless/stack.json');
+    definition.SERVICE_ENDPOINT = JSON.stringify(stack.ServiceEndpoint);
 }
 
 console.log('Definition: ', definition);
@@ -19,7 +19,7 @@ module.exports = {
     plugins: [
         new DefinePlugin(definition),
         new ExtractTextPlugin('styles.css'),
-        new HtmlWebpackPlugin({ template: './web/index.ejs' }),
+        new HtmlWebpackPlugin({ hash: true, template: './web/index.ejs' }),
     ],
     module: {
         rules: [

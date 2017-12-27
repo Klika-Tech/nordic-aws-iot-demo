@@ -13,7 +13,7 @@
   }
 
   @media #{$mobile} {
-    .col-md-2.col-sm-3.col-xs-6 {
+    [class^="col-"] {
       padding-left: 5px;
       padding-right: 5px;
     }
@@ -36,9 +36,19 @@
       font-size: 1.8rem;
       line-height: 2rem;
 
+      white-space: nowrap;
+
+      @media #{$mobile} {
+        font-size: 1.5rem;
+      }
+
       .tile-icon {
         font-size: 2.3rem;
         margin-right: 1rem;
+
+        @media #{$mobile} {
+          font-size: 2rem;
+        }
       }
 
     }
@@ -64,6 +74,13 @@
           font-size: 3.2rem;
           line-height: 3.3rem;
           font-weight: bold;
+
+
+          @media #{$mobile} {
+            font-size: 2.5rem;
+            line-height: 3rem;
+          }
+
         }
 
         .tile-center {
@@ -83,6 +100,10 @@
             font-size: 2rem;
             font-weight: bold;
           }
+        }
+
+        .simple-text {
+          font-size: 1.7rem;
         }
 
         .color-circle {
