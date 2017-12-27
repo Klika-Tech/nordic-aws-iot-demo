@@ -10,6 +10,7 @@ You can see the live demo [here](http://iot-demo.nordic.klika-tech.com/#/dashboa
 ##### Contents
 
 - [Platform Scheme](#platform-scheme)
+- [How It Works](#how-it-works)
 - [Serverless](#serverless)
 - [Features](#features)
 - [Back-end](#back-end)
@@ -18,14 +19,19 @@ You can see the live demo [here](http://iot-demo.nordic.klika-tech.com/#/dashboa
 - [Setup](#setup)
 - [Deployment](#deployment)
 - [Offline Development](#offline-development)
-- [Connect device](#connect-device)
+- [Connect Device](#connect-device)
 - [Device Simulation](#device-simulation)
-        
+   
 ### Platform Schema
 
 <p align="left">
   <img src="./assets/schema.png" atl="Nordic Thingy Demo Platform Scheme" />
 </p>    
+
+### How It Works   
+
+The demo device is [Nordic Thingy:52](https://www.nordicsemi.com/eng/Products/Nordic-Thingy-52). The device is a "thing" for the AWS IoT service. Listener (PC) connect to the device over Bluetooth via [middleware](#connect-device). Middleware subscribing to sensors updates and resend data to AWS IoT. It updates its [shadow](http://docs.aws.amazon.com/iot/latest/developerguide/iot-thing-shadows.html) with sensors data few second. Following environmental sensors are supported: Temperature, Humidity, Air pressure, Air quality (CO2 and TVOC), Color and light intensity. Following motion sensors are supported: Tap detection, Orientation, Step counter, Quaternions, Euler angles, Rotation matrix, Gravity vector, Compass heading. Time series data stored in the cloud. And you can see actual data and history on a [dashboard](#front-end). 
+Also clicking on the button set a marker on charts.
     
 ### Serverless
 
@@ -83,7 +89,7 @@ For launch app in _offline mode_ do following:
 
 _Note: For local AWS IoT we use [Mosquitto Broker](https://mosquitto.org/), setup on local machine with enabled WebSocket protocol (127.0.0.1:1883), without auth_
 
-### Connect device  
+### Connect Device  
 
 For setup connection to your [Nordic Thingy:52](https://www.nordicsemi.com/eng/Products/Nordic-Thingy-52) make following:
 
