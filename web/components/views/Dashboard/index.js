@@ -15,7 +15,11 @@ function formattedValue(shadow, key, scaleUnit, round) {
     if (isNumber(val)) {
         strVal = `${round ? Math.round(val) : val.toFixed(2)}`;
     }
-    return scaleUnit ? `${strVal}${scaleUnit.label}` : strVal;
+    return (<span>
+        {scaleUnit ? `${strVal}` : strVal}
+        <wbr />
+        {scaleUnit ? `${scaleUnit.label}` : ''}
+    </span>);
 }
 
 function formattedRGB(shadow, key) {
@@ -25,7 +29,7 @@ function formattedRGB(shadow, key) {
 
 function formatDate(shadow, key) {
     const date = get(shadow, key);
-    return date ? moment(date).fromNow() : UNDEFINED_STR_VAL;
+    return date ? moment(date).fromNow() : 'more then 2h ago';
 }
 
 const mapStateToProps = state => ({
@@ -35,43 +39,43 @@ const mapStateToProps = state => ({
 const Dashboard = ({ shadow }) => (
     <Grid className="dashboard">
         <Row>
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Temperature" glyph="temperatire" href="/temperature">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'temperature', CELSIUS)}</div>
                 </MetricsContainer>
             </Col>
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Humidity" glyph="water" href="/humidity">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'humidity', PERCENTS)}</div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Barometer" glyph="gauge" href="/barometer">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'pressure', HYPER_PASCALS)}</div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="CO2" glyph="pagelines" href="/eco2">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'eco2', PPM, true)}</div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="TVOC" glyph="beaker" href="/tvoc">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'tvoc', PPB, true)}</div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Color" glyph="eyedropper">
                     <div className="tile-center color-circle" style={{ color: formattedRGB(shadow, 'color') }}>
                         <Icon className="tile-icon" bundle="fontello" glyph="circle" />
                     </div>
                 </MetricsContainer>
             </Col>
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Accelerometer" glyph="chart-line" href="/accelerometer">
                     <div className="tile-center">
                         <table className="table">
@@ -93,7 +97,7 @@ const Dashboard = ({ shadow }) => (
             </Col>
 
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Gyroscope" glyph="globe-alt" href="/gyroscope">
                     <div className="tile-center">
                         <table className="table">
@@ -114,7 +118,7 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Compass" glyph="compass" href="/compass">
                     <div className="tile-center">
                         <table className="table">
@@ -135,7 +139,7 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Gravity" glyph="magnet-1" href="/gravity">
                     <div className="tile-center">
                         <table className="table">
@@ -156,7 +160,7 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Euler" glyph="ccw">
                     <div className="tile-center">
                         <table className="table">
@@ -177,42 +181,36 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Quaternion" glyph="cw">
-                    <div className="tile-center">
-                        <table className="table">
-                            <tbody>
-                                <tr>
-                                    <th>X</th>
-                                    <th>Y</th>
-                                    <th>Z</th>
-                                    <th>W</th>
-                                </tr>
-                                <tr>
-                                    <td>{formattedValue(shadow, 'quaternion.x')}</td>
-                                    <td>{formattedValue(shadow, 'quaternion.y')}</td>
-                                    <td>{formattedValue(shadow, 'quaternion.z')}</td>
-                                    <td>{formattedValue(shadow, 'quaternion.w')}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="tile-center simple-text">
+                        <div>
+                            <span>X: <b>{formattedValue(shadow, 'quaternion.x')}</b></span>
+                            {' '}
+                            <span>Y: <b>{formattedValue(shadow, 'quaternion.y')}</b></span>
+                        </div>
+                        <div>
+                            <span>Z: <b>{formattedValue(shadow, 'quaternion.z')}</b></span>
+                            {' '}
+                            <span>W: <b>{formattedValue(shadow, 'quaternion.w')}</b></span>
+                        </div>
                     </div>
                 </MetricsContainer>
             </Col>
 
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Step Counter" glyph="heart">
                     <div className="tile-center">
                         <div className="tile-big-val">
                             {formattedValue(shadow, 'stepCounter.steps', null, true)}
                         </div>
-                        <div>Time: {formattedValue(shadow, 'stepCounter.time', null, true)} sec</div>
+                        <div>Time: {formattedValue(shadow, 'stepCounter.time', null, true)} ms</div>
                     </div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Tap" glyph="down-hand">
                     <div className="tile-center">
                         <div className="tile-big-val">{Direction[get(shadow, 'tap.direction', 0)]}</div>
@@ -223,7 +221,7 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Orientation" glyph="anchor">
                     <div className="tile-big-val tile-center">
                         {get(Orientation, get(shadow, 'orientation'), UNDEFINED_STR_VAL)}
@@ -231,13 +229,13 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Heading" glyph="direction" href="heading">
                     <div className="tile-big-val tile-center">{formattedValue(shadow, 'heading', DEGREES)}</div>
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Battery" glyph="battery" href="/battery">
                     <div className="tile-big-val tile-center">
                         {formattedValue(shadow, 'batteryLevel', PERCENTS, true)}
@@ -245,7 +243,7 @@ const Dashboard = ({ shadow }) => (
                 </MetricsContainer>
             </Col>
 
-            <Col xs={6} sm={3} md={2}>
+            <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Button last pushed" glyph="blank">
                     <div className="tile-big-val tile-center">{formatDate(shadow, 'marked')}</div>
                 </MetricsContainer>
