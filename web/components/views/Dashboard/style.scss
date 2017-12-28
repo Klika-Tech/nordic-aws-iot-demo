@@ -1,6 +1,8 @@
 @import "~@sketchpixy/rubix/sass/variables";
 @import "../../../theme/variables";
 
+$dashboard-icons-color: darken($theme-primary-color, 15%);
+
 .dashboard {
   .chart-panel-body {
     height: 335px;
@@ -12,13 +14,20 @@
     }
   }
 
-  @media #{$mobile} {
-    [class^="col-"] {
+  [class^="col-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    @media #{$mobile} {
       padding-left: 5px;
       padding-right: 5px;
     }
   }
 
+}
+
+.sidebar-nav-container .sidebar-nav .sidebar-nav-item .rubix-icon {
+  color: $dashboard-icons-color;
 }
 
 .nordic-metric-container {
@@ -33,22 +42,17 @@
       right: 0;
 
       padding: 5px 1rem;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       line-height: 2rem;
-
-      white-space: nowrap;
 
       @media #{$mobile} {
         font-size: 1.5rem;
       }
 
       .tile-icon {
-        font-size: 2.3rem;
-        margin-right: 1rem;
-
-        @media #{$mobile} {
-          font-size: 2rem;
-        }
+        margin-right: 0.5rem;
+        font-size: 1.8rem;
+        color: $dashboard-icons-color;
       }
 
     }
@@ -71,7 +75,7 @@
 
         .tile-big-val {
           margin: 0;
-          font-size: 3.2rem;
+          font-size: 2.7rem;
           line-height: 3.3rem;
           font-weight: bold;
 
@@ -81,6 +85,10 @@
             line-height: 3rem;
           }
 
+        }
+
+        .tile-value .unit {
+          font-weight: normal;
         }
 
         .tile-center {
@@ -97,7 +105,7 @@
             text-align: center;
           }
           td {
-            font-size: 2rem;
+            font-size: 1.2rem;
             font-weight: bold;
           }
         }
@@ -112,6 +120,18 @@
           text-align: center;
         }
 
+      }
+
+      .color-axis-x {
+        color: $theme-x-axis-color;
+      }
+
+      .color-axis-y {
+        color: $theme-y-axis-color;
+      }
+
+      .color-axis-z {
+        color: $theme-z-axis-color;
       }
 
     }

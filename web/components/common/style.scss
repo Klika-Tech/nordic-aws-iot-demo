@@ -36,26 +36,26 @@
     }
 
     .area {
-      fill: darken($theme-primary-color, 15%);
+      fill: darken($theme-default-axis-color, 15%);
       clip-path: url(#clip);
     }
 
     .line {
-      stroke: $theme-primary-color;
+      stroke: $theme-default-axis-color;
       stroke-width: 1px; // XXX: Perfomance fix for chrome-only, see https://bugs.chromium.org/p/chromium/issues/detail?id=455429
       fill: none;
       clip-path: url(#clip);
 
       &.x {
-        stroke: #E76049;
+        stroke: $theme-x-axis-color;
       }
 
       &.y {
-        stroke: #4caf50;
+        stroke: $theme-y-axis-color;
       }
 
       &.z {
-        stroke: #4c9af1;
+        stroke: $theme-z-axis-color;
       }
     }
 

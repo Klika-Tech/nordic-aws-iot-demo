@@ -83,20 +83,20 @@ const sensorsConfig = {
     gyroscope: {
         initial: [0, 0, 0],
         maxDelta: 5,
-        min: -100,
-        max: 100,
+        min: -180,
+        max: 180,
     },
     compass: {
-        initial: [0, 0, 0],
-        maxDelta: 5,
-        min: -100,
-        max: 100,
-    },
-    gravity: {
         initial: [-0.5, -0.1, 0.5],
         maxDelta: 0.005,
         min: -0.6,
         max: 0.6,
+    },
+    gravity: {
+        initial: [-1, -2, 0],
+        maxDelta: 1,
+        min: -20,
+        max: 20,
     },
     color: {
         initial: {
@@ -155,8 +155,8 @@ const sensorsConfig = {
         },
         round: true,
         maxDelta: 1,
-        min: 0,
-        max: 1000,
+        min: -180,
+        max: 180,
     },
     rotation: {
         initial: {
