@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import moment from 'moment';
 import isNumber from 'lodash/isNumber';
 import { Grid, Row, Col, Icon } from '@sketchpixy/rubix';
-import { CELSIUS, PERCENTS, HYPER_PASCALS, PPM, PPB, DEGREES, G, FAHRENHEITS } from '../../../scaleUnits';
+import { CELSIUS, PERCENTS, HYPER_PASCALS, PPM, PPB, DEGREES, G, FAHRENHEITS, TESLAS } from '../../../scaleUnits';
 import { UNDEFINED_STR_VAL, Direction, Orientation } from '../../../thingy52Const';
 import './style.scss';
 import MetricsContainer from './MetricsContainer';
@@ -139,9 +139,9 @@ const Dashboard = ({ shadow }) => (
                         <table className="table">
                             <tbody>
                                 <tr>
-                                    <td>{formattedShadowValue(shadow, 'compass.0')}</td>
-                                    <td>{formattedShadowValue(shadow, 'compass.1')}</td>
-                                    <td>{formattedShadowValue(shadow, 'compass.2')}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.0', TESLAS)}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.1', TESLAS)}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.2', TESLAS)}</td>
                                 </tr>
                                 <tr>
                                     <td className="color-axis-x">X</td>
@@ -160,9 +160,9 @@ const Dashboard = ({ shadow }) => (
                         <table className="table">
                             <tbody>
                                 <tr>
-                                    <td>{formattedShadowValue(shadow, 'gravity.0', G)}</td>
-                                    <td>{formattedShadowValue(shadow, 'gravity.1', G)}</td>
-                                    <td>{formattedShadowValue(shadow, 'gravity.2', G)}</td>
+                                    <td>{formattedShadowValue(shadow, 'gravity.0')}</td>
+                                    <td>{formattedShadowValue(shadow, 'gravity.1')}</td>
+                                    <td>{formattedShadowValue(shadow, 'gravity.2')}</td>
                                 </tr>
                                 <tr>
                                     <td className="color-axis-x">X</td>

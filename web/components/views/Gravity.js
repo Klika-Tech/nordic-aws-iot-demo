@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { G } from '../../scaleUnits';
+import { SCALAR } from '../../scaleUnits';
 import DimensionsChart from '../common/DimensionsChart';
 
 const mapStateToProps = state => ({
@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 const Gravity = ({ data, markersData }) => (
     <DimensionsChart
         type="gravity"
-        units={G}
+        units={SCALAR}
         data={data}
         markersData={markersData}
     />
