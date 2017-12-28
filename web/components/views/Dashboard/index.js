@@ -139,14 +139,14 @@ const Dashboard = ({ shadow }) => (
                         <table className="table">
                             <tbody>
                                 <tr>
-                                    <td>{formattedShadowValue(shadow, 'compass.0', TESLAS)}</td>
-                                    <td>{formattedShadowValue(shadow, 'compass.1', TESLAS)}</td>
-                                    <td>{formattedShadowValue(shadow, 'compass.2', TESLAS)}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.0')}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.1')}</td>
+                                    <td>{formattedShadowValue(shadow, 'compass.2')}</td>
                                 </tr>
                                 <tr>
-                                    <td className="color-axis-x">X</td>
-                                    <td className="color-axis-y">Y</td>
-                                    <td className="color-axis-z">Z</td>
+                                    <td>X <span className="color-axis-x">{TESLAS.label}</span></td>
+                                    <td>Y <span className="color-axis-y">{TESLAS.label}</span></td>
+                                    <td>Z <span className="color-axis-z">{TESLAS.label}</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -181,9 +181,9 @@ const Dashboard = ({ shadow }) => (
                         <table className="table">
                             <tbody>
                                 <tr>
-                                    <td>{formattedShadowValue(shadow, 'euler.roll', null, true)}</td>
-                                    <td>{formattedShadowValue(shadow, 'euler.pitch', null, true)}</td>
-                                    <td>{formattedShadowValue(shadow, 'euler.yaw', null, true)}</td>
+                                    <td>{formattedShadowValue(shadow, 'euler.roll', DEGREES, true)}</td>
+                                    <td>{formattedShadowValue(shadow, 'euler.pitch', DEGREES, true)}</td>
+                                    <td>{formattedShadowValue(shadow, 'euler.yaw', DEGREES, true)}</td>
                                 </tr>
                                 <tr>
                                     <td className="color-axis-x">Roll</td>
