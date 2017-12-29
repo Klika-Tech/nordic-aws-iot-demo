@@ -8,6 +8,7 @@ import { CELSIUS, PERCENTS, HYPER_PASCALS, PPM, PPB, DEGREES, G, FAHRENHEITS, TE
 import { UNDEFINED_STR_VAL, Direction, Orientation } from '../../../thingy52Const';
 import './style.scss';
 import MetricsContainer from './MetricsContainer';
+import AngleIcon from '../../common/AngleIcon';
 
 function cToF(celsius) {
     if (celsius === null || celsius === undefined) return null;
@@ -45,6 +46,8 @@ function formatDate(shadow, key) {
 const mapStateToProps = state => ({
     shadow: state.data.shadow,
 });
+
+const eulerDomain = [-180, 180];
 
 const Dashboard = ({ shadow }) => (
     <Grid className="dashboard">
@@ -180,6 +183,20 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="angle-icons-container">
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-x"
+                                            value={get(shadow, 'euler.roll', 0)}
+                                            domain={eulerDomain} />
+                                    </td>
+                                    <td>
+                                        <AngleIcon value={get(shadow, 'euler.pitch', 0)} domain={eulerDomain} className="icon-y" />
+                                    </td>
+                                    <td>
+                                        <AngleIcon value={get(shadow, 'euler.pitch', 0)} domain={eulerDomain} className="icon-z" />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'euler.roll', DEGREES, true)}</td>
                                     <td>{formattedShadowValue(shadow, 'euler.pitch', DEGREES, true)}</td>

@@ -24,6 +24,10 @@ $dashboard-icons-color: darken($theme-primary-color, 15%);
     }
   }
 
+  .angle-icons-container > * {
+    height: 70px;
+  }
+
 }
 
 .sidebar-nav-container .sidebar-nav .sidebar-nav-item .rubix-icon {
