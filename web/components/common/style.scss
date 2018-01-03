@@ -1,6 +1,6 @@
 @import "../../theme/variables";
 
-.nordic-angle-icon {
+.nordic-angle-icon, .nordic-bar-icon {
   width: 100%;
   height: 100%;
 
@@ -24,16 +24,31 @@
     stroke-width: 3px;
   }
 
-  &.icon-x .metric-cursor {
-    stroke: $theme-x-axis-color;
+  &.icon-x {
+    .metric-cursor {
+      stroke: $theme-x-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-x-axis-color;
+    }
   }
 
-  &.icon-y .metric-cursor {
-    stroke: $theme-y-axis-color;
+  &.icon-y {
+    .metric-cursor {
+      stroke: $theme-y-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-y-axis-color;
+    }
   }
 
-  &.icon-z .metric-cursor {
-    stroke: $theme-z-axis-color;
+  &.icon-z {
+    .metric-cursor {
+      stroke: $theme-z-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-z-axis-color;
+    }
   }
 
 }

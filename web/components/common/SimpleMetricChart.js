@@ -4,7 +4,7 @@ import { scaleTime, scaleLinear } from 'd3-scale';
 import './style.scss';
 import Chart from './Chart';
 import Axis from './Axis';
-import Line from './Line';
+import Area from './Area';
 import NoDataAvailable from './NoDataAvailable';
 
 class SimpleMetricChart extends Component {
@@ -65,7 +65,7 @@ class SimpleMetricChart extends Component {
 
     render() {
         const { containerWidth, containerHeight, data, type, units } = this.props;
-        const { margin, x, y, height, width } = this;
+        const { margin, x, y, height, width, focusYDomain } = this;
         return (
             <div className="nucleo-chart-container">
                 { !data.length && (
@@ -84,10 +84,12 @@ class SimpleMetricChart extends Component {
                                 transform={`translate(${margin.left},${margin.top})`}
                             >
                                 <g className="zoom">
-                                    <Line
+                                    <Area
                                         data={data}
+                                        domain={focusYDomain}
+                                        y0={d => y(focusYDomain[0])}
+                                        y1={d => y(d[type])}
                                         x={d => x(d.date)}
-                                        y={d => y(d[type])}
                                     />
                                 </g>
                                 <Axis

@@ -24,14 +24,19 @@ $dashboard-icons-color: darken($theme-primary-color, 15%);
     }
   }
 
-  .angle-icons-container > * {
-    height: 70px;
-  }
-
 }
 
 .sidebar-nav-container .sidebar-nav .sidebar-nav-item .rubix-icon {
   color: $dashboard-icons-color;
+}
+
+.angle-icons-container, .bar-icons-container {
+  td {
+    width: 33.33%;
+  }
+  &.quaterion td {
+    width: 25%;
+  }
 }
 
 .nordic-metric-container {

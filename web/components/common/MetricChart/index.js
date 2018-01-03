@@ -5,13 +5,13 @@ import _ from 'lodash';
 import '../../common/style.scss';
 import Chart from '../../common/Chart';
 import Axis from '../../common/Axis';
-import Line from '../../common/Line';
+import Area from '../../common/Area';
+import NoDataAvailable from '../../common/NoDataAvailable';
 import Focus from '../../common/Focus';
 import BrushX from '../../common/BrushX';
 import MetricCursor from './Cursor';
 import FocusMarker from '../../common/FocusMarker';
 import ContextMarker from '../../common/ContextMarker';
-import NoDataAvailable from '../NoDataAvailable';
 
 const bisector = d3.bisector(d => d.date).right;
 const zoomVelocity = 3;
@@ -23,7 +23,7 @@ class MetricChart extends Component {
         this.y = scaleLinear();
         this.x2 = scaleTime();
         this.y2 = scaleLinear();
-        this.margin = { top: 0, right: 40, bottom: 100, left: 0 };
+        this.margin = { top: 0, right: 10, bottom: 100, left: 0 };
         this.margin2 = { right: 10, bottom: 20, left: 0 };
         this.state = {
             brush: false,
@@ -34,6 +34,7 @@ class MetricChart extends Component {
         };
         this.getDefaultFocusDomain = this.getDefaultFocusDomain.bind(this);
         this.getCursorState = this.getCursorState.bind(this);
+        this.calculateYDomain = this.calculateYDomain.bind(this);
         this.handleWheel = this.handleWheel.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -42,7 +43,7 @@ class MetricChart extends Component {
         this.handleBrush = this.handleBrush.bind(this);
         this.handleBrushEnd = this.handleBrushEnd.bind(this);
         this.updateContextDomains = this.updateContextDomains.bind(this);
-        this.updateFocusDomain = this.updateFocusDomain.bind(this);
+        this.updateFocusDomains = this.updateFocusDomains.bind(this);
         this.updateCursor = this.updateCursor.bind(this);
         this.updateDimension = this.updateDimension.bind(this);
         this.updateD3(props);
@@ -68,6 +69,16 @@ class MetricChart extends Component {
         };
     }
 
+    calculateYDomain(data) {
+        const { type } = this.props;
+        const minY = d3.min(data.map(d => d[type]));
+        const maxY = d3.max(data.map(d => d[type]));
+        return [
+            Math.floor((minY - 0.3) * 30) / 30,
+            Math.ceil((maxY + 0.3) * 30) / 30,
+        ];
+    }
+
     updateD3(newProps, oldProps = {}) {
         const state = this.state;
         const isDataChanged = oldProps.data !== newProps.data;
@@ -79,7 +90,7 @@ class MetricChart extends Component {
             this.updateContextDomains(newProps, state);
         }
         if (isBrush || isDataChanged) {
-            this.updateFocusDomain(newProps, state);
+            this.updateFocusDomains(newProps, state);
         }
         if (isSizeChanged) {
             this.updateDimension(newProps, state);
@@ -90,33 +101,29 @@ class MetricChart extends Component {
     }
 
     updateContextDomains(props) {
-        const { y, x2, y2 } = this;
-        const { type, data } = props;
+        const { x2, y2 } = this;
+        const { data } = props;
         this.contextDomain = d3.extent(data.map(d => d.date));
-        const minY = d3.min(data.map(d => d[type]));
-        const maxY = d3.max(data.map(d => d[type]));
-        this.focusYDomain = [
-            Math.floor((minY - 0.3) * 30) / 30,
-            Math.ceil((maxY + 0.3) * 30) / 30,
-        ];
-        y.domain(this.focusYDomain);
         x2.domain(this.contextDomain);
-        y2.domain(this.focusYDomain);
+        this.contextYDomain = this.calculateYDomain(data);
+        y2.domain(this.contextYDomain);
     }
 
-    updateFocusDomain(props, state = {}) {
-        const { x, x2, contextDomain, getDefaultFocusDomain } = this;
+    updateFocusDomains(props, state = {}) {
+        const { y, x, x2, getDefaultFocusDomain } = this;
         const { selection } = state;
-        const { data } = props;
+        const { type, data } = props;
         const fd = (selection) ? (selection.map(x2.invert)) : getDefaultFocusDomain();
         const [minX, maxX] = fd;
-        const focusData = data.slice(
+        this.focusData = data.slice(
             Math.max(0, bisector(data, minX) - 1),
             Math.min(data.length, bisector(data, maxX) + 1),
         );
-        this.focusDomain = d3.extent(focusData.map(d => d.date));
+        this.focusDomain = d3.extent(this.focusData.map(d => d.date));
         this.defaultSelection = this.focusDomain.map(d => x2(d));
         x.domain(this.focusDomain);
+        this.focusYDomain = this.calculateYDomain(this.focusData);
+        y.domain(this.focusYDomain);
     }
 
     updateCursor(props, state = {}) {
@@ -207,8 +214,12 @@ class MetricChart extends Component {
     }
 
     render() {
-        const { containerWidth, containerHeight, data, type, units, markersData } = this.props;
-        const { margin, margin2, x, y, x2, y2, height, height2, width, state, focusYDomain } = this;
+        const { containerWidth, containerHeight, data, markersData, type, units } = this.props;
+        const {
+            margin, margin2, x, y, x2, y2,
+            focusData, focusYDomain, contextYDomain,
+            height, height2, width, state,
+        } = this;
         return (
             <div className="nucleo-chart-container">
                 { !data.length && (
@@ -231,27 +242,32 @@ class MetricChart extends Component {
                                 onWheel={this.handleWheel}
                             >
                                 <g className="zoom">
-                                    <Line
-                                        data={data}
+                                    <Area
+                                        data={focusData}
+                                        domain={focusYDomain}
+                                        y0={d => y(focusYDomain[0])}
+                                        y1={d => y(d[type])}
                                         x={d => x(d.date)}
-                                        y={d => y(d[type])}
                                     />
                                     {markersData.map(d => (
-                                        <g key={d.date.toISOString()}>
-                                            <FocusMarker y={y(d[type])} x={x(d.date)} />
-                                        </g>
+                                        <FocusMarker
+                                            key={d.date.toISOString()}
+                                            y={y(d[type])}
+                                            x={x(d.date)}
+                                        />
                                     ))}
                                 </g>
                                 <Axis
                                     type="x"
                                     scale={x}
-                                    data={data}
+                                    data={focusData}
                                     translate={[0, height]}
                                 />
                                 <Axis
                                     type="y"
                                     scale={y}
-                                    data={data}
+                                    data={focusData}
+                                    domain={focusYDomain}
                                     tickSize={width}
                                     tickFormat={v => (`${y.tickFormat()(v)}${units.label}`)}
                                 />
@@ -265,17 +281,18 @@ class MetricChart extends Component {
                                     onBrush={this.handleBrush}
                                     onBrushEnd={this.handleBrushEnd}
                                 >
-                                    <Line
+                                    <Area
                                         data={data}
+                                        domain={contextYDomain}
+                                        y0={d => y2(contextYDomain[0])}
+                                        y1={d => y2(d[type])}
                                         x={d => x2(d.date)}
-                                        y={d => y2(d[type])}
-                                        skipRenderCount={10}
                                     />
                                     {markersData.map(d => (
                                         <ContextMarker
                                             key={d.date.toISOString()}
-                                            y1={y2(focusYDomain[0])}
-                                            y2={y2(focusYDomain[1])}
+                                            y1={y2(contextYDomain[0])}
+                                            y2={y2(contextYDomain[1])}
                                             x={x2(d.date)}
                                         />
                                     ))}
