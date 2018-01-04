@@ -68,7 +68,7 @@ class SimpleDimensionsChart extends Component {
         const { containerWidth, containerHeight, data, type, units } = this.props;
         const { margin, x, y, height, width } = this;
         return (
-            <div className="nucleo-chart-container">
+            <div className="device-chart-container">
                 <div className="dimensions-chart">
                     <svg width={containerWidth} height={containerHeight}>
                         <defs>

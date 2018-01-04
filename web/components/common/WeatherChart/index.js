@@ -7,7 +7,7 @@ const WeatherChartContainer = ({
     type, chartType, displayedCitiesData, units, sensorData, markersData, citiesData,
     onChangeType, onToggleVisibility, onChangeUnits,
 }) => (
-    <div className="nucleo-chart-container">
+    <div className="device-chart-container">
         <WeatherParams
             type={type}
             selectedUnits={units}

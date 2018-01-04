@@ -211,7 +211,7 @@ class DimensionsChart extends Component {
         const { containerWidth, containerHeight, data, type, units, markersData } = this.props;
         const { margin, margin2, x, y, x2, y2, height, height2, width, state, focusYDomain } = this;
         return (
-            <div className="nucleo-chart-container">
+            <div className="device-chart-container">
                 <div className="dimensions-chart">
                     <svg width={containerWidth} height={containerHeight}>
                         <defs>

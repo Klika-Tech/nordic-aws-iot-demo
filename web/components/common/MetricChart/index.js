@@ -221,7 +221,7 @@ class MetricChart extends Component {
             height, height2, width, state,
         } = this;
         return (
-            <div className="nucleo-chart-container">
+            <div className="device-chart-container">
                 { !data.length && (
                     <NoDataAvailable />
                 ) }

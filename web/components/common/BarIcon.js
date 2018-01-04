@@ -34,8 +34,8 @@ class BarIcon extends Component {
         const offsetX = margin - 5;
         const yStep = yCenter / 4;
         return (
-            <div className={`nordic-bar-icon ${this.props.className}`}>
-                <svg width={containerWidth} height={height}>
+            <div className={`device-bar-icon ${this.props.className}`}>
+                <svg height={height}>
                     <g>
                         <line
                             x1={margin}

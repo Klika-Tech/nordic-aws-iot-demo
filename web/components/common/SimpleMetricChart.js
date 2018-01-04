@@ -67,7 +67,7 @@ class SimpleMetricChart extends Component {
         const { containerWidth, containerHeight, data, type, units } = this.props;
         const { margin, x, y, height, width, focusYDomain } = this;
         return (
-            <div className="nucleo-chart-container">
+            <div className="device-chart-container">
                 { !data.length && (
                     <NoDataAvailable />
                 ) }

@@ -29,11 +29,11 @@ class AngleIcon extends Component {
     }
 
     render() {
-        const { containerWidth, value } = this.props;
+        const { value } = this.props;
         const { height, cx, cy, r, scale } = this;
         return (
-            <div className={`nordic-angle-icon ${this.props.className}`}>
-                <svg width={containerWidth} height={height}>
+            <div className={`device-angle-icon ${this.props.className}`}>
+                <svg height={height}>
                     <g>
                         <circle
                             cx={cx}
