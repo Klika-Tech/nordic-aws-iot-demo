@@ -3,11 +3,15 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import moment from 'moment';
 import isNumber from 'lodash/isNumber';
+import { scaleLinear } from 'd3-scale';
 import { Grid, Row, Col, Icon } from '@sketchpixy/rubix';
 import { CELSIUS, PERCENTS, HYPER_PASCALS, PPM, PPB, DEGREES, G, FAHRENHEITS, TESLAS } from '../../../scaleUnits';
 import { UNDEFINED_STR_VAL, Direction, Orientation } from '../../../thingy52Const';
 import './style.scss';
 import MetricsContainer from './MetricsContainer';
+import AngleIcon from '../../common/AngleIcon';
+import BarIcon from '../../common/BarIcon';
+
 
 function cToF(celsius) {
     if (celsius === null || celsius === undefined) return null;
@@ -45,6 +49,15 @@ function formatDate(shadow, key) {
 const mapStateToProps = state => ({
     shadow: state.data.shadow,
 });
+
+const angleDomain = [-180, 180];
+const accelerometerDomain = [-3, 3];
+const compassDomain = [-1, 1];
+const gravityDomain = [-20, 20];
+
+const courseScale = scaleLinear()
+    .domain([0, 359])
+    .range(['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest']);
 
 const Dashboard = ({ shadow }) => (
     <Grid className="dashboard">
@@ -95,6 +108,29 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="bar-icons-container">
+                                    <td>
+                                        <BarIcon
+                                            className="icon-x"
+                                            domain={accelerometerDomain}
+                                            value={get(shadow, 'accelerometer.0', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-y"
+                                            domain={accelerometerDomain}
+                                            value={get(shadow, 'accelerometer.1', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-z"
+                                            domain={accelerometerDomain}
+                                            value={get(shadow, 'accelerometer.2', 0)}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'accelerometer.0', G)}</td>
                                     <td>{formattedShadowValue(shadow, 'accelerometer.1', G)}</td>
@@ -117,6 +153,29 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="angle-icons-container">
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-x"
+                                            value={get(shadow, 'gyroscope.0', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-y"
+                                            value={get(shadow, 'gyroscope.1', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-z"
+                                            value={get(shadow, 'gyroscope.2', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'gyroscope.0', DEGREES)}</td>
                                     <td>{formattedShadowValue(shadow, 'gyroscope.1', DEGREES)}</td>
@@ -138,6 +197,29 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="bar-icons-container">
+                                    <td>
+                                        <BarIcon
+                                            className="icon-x"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'compass.0', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-y"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'compass.1', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-z"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'compass.2', 0)}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'compass.0')}</td>
                                     <td>{formattedShadowValue(shadow, 'compass.1')}</td>
@@ -159,6 +241,29 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="bar-icons-container">
+                                    <td>
+                                        <BarIcon
+                                            className="icon-x"
+                                            domain={gravityDomain}
+                                            value={get(shadow, 'gravity.0', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-y"
+                                            domain={gravityDomain}
+                                            value={get(shadow, 'gravity.1', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-z"
+                                            domain={gravityDomain}
+                                            value={get(shadow, 'gravity.2', 0)}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'gravity.0')}</td>
                                     <td>{formattedShadowValue(shadow, 'gravity.1')}</td>
@@ -180,6 +285,29 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="angle-icons-container">
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-x"
+                                            value={get(shadow, 'euler.roll', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-y"
+                                            value={get(shadow, 'euler.pitch', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                    <td>
+                                        <AngleIcon
+                                            className="icon-z"
+                                            value={get(shadow, 'euler.pitch', 0)}
+                                            domain={angleDomain}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'euler.roll', DEGREES, true)}</td>
                                     <td>{formattedShadowValue(shadow, 'euler.pitch', DEGREES, true)}</td>
@@ -201,6 +329,36 @@ const Dashboard = ({ shadow }) => (
                     <div className="tile-center">
                         <table className="table">
                             <tbody>
+                                <tr className="bar-icons-container quaterion">
+                                    <td>
+                                        <BarIcon
+                                            className="icon-x"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'quaternion.x', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-y"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'quaternion.y', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className="icon-z"
+                                            domain={compassDomain}
+                                            value={get(shadow, 'quaternion.z', 0)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <BarIcon
+                                            className=""
+                                            domain={compassDomain}
+                                            value={get(shadow, 'quaternion.w', 0)}
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>{formattedShadowValue(shadow, 'quaternion.x')}</td>
                                     <td>{formattedShadowValue(shadow, 'quaternion.y')}</td>
@@ -252,7 +410,10 @@ const Dashboard = ({ shadow }) => (
 
             <Col xs={6} sm={4} md={2}>
                 <MetricsContainer title="Heading" glyph="direction" href="heading">
-                    <div className="tile-big-val tile-center">{formattedShadowValue(shadow, 'heading', DEGREES)}</div>
+                    <div className="tile-center">
+                        <div className="tile-big-val">{courseScale(get(shadow, 'heading', 0))}</div>
+                        <div>{formattedShadowValue(shadow, 'heading', DEGREES)}</div>
+                    </div>
                 </MetricsContainer>
             </Col>
 

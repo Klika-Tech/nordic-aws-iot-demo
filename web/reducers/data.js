@@ -1,5 +1,6 @@
 import filter from 'lodash/filter';
 import last from 'lodash/last';
+import get from 'lodash/get';
 import { DATA_FETCHED, DATA_STATE_RECEIVED } from '../actionTypes';
 
 const INITIAL_STATE = {
@@ -8,7 +9,7 @@ const INITIAL_STATE = {
 };
 
 function getLastMarked(sensorData) {
-    return last(filter(sensorData, d => d.marker));
+    return last(filter(sensorData, d => get(d, 'marker')));
 }
 
 function setLastMarked(state, payload) {

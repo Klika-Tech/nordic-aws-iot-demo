@@ -74,7 +74,7 @@ class SimpleWeatherChart extends Component {
         const { containerWidth, containerHeight, type, units } = this.props;
         const { margin, x, y, height, width, focusData, focusYDomain } = this;
         return (
-            <div className="nucleo-chart-container">
+            <div className="device-chart-container">
                 { !focusData.length && (
                     <NoDataAvailable />
                 ) }

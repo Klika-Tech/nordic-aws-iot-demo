@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Grid, Row, Col, PanelContainer, Panel, PanelBody, PanelHeader, Icon } from '@sketchpixy/rubix';
 
 const MetricsContainer = ({ children, title, glyph, href }) => (
-    <PanelContainer className="nordic-metric-container">
+    <PanelContainer className="device-metric-container">
         <Panel>
             <PanelBody>
                 <Grid>

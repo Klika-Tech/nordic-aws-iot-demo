@@ -30,7 +30,16 @@ $dashboard-icons-color: darken($theme-primary-color, 15%);
   color: $dashboard-icons-color;
 }
 
-.nordic-metric-container {
+.angle-icons-container, .bar-icons-container {
+  td {
+    width: 33.33%;
+  }
+  &.quaterion td {
+    width: 25%;
+  }
+}
+
+.device-metric-container {
 
   .rubix-panel-container {
     border-radius: 4px;
@@ -40,6 +49,9 @@ $dashboard-icons-color: darken($theme-primary-color, 15%);
       top: 0;
       left: 0;
       right: 0;
+
+      z-index: 100;
+      background-color: white;
 
       padding: 5px 1rem;
       font-size: 1.5rem;

@@ -115,10 +115,10 @@ class Main extends React.Component {
                                                     <a href="/" className="navbar-brand">
                                                         <img
                                                             src={require('./logo.png')}
-                                                            className="nordic-logo"
+                                                            className="vendor-logo"
                                                             alt="logo"
                                                         />
-                                                        <span className="nordic-device-model">Thingy:52</span>
+                                                        <span className="vendor-device-model">Thingy:52</span>
                                                     </a>
                                                 </NavbarBrand>
                                             </NavbarHeader>

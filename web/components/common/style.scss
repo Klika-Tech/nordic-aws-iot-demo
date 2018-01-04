@@ -1,6 +1,61 @@
 @import "../../theme/variables";
 
-.nucleo-chart-container {
+.device-angle-icon, .device-bar-icon {
+  width: 100%;
+  height: 100%;
+
+  $bg-stroke: #999;
+
+  svg {
+    width: 100%;
+
+    circle {
+      fill: #FFF;
+      stroke: $bg-stroke;
+      stroke-width: 1px;
+    }
+
+    line {
+      stroke: $bg-stroke;
+      stroke-width: 1px;
+    }
+  }
+
+  .metric-cursor {
+    stroke: $theme-default-axis-color;
+    stroke-width: 3px;
+  }
+
+  &.icon-x {
+    .metric-cursor {
+      stroke: $theme-x-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-x-axis-color;
+    }
+  }
+
+  &.icon-y {
+    .metric-cursor {
+      stroke: $theme-y-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-y-axis-color;
+    }
+  }
+
+  &.icon-z {
+    .metric-cursor {
+      stroke: $theme-z-axis-color;
+    }
+    .metric-bar {
+      fill: $theme-z-axis-color;
+    }
+  }
+
+}
+
+.device-chart-container {
 
   position: absolute;
   top: 20px;
@@ -167,3 +222,5 @@
   }
 
 }
+
+
